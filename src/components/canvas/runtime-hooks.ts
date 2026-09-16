@@ -1,4 +1,11 @@
 import { useEffect, useState, useSyncExternalStore, type RefObject } from "react";
+import { supportsWebGL2 } from "./webgl-support";
+
+export function useWebGLSupport() {
+  const [support, setSupport] = useState<"checking" | "supported" | "unsupported">("checking");
+  useEffect(() => { setSupport(supportsWebGL2() ? "supported" : "unsupported"); }, []);
+  return support;
+}
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 

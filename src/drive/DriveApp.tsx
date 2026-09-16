@@ -15,15 +15,18 @@ import { installQA } from "./systems/qa";
 import { useLang } from "@/lib/lang";
 import { isInteractiveTarget, setInputLocked } from "./systems/input";
 import { ContextLossGuard, FirstFrameReady } from "@/components/canvas/runtime";
-import { useReducedMotion, useSceneVisibility } from "@/components/canvas/runtime-hooks";
+import { useReducedMotion, useSceneVisibility, useWebGLSupport } from "@/components/canvas/runtime-hooks";
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
+import { CanvasFallback } from "@/components/canvas/canvas-fallback";
 import { StudyFallback } from "./ui/StudyFallback";
 
 export default function DriveApp() {
   const root = useRef<HTMLDivElement>(null);
   const live = useSceneVisibility(root);
   const reducedMotion = useReducedMotion();
-  const [unavailable, setUnavailable] = useState(false);
+  const webgl = useWebGLSupport();
+  const [failed, setUnavailable] = useState(false);
+  const unavailable = failed || webgl === "unsupported";
   const [rendered, setRendered] = useState(false);
   const onUnavailable = useCallback(() => setUnavailable(true), []);
   const onReady = useCallback(() => setRendered(true), []);
@@ -38,7 +41,7 @@ export default function DriveApp() {
   const setMutedStore = useDrive((s) => s.setMuted);
   const siteLang = useLang((s) => s.lang);
   const setDriveLang = useDrive((s) => s.setLang);
-  const blocked = !live || unavailable || Boolean(activeId) || overlay !== "none";
+  const blocked = !live || unavailable || webgl === "checking" || Boolean(activeId) || overlay !== "none";
 
   useEffect(() => {
     setInputLocked(blocked || !started);
@@ -88,7 +91,7 @@ export default function DriveApp() {
       data-scene-state={unavailable ? "fallback" : rendered ? "ready" : "loading"}
       data-scene-active={live ? "true" : "false"}
     >
-      {unavailable ? <StudyFallback /> : <WebGLBoundary fallback={<StudyFallback />} onFailure={onUnavailable}>
+      {unavailable ? <StudyFallback /> : webgl === "checking" ? <CanvasFallback label={siteLang === "th" ? "กำลังเตรียมลาน" : "Preparing the grounds"} /> : <WebGLBoundary fallback={<StudyFallback />} onFailure={onUnavailable}>
       <Canvas
         shadows={quality !== "low"}
         dpr={quality === "low" ? 1 : [1, quality === "medium" ? 1.25 : 1.6]}

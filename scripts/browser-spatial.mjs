@@ -72,6 +72,8 @@ function installProbe({ unavailable }) {
 async function navigate(page, route) {
   const response = await page.goto(origin + route, { waitUntil: "domcontentloaded", timeout: 25_000 });
   assert.equal(response?.status(), 200, `${route} must respond successfully`);
+  await page.locator('html[data-app-ready="true"]').waitFor();
+  if (route === "/forge") await page.locator('main[data-page-ready="true"]').waitFor();
 }
 
 async function scenario(name, options, check) {
@@ -92,10 +94,10 @@ async function scenario(name, options, check) {
     const entry = { kind, message: String(message).slice(0, 4000) };
     // A deliberately absent WebGL context is expected to reach the React boundary.
     // No other browser or application errors are allowed through this filter.
-    const expected = options.unavailable && (
+    const expected = (options.unavailable && (
       /Error creating WebGL context[.!]?/i.test(entry.message) ||
       /The above error occurred in the <CanvasImpl> component/.test(entry.message)
-    );
+    )) || (options.contextLoss && entry.message === "THREE.WebGLRenderer: Context Lost.");
     (expected ? result.expectedErrors : result.errors).push(entry);
   };
   page.on("pageerror", (error) => recordError("pageerror", error.message));
@@ -240,6 +242,44 @@ try {
     result.checks.push("Fallback Work index link navigates successfully");
   });
 
+  await scenario("drive-context-loss", { contextLoss: true, reducedMotion: "reduce" }, async (page, result) => {
+    await navigate(page, "/drive");
+    const stage = page.locator('[data-scene-stage="grounds"]');
+    await stage.waitFor();
+    await page.waitForFunction(() => {
+      const state = document.querySelector('[data-scene-stage="grounds"]')?.getAttribute("data-scene-state");
+      return state === "ready" || state === "fallback";
+    }, null, { timeout: 25_000 });
+    if (await stage.getAttribute("data-scene-state") === "fallback") {
+      await page.getByRole("heading", { name: "Explore the studies", exact: true }).waitFor();
+      result.contextLossCheck = "NOT_TESTED: runner could not create a live WebGL2 scene";
+      return;
+    }
+    const loss = await stage.locator("canvas").evaluate((canvas) => {
+      const context = canvas.getContext("webgl2");
+      if (!context) return "NO_CONTEXT";
+      const extension = context.getExtension("WEBGL_lose_context");
+      if (!extension) return "NO_EXTENSION";
+      extension.loseContext();
+      return "REQUESTED";
+    });
+    assert.notEqual(loss, "NO_CONTEXT", "A ready scene must have a live WebGL2 context");
+    if (loss === "NO_EXTENSION") {
+      result.contextLossCheck = "NOT_TESTED: WEBGL_lose_context extension unavailable";
+      return;
+    }
+    await page.locator('[data-scene-stage="grounds"][data-scene-state="fallback"]').waitFor();
+    const studies = page.getByRole("region", { name: "Explore the studies", exact: true });
+    await studies.waitFor();
+    assert.equal(await studies.getByRole("article").count(), 12);
+    assert.equal(await studies.getByText("Concept study · unverified", { exact: true }).count(), 12);
+    assert.equal(await stage.locator("canvas").count(), 0);
+    await studies.getByText("Read study", { exact: true }).first().click();
+    await studies.getByText("These are exploratory design concepts. Client commissions and production outcomes have not been verified.", { exact: true }).first().waitFor();
+    result.contextLossCheck = "PASS: actual live context loss replaced the scene with all twelve readable concepts";
+    result.checks.push("WEBGL_lose_context after the first rendered frame reaches permanent fallback without losing study content");
+  });
+
   report.ok = report.scenarios.every((result) => result.status === "PASS");
 } catch (error) {
   report.error = String(error?.stack ?? error).slice(0, 6000);
@@ -248,6 +288,6 @@ try {
   clearTimeout(deadline);
   report.finishedAt = new Date().toISOString();
   writeReport();
-  console.log(JSON.stringify({ ok: report.ok, verdict: verdictPath, scenarios: report.scenarios.map(({ name, status, motionCheck }) => ({ name, status, motionCheck })) }, null, 2));
+  console.log(JSON.stringify({ ok: report.ok, verdict: verdictPath, scenarios: report.scenarios.map(({ name, status, motionCheck, contextLossCheck }) => ({ name, status, motionCheck, contextLossCheck })) }, null, 2));
   if (!report.ok) process.exitCode = 1;
 }

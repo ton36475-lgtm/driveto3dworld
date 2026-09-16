@@ -87,6 +87,7 @@ function ForgePage() {
           <label className="block text-sm">
             {th ? "รูปแบบงาน" : "Business preset"}
             <select
+              aria-label={th ? "รูปแบบงาน" : "Business preset"}
               className={field}
               value={c.preset}
               onChange={(e) => update("preset", e.target.value as ForgeConfig["preset"])}
@@ -111,6 +112,7 @@ function ForgePage() {
           <label className="block text-sm">
             {th ? "บรรยากาศ" : "Theme"}
             <select
+              aria-label={th ? "บรรยากาศ" : "Theme"}
               className={field}
               value={c.theme}
               onChange={(e) => update("theme", e.target.value as ForgeConfig["theme"])}
@@ -122,6 +124,7 @@ function ForgePage() {
           <label className="block text-sm">
             {th ? "มุมมอง" : "Scene"}
             <select
+              aria-label={th ? "มุมมอง" : "Scene"}
               className={field}
               value={c.scene}
               onChange={(e) => update("scene", e.target.value as ForgeConfig["scene"])}
@@ -133,6 +136,7 @@ function ForgePage() {
           <label className="block text-sm">
             {th ? "จำนวนผลงาน" : "Work count"}
             <select
+              aria-label={th ? "จำนวนผลงาน" : "Work count"}
               className={field}
               value={c.density}
               onChange={(e) => {

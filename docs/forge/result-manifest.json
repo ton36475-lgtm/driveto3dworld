@@ -11,7 +11,7 @@
   },
   "checks": {
     "nodeTests": {
-      "passed": 291,
+      "passed": 294,
       "failed": 0,
       "skipped": 4
     },
@@ -35,7 +35,20 @@
       "npm10 optional peer missing from lockfile: repaired and verified on Node22/npm10 and Node24/npm11",
       "Auth unit tests inherited CI auth-off flag: isolated test environment",
       "Fresh checkout lacked ignored auth-off config: tracked default added with explicit environment precedence"
-    ]
+    ],
+    "lastCompletedRemoteRun": {
+      "id": 35068818354,
+      "commit": "3e22b660ceb95174ff3d213ce0b0e5647b3abc9e",
+      "passed": [
+        "Node22 and Node24 install, tests, build, types, lint, 13-route HTTP",
+        "4 routes x 4 browser viewports",
+        "production home baseline at 4 viewports",
+        "desktop and mobile operations; actual export/restore"
+      ],
+      "failed": [
+        "spatial suite: Forge labels and unsupported WebGL initialization"
+      ]
+    }
   },
   "productionReady": false,
   "rollback": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",

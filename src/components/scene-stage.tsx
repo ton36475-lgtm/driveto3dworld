@@ -6,7 +6,8 @@ import { LoadingVeil } from "@/components/canvas/loading-veil";
 import { getQuality } from "@/components/canvas/quality";
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
 import type { Work } from "@/lib/works";
-import { useReducedMotion, useSceneVisibility } from "@/components/canvas/runtime-hooks";
+import { useCopy } from "@/lib/copy";
+import { useReducedMotion, useSceneVisibility, useWebGLSupport } from "@/components/canvas/runtime-hooks";
 
 const HeroScene = lazy(() => import("@/components/canvas/hero-scene"));
 
@@ -37,15 +38,19 @@ export function SceneStage({
   focus = false,
   paused = false,
 }: Props) {
+  const copy = useCopy();
   const quality = useMemo(() => getQuality(), []);
   const wrap = useRef<HTMLDivElement>(null);
   const live = useSceneVisibility(wrap);
   const reducedMotion = useReducedMotion();
-  const [unavailable, setUnavailable] = useState(false);
+  const webgl = useWebGLSupport();
+  const [failed, setUnavailable] = useState(false);
+  const unavailable = failed || webgl === "unsupported";
   const [rendered, setRendered] = useState(false);
   const onUnavailable = useCallback(() => setUnavailable(true), []);
   const onReady = useCallback(() => setRendered(true), []);
   const fallback = <CanvasFallback label={label} works={works} />;
+  const permanentFallback = <CanvasFallback label={copy.fallback.webgl} works={works} />;
 
   return (
     <div
@@ -56,8 +61,8 @@ export function SceneStage({
       data-scene-active={live ? "true" : "false"}
     >
       <ClientOnly fallback={fallback}>
-        <WebGLBoundary fallback={fallback} onFailure={onUnavailable}>
-          {unavailable ? fallback : <Suspense fallback={fallback}>
+        <WebGLBoundary fallback={permanentFallback} onFailure={onUnavailable}>
+          {unavailable ? permanentFallback : webgl === "checking" ? fallback : <Suspense fallback={fallback}>
             <HeroScene
               works={works}
               quality={quality}
@@ -75,7 +80,7 @@ export function SceneStage({
               frameloop={!live ? "never" : reducedMotion || paused ? "demand" : "always"}
             />
           </Suspense>}
-          {!unavailable && !rendered && <LoadingVeil label={label} />}
+          {!unavailable && webgl === "supported" && !rendered && <LoadingVeil label={label} />}
         </WebGLBoundary>
       </ClientOnly>
     </div>

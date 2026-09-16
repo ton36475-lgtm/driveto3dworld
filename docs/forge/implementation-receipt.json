@@ -137,6 +137,10 @@
       "sha256": "d85b592dc4756073c0c217993711d71409a8db2859a168265357682dc5b56230"
     },
     {
+      "path": "docs/forge/evidence/webgl-fix-tests.log",
+      "sha256": "cdbc1cc8b174c265a5c4ff88d8b7352cc48f256e0e83429415d0bc85060c2a55"
+    },
+    {
       "path": "docs/forge/operator-packet.md",
       "sha256": "385ad2c87eaee732c19214a16f73ba4ef49620994e46a67753cd3aaf47816d28"
     },
@@ -146,7 +150,7 @@
     },
     {
       "path": "docs/forge/result-manifest.json",
-      "sha256": "c438e3a0c3410ceaa38dfbb08d4d40b7ecfdfdb7afcb0db29ed7f67d99271601"
+      "sha256": "87a97e08f3229e68731b202afa5c29ce949defdb4292fe6bc09828abc9311e27"
     },
     {
       "path": "docs/forge/source-reconciliation.md",
@@ -154,7 +158,7 @@
     },
     {
       "path": "docs/forge/validation.md",
-      "sha256": "6a0c0bbe905886414d135166267940661107b2cf21ede2d0720dac3c7db1150e"
+      "sha256": "d9c7b11cd79da676d3fa49be35b3eb36b369012cb13c6d9d46bfce878fb1e266"
     },
     {
       "path": "docs/runtime-environment.example.json",
@@ -170,7 +174,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "ce656a84eb0824fe8940dc9194588df3ec7b5e98fec1c840dd175e03f1b12a15"
+      "sha256": "7e2e5186776db0eb7e7099d7f41ff05abc739d545088da5af2c69d389d22bd91"
     },
     {
       "path": "public/__grok/icon-180.png",
@@ -274,7 +278,7 @@
     },
     {
       "path": "scripts/browser-spatial.mjs",
-      "sha256": "f0feaf25d215c241b254995dd9ca18791377bacc204d8eec980ac8f4f4e6882c"
+      "sha256": "35ba3b7f3e40410911b285678a6f58fcc7292cf39c52614db4348bf80544b38d"
     },
     {
       "path": "scripts/check-auth-invariant.test.mjs",
@@ -358,15 +362,23 @@
     },
     {
       "path": "src/components/canvas/runtime-hooks.ts",
-      "sha256": "1194ffbf7ce8be4bfbeffb011d89dfdf4b034e184082ea097a7c750a7be1acde"
+      "sha256": "d4fd89e8e311b258f7f99bdd11eb04543f2ec9c66a0e0ab02bf07106e78fa5cc"
     },
     {
       "path": "src/components/canvas/runtime.tsx",
-      "sha256": "9a83c79c4ac64f5eb6b31b86083756d3311b5436a9017c45aab7cad7d5449822"
+      "sha256": "029a8d2ca4ce210a8d8ed27041874c3d37e8a3592bae90ee21350efe12d70575"
     },
     {
       "path": "src/components/canvas/webgl-boundary.tsx",
       "sha256": "2ac63a0f397b8bb4f988cf8dbef6ee16bc14b36dd32d70090f5be20e39757ce2"
+    },
+    {
+      "path": "src/components/canvas/webgl-support.test.ts",
+      "sha256": "0d08adc9ce58353e9b518742ab4ed96a37cf2d180ad719a9507ccccdd4b64993"
+    },
+    {
+      "path": "src/components/canvas/webgl-support.ts",
+      "sha256": "17b982c08e3126a7a552af681260072ed70ca913ddcfc57393bf5a02ea7af23e"
     },
     {
       "path": "src/components/layout/site-nav.tsx",
@@ -386,7 +398,7 @@
     },
     {
       "path": "src/components/scene-stage.tsx",
-      "sha256": "ff6e5293187e228bdebd3e70443c7e48a933bee98aac47475df15a95ecbdfdee"
+      "sha256": "6d686108f229fa53c4390bdb0efc82098d234850a76d2834adfd7eec265a9593"
     },
     {
       "path": "src/components/work-card.tsx",
@@ -394,7 +406,7 @@
     },
     {
       "path": "src/drive/DriveApp.tsx",
-      "sha256": "c023eb4e4a533219da5bc1839db3886ab6a4be9a47d39e580e5b06f1d7dd23e7"
+      "sha256": "d28b9d148bd2a6fb947d740b7d80cadd2daf709d92a2f1bb8f2fd4792ba6142d"
     },
     {
       "path": "src/drive/data/concepts.ts",
@@ -554,7 +566,7 @@
     },
     {
       "path": "src/routes/forge.tsx",
-      "sha256": "fcdea46c8e79d81c9fc84f7936de3dc032d3ab4550461bc7f07dbd6d0b863533"
+      "sha256": "6eaaa18b0cb37a15dee6f562428563f034231686586b9a78a489c691ed87265a"
     },
     {
       "path": "src/routes/gallery.tsx",
