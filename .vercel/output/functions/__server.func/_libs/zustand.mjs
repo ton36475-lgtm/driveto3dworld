@@ -1,5 +1,5 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { i as createStore, v as require_react } from "./@react-three/fiber+[...].mjs";
+import { i as createStore, y as require_react } from "./@react-three/fiber+[...].mjs";
 //#region node_modules/zustand/esm/react.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var identity = (arg) => arg;

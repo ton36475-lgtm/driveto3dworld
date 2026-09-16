@@ -1,6 +1,6 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { _ as require_jsx_runtime, v as require_react } from "../_libs/@react-three/fiber+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-D2ZcpozG.js
+import { v as require_jsx_runtime, y as require_react } from "../_libs/@react-three/fiber+[...].mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BLW7gZEc.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function Boot() {
@@ -21,7 +21,7 @@ function Boot() {
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "text-muted mb-6 max-w-sm text-sm leading-relaxed",
-					children: "A 3D design grounds you can drive. Four zones, twelve hidden crystals. Collect a piece to open it."
+					children: "A 3D design grounds you can drive. Four zones, twelve hidden crystals. Collect a piece to open it — or browse the archive."
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "text-faint text-xs tracking-wide",
@@ -35,7 +35,7 @@ function Home() {
 	const [App, setApp] = (0, import_react.useState)(null);
 	(0, import_react.useEffect)(() => {
 		let alive = true;
-		import("./DriveApp-CU7mcOh4.mjs").then((mod) => {
+		import("./DriveApp-DBA3BVEB.mjs").then((mod) => {
 			if (alive) setApp(() => mod.default);
 		});
 		return () => {

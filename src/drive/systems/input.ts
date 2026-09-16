@@ -6,10 +6,12 @@ let steerOverride: number | null = null;
 let touchX = 0;
 let touchY = 0;
 let touchOn = false;
+let touchBrake = 0;
 let gamepadSteer = 0;
 let gamepadThrottle = 0;
 let gamepadBrake = 0;
 let attached = false;
+let locked = false;
 
 function clamp(v: number, a: number, b: number) {
   return Math.max(a, Math.min(b, v));
@@ -25,6 +27,7 @@ function onKey(e: KeyboardEvent, down: boolean) {
 
 function onBlur() {
   held.clear();
+  touchBrake = 0;
 }
 
 export function attachInput() {
@@ -46,10 +49,34 @@ export function attachInput() {
   };
 }
 
+export function setInputLocked(v: boolean) {
+  locked = v;
+  if (v) {
+    held.clear();
+    touchOn = false;
+    touchBrake = 0;
+  }
+}
+
+export function isInputLocked() {
+  return locked;
+}
+
 export function setTouch(x: number, y: number, active: boolean) {
   touchOn = active;
   touchX = active ? clamp(x, -1, 1) : 0;
   touchY = active ? clamp(y, -1, 1) : 0;
+}
+
+export function setTouchBrake(v: boolean) {
+  touchBrake = v ? 1 : 0;
+}
+
+function radial(x: number, y: number, dz = 0.18) {
+  const m = Math.hypot(x, y);
+  if (m < dz) return { x: 0, y: 0 };
+  const scale = ((m - dz) / (1 - dz)) / m;
+  return { x: x * scale, y: y * scale };
 }
 
 export function pollGamepad() {
@@ -61,15 +88,18 @@ export function pollGamepad() {
     gamepadBrake = 0;
     return;
   }
-  const ax = pad.axes[0] ?? 0;
-  const ay = pad.axes[1] ?? 0;
-  gamepadSteer = Math.abs(ax) > 0.18 ? -ax : 0;
+  const stick = radial(pad.axes[0] ?? 0, pad.axes[1] ?? 0);
+  gamepadSteer = -stick.x;
   gamepadThrottle = 0;
-  if (ay < -0.18) gamepadThrottle += -ay;
-  if (ay > 0.18) gamepadThrottle -= ay;
-  if (pad.buttons[7]?.pressed || pad.buttons[0]?.pressed) gamepadThrottle = Math.max(gamepadThrottle, 1);
-  if (pad.buttons[6]?.pressed) gamepadThrottle = Math.min(gamepadThrottle, -1);
+  if (stick.y < 0) gamepadThrottle += -stick.y;
+  if (stick.y > 0) gamepadThrottle -= stick.y;
+  const rt = pad.buttons[7]?.value ?? 0;
+  const lt = pad.buttons[6]?.value ?? 0;
+  if (rt > 0.1) gamepadThrottle = Math.max(gamepadThrottle, rt);
+  if (lt > 0.1) gamepadThrottle = Math.min(gamepadThrottle, -lt);
+  if (pad.buttons[0]?.pressed) gamepadThrottle = Math.max(gamepadThrottle, 1);
   gamepadBrake = pad.buttons[1]?.pressed ? 1 : 0;
+  if (pad.buttons[9]?.pressed) gamepadBrake = 1;
 }
 
 function fromSet(set: Set<string>): Axes {
@@ -79,11 +109,12 @@ function fromSet(set: Set<string>): Axes {
   let throttle = 0;
   if (set.has("KeyW") || set.has("ArrowUp")) throttle += 1;
   if (set.has("KeyS") || set.has("ArrowDown")) throttle -= 1;
-  const brake = set.has("Space") ? 1 : 0;
+  const brake = set.has("Space") || set.has("ShiftLeft") || set.has("ShiftRight") ? 1 : 0;
   return { steer: clamp(steer, -1, 1), throttle: clamp(throttle, -1, 1), brake };
 }
 
 export function readAxes(): Axes {
+  if (locked) return { steer: 0, throttle: 0, brake: 0 };
   if (injected) {
     const a = fromSet(injected);
     if (steerOverride != null) a.steer = clamp(steerOverride, -1, 1);
@@ -92,14 +123,13 @@ export function readAxes(): Axes {
   const keys = fromSet(held);
   let steer = keys.steer;
   let throttle = keys.throttle;
-  let brake = keys.brake;
+  let brake = Math.max(keys.brake, touchBrake, gamepadBrake);
   if (touchOn) {
     steer += -touchX;
     throttle += touchY;
   }
   steer += gamepadSteer;
   throttle += gamepadThrottle;
-  brake = Math.max(brake, gamepadBrake);
   if (steerOverride != null) steer = steerOverride;
   return {
     steer: clamp(steer, -1, 1),
@@ -119,6 +149,7 @@ declare global {
   interface Window {
     __controlsTest?: ControlsProbe;
     __driveReady?: boolean;
+    __driveQA?: Record<string, unknown>;
   }
 }
 

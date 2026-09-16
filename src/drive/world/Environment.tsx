@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { ZONES } from "../data/projects";
 import { dayState, stepDayNight } from "../systems/dayNight";
 import { perfState } from "../systems/sim";
-import { useDrive } from "../store";
+import { isDriveBlocked, useDrive } from "../store";
 
 function mulberry32(a: number) {
   return function () {
@@ -50,15 +50,15 @@ function makeGroundTexture() {
   ctx.fillRect(to(-8), 0, to(8) - to(-8), 1024);
   ctx.fillRect(0, to(-8), 1024, to(8) - to(-8));
   ctx.beginPath();
-  ctx.arc(512, 512, ((16) / 200) * 1024, 0, Math.PI * 2);
+  ctx.arc(512, 512, 16 / 200 * 1024, 0, Math.PI * 2);
   ctx.fillStyle = "#32363d";
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(512, 512, ((11) / 200) * 1024, 0, Math.PI * 2);
+  ctx.arc(512, 512, 11 / 200 * 1024, 0, Math.PI * 2);
   ctx.fillStyle = "#1e2420";
   ctx.fill();
   for (const z of ZONES) {
-    const s = ((z.size / 2) / 100) * 512;
+    const s = (z.size / 2 / 100) * 512;
     ctx.fillStyle = z.pad;
     ctx.globalAlpha = 0.85;
     ctx.fillRect(to(z.x) - s, to(z.z) - s, s * 2, s * 2);
@@ -82,6 +82,8 @@ function makeGroundTexture() {
   tex.anisotropy = 4;
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.needsUpdate = true;
+  tex.wrapS = THREE.ClampToEdgeWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
   return tex;
 }
 
@@ -90,10 +92,11 @@ export function Lighting() {
   const hemi = useRef<THREE.HemisphereLight>(null);
   const { scene, gl } = useThree();
   const setFps = useDrive((s) => s.setFps);
+  const quality = useDrive((s) => s.quality);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1);
-    stepDayNight(dt);
+    if (!isDriveBlocked()) stepDayNight(dt);
     const d = dayState;
     scene.background = d.sky;
     scene.fog = scene.fog ?? new THREE.Fog(d.fog, 40, 150);
@@ -114,13 +117,14 @@ export function Lighting() {
       perfState.frames = 0;
       perfState.last = now;
       setFps(perfState.fps);
-      const next = perfState.fps < 32 ? 1 : Math.min(window.devicePixelRatio || 1, 1.6);
+      const cap = quality === "low" ? 1 : quality === "medium" ? 1.25 : 1.6;
+      const next = perfState.fps < 32 ? 1 : Math.min(window.devicePixelRatio || 1, cap);
       if (Math.abs(next - perfState.dpr) > 0.05) {
         perfState.dpr = next;
         gl.setPixelRatio(next);
       }
-      perfState.shadows = perfState.fps >= 28;
-      sun.current!.castShadow = perfState.shadows;
+      perfState.shadows = quality !== "low" && perfState.fps >= 28;
+      if (sun.current) sun.current.castShadow = perfState.shadows;
     }
   });
 
@@ -132,7 +136,7 @@ export function Lighting() {
         castShadow
         intensity={1.2}
         position={[40, 55, 18]}
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={quality === "high" ? [1024, 1024] : [512, 512]}
         shadow-camera-near={1}
         shadow-camera-far={180}
         shadow-camera-left={-50}
@@ -156,9 +160,11 @@ export function Ground() {
 }
 
 export function Trees() {
+  const quality = useDrive((s) => s.quality);
+  const count = quality === "low" ? 36 : quality === "medium" ? 52 : 70;
   const pts = useMemo(
-    () => scatter(70, 42, ZONES.map((z) => ({ x: z.x, z: z.z, r: 22 }))),
-    [],
+    () => scatter(count, 42, ZONES.map((z) => ({ x: z.x, z: z.z, r: 22 }))),
+    [count],
   );
   const canopy = useRef<THREE.InstancedMesh>(null);
   const trunk = useRef<THREE.InstancedMesh>(null);
@@ -197,44 +203,48 @@ export function Trees() {
   );
 }
 
+function lampSpots() {
+  const list: [number, number][] = [];
+  for (let i = -70; i <= 70; i += 20) {
+    if (Math.abs(i) < 14) continue;
+    list.push([8.5, i], [-8.5, i], [i, 8.5], [i, -8.5]);
+  }
+  return list;
+}
+
 export function Lamps() {
-  const spots = useMemo(() => {
-    const list: [number, number][] = [];
-    for (let i = -70; i <= 70; i += 20) {
-      if (Math.abs(i) < 14) continue;
-      list.push([8.5, i], [-8.5, i], [i, 8.5], [i, -8.5]);
-    }
-    return list;
-  }, []);
-  const glow = useRef<THREE.Mesh[]>([]);
+  const spots = useMemo(lampSpots, []);
+  const pole = useRef<THREE.InstancedMesh>(null);
+  const glow = useRef<THREE.InstancedMesh>(null);
+  const mat = useRef<THREE.MeshStandardMaterial>(null);
+
+  useLayoutEffect(() => {
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    spots.forEach((s, i) => {
+      m.compose(new THREE.Vector3(s[0], 1.4, s[1]), q, new THREE.Vector3(1, 1, 1));
+      pole.current?.setMatrixAt(i, m);
+      m.compose(new THREE.Vector3(s[0], 2.9, s[1]), q, new THREE.Vector3(1, 1, 1));
+      glow.current?.setMatrixAt(i, m);
+    });
+    if (pole.current) pole.current.instanceMatrix.needsUpdate = true;
+    if (glow.current) glow.current.instanceMatrix.needsUpdate = true;
+  }, [spots]);
 
   useFrame(() => {
-    const n = 0.15 + dayState.night * 2.4;
-    for (const m of glow.current) {
-      const mat = m.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = n;
-    }
+    if (mat.current) mat.current.emissiveIntensity = 0.15 + dayState.night * 2.4;
   });
 
   return (
     <group>
-      {spots.map(([x, z], i) => (
-        <group key={i} position={[x, 0, z]}>
-          <mesh position={[0, 1.4, 0]} castShadow>
-            <cylinderGeometry args={[0.07, 0.09, 2.8, 6]} />
-            <meshStandardMaterial color="#2a2d33" metalness={0.5} roughness={0.4} />
-          </mesh>
-          <mesh
-            position={[0, 2.9, 0]}
-            ref={(el) => {
-              if (el) glow.current[i] = el;
-            }}
-          >
-            <sphereGeometry args={[0.16, 8, 8]} />
-            <meshStandardMaterial color="#f3eee6" emissive="#f3eee6" emissiveIntensity={0.4} />
-          </mesh>
-        </group>
-      ))}
+      <instancedMesh ref={pole} args={[undefined, undefined, spots.length]} castShadow>
+        <cylinderGeometry args={[0.07, 0.09, 2.8, 6]} />
+        <meshStandardMaterial color="#2a2d33" metalness={0.5} roughness={0.4} />
+      </instancedMesh>
+      <instancedMesh ref={glow} args={[undefined, undefined, spots.length]}>
+        <sphereGeometry args={[0.16, 8, 8]} />
+        <meshStandardMaterial ref={mat} color="#f3eee6" emissive="#f3eee6" emissiveIntensity={0.4} />
+      </instancedMesh>
     </group>
   );
 }

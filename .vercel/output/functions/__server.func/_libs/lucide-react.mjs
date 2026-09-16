@@ -1,5 +1,5 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { v as require_react } from "./@react-three/fiber+[...].mjs";
+import { y as require_react } from "./@react-three/fiber+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -126,6 +126,95 @@ var Gem = createLucideIcon("gem", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var LayoutGrid = createLucideIcon("layout-grid", [
+	["rect", {
+		width: "7",
+		height: "7",
+		x: "3",
+		y: "3",
+		rx: "1",
+		key: "1g98yp"
+	}],
+	["rect", {
+		width: "7",
+		height: "7",
+		x: "14",
+		y: "3",
+		rx: "1",
+		key: "6d4xhi"
+	}],
+	["rect", {
+		width: "7",
+		height: "7",
+		x: "14",
+		y: "14",
+		rx: "1",
+		key: "nxv5o0"
+	}],
+	["rect", {
+		width: "7",
+		height: "7",
+		x: "3",
+		y: "14",
+		rx: "1",
+		key: "1bb6yr"
+	}]
+]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Pause = createLucideIcon("pause", [["rect", {
+	x: "14",
+	y: "4",
+	width: "4",
+	height: "16",
+	rx: "1",
+	key: "zuxfzm"
+}], ["rect", {
+	x: "6",
+	y: "4",
+	width: "4",
+	height: "16",
+	rx: "1",
+	key: "1okwgv"
+}]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Settings2 = createLucideIcon("settings-2", [
+	["path", {
+		d: "M20 7h-9",
+		key: "3s1dr2"
+	}],
+	["path", {
+		d: "M14 17H5",
+		key: "gfn3mx"
+	}],
+	["circle", {
+		cx: "17",
+		cy: "17",
+		r: "3",
+		key: "18b49y"
+	}],
+	["circle", {
+		cx: "7",
+		cy: "7",
+		r: "3",
+		key: "dfmy0x"
+	}]
+]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var TriangleAlert = createLucideIcon("triangle-alert", [
 	["path", {
 		d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
@@ -187,4 +276,4 @@ var VolumeX = createLucideIcon("volume-x", [
 	}]
 ]);
 //#endregion
-export { CloudRain as a, Gem as i, Volume2 as n, TriangleAlert as r, VolumeX as t };
+export { Pause as a, CloudRain as c, Settings2 as i, Volume2 as n, LayoutGrid as o, TriangleAlert as r, Gem as s, VolumeX as t };

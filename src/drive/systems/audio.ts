@@ -21,6 +21,7 @@ const loops = new Map<string, { src: AudioBufferSourceNode; gain: GainNode }>();
 let currentZone: string | null = null;
 let muted = false;
 let unlocked = false;
+let visHooked = false;
 
 function ensure(): Bus | null {
   if (typeof window === "undefined") return null;
@@ -46,9 +47,12 @@ export function unlockAudio() {
   if (!b) return;
   if (b.ctx.state === "suspended") void b.ctx.resume();
   unlocked = true;
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && b.ctx.state === "suspended") void b.ctx.resume();
-  });
+  if (!visHooked) {
+    visHooked = true;
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && b.ctx.state === "suspended") void b.ctx.resume();
+    });
+  }
 }
 
 async function loadBuffer(key: string, url: string) {
@@ -60,7 +64,7 @@ async function loadBuffer(key: string, url: string) {
     const decoded = await b.ctx.decodeAudioData(raw.slice(0));
     buffers.set(key, decoded);
   } catch {
-    /* fallback oscillators later */
+    /* oscillator fallback */
   }
 }
 
@@ -108,6 +112,7 @@ export async function startAudio() {
   await Promise.all(Object.entries(FILES).map(([k, u]) => loadBuffer(k, u)));
   if (!loops.has("engine")) startLoop("engine", b.music, 0.12);
   if (!loops.has("wind")) startLoop("wind", b.music, 0.08);
+  setMuted(muted);
 }
 
 export function setEngine(speed: number) {
@@ -128,11 +133,12 @@ export function setZoneBed(zone: string | null) {
   if (!bus || !unlocked) return;
   if (zone === currentZone) return;
   const t = bus.ctx.currentTime;
-  if (currentZone) {
-    const prev = loops.get(currentZone);
+  const prevZone = currentZone;
+  if (prevZone) {
+    const prev = loops.get(prevZone);
     if (prev) prev.gain.gain.setTargetAtTime(0, t, 0.25);
     window.setTimeout(() => {
-      if (currentZone !== zone) stopLoop(currentZone!);
+      if (currentZone !== prevZone) stopLoop(prevZone);
     }, 600);
   }
   currentZone = zone;
@@ -148,21 +154,31 @@ export function playCollect() {
   if (!b || muted) return;
   const buf = buffers.get("collect");
   const gain = b.ctx.createGain();
-  gain.gain.value = 0.55;
+  const t = b.ctx.currentTime;
+  gain.gain.setValueAtTime(0.001, t);
+  gain.gain.exponentialRampToValueAtTime(0.55, t + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
   gain.connect(b.sfx);
   if (buf) {
     const src = b.ctx.createBufferSource();
     src.buffer = buf;
+    src.playbackRate.value = 0.94 + Math.random() * 0.14;
     src.connect(gain);
     src.start();
-    src.onended = () => gain.disconnect();
+    src.onended = () => {
+      try {
+        gain.disconnect();
+      } catch {
+        /* */
+      }
+    };
     return;
   }
   const osc = b.ctx.createOscillator();
-  osc.frequency.value = 880;
+  osc.frequency.value = 760 + Math.random() * 180;
   osc.connect(gain);
   osc.start();
-  osc.stop(b.ctx.currentTime + 0.2);
+  osc.stop(t + 0.22);
 }
 
 export function setMuted(next: boolean) {
@@ -173,4 +189,15 @@ export function setMuted(next: boolean) {
 
 export function isAudioMuted() {
   return muted;
+}
+
+export function getAudioDebug() {
+  return {
+    unlocked,
+    muted,
+    hasBus: Boolean(bus),
+    state: bus?.ctx.state ?? "none",
+    zone: currentZone,
+    loops: [...loops.keys()],
+  };
 }

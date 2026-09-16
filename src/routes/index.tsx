@@ -22,7 +22,7 @@ function Boot() {
           Atelier Drive
         </h1>
         <p className="text-muted mb-6 max-w-sm text-sm leading-relaxed">
-          A 3D design grounds you can drive. Four zones, twelve hidden crystals. Collect a piece to open it.
+          A 3D design grounds you can drive. Four zones, twelve hidden crystals. Collect a piece to open it — or browse the archive.
         </p>
         <p className="text-faint text-xs tracking-wide">Loading the grounds…</p>
       </div>

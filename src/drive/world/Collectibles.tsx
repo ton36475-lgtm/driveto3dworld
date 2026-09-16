@@ -1,9 +1,9 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { PROJECTS } from "../data/projects";
 import { sim } from "../systems/sim";
-import { useDrive } from "../store";
+import { isDriveBlocked, useDrive } from "../store";
 import { playCollect } from "../systems/audio";
 
 function Sparkle({ color, active }: { color: string; active: boolean }) {
@@ -58,6 +58,10 @@ function Crystal({
   const started = useDrive((s) => s.started);
   const taken = useRef(false);
 
+  useEffect(() => {
+    if (!collected) taken.current = false;
+  }, [collected]);
+
   useFrame((state) => {
     if (taken.current || collected) return;
     const m = mesh.current;
@@ -67,7 +71,7 @@ function Crystal({
     m.position.y = 1.35 + Math.sin(t * 2.2 + x) * 0.22;
     const pulse = 0.85 + Math.sin(t * 4) * 0.4;
     (m.material as THREE.MeshStandardMaterial).emissiveIntensity = pulse;
-    if (!started) return;
+    if (!started || isDriveBlocked()) return;
     const dx = sim.x - x;
     const dz = sim.z - z;
     if (dx * dx + dz * dz < 3.2 * 3.2) {

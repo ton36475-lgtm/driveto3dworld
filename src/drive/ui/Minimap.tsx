@@ -3,9 +3,11 @@ import { PROJECTS, ZONES } from "../data/projects";
 import { sim } from "../systems/sim";
 import { useDrive } from "../store";
 
-export function Minimap() {
+export function Minimap({ interactive = false }: { interactive?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const collected = useDrive((s) => s.collected);
+  const waypoint = useDrive((s) => s.waypoint);
+  const setWaypoint = useDrive((s) => s.setWaypoint);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -37,6 +39,13 @@ export function Minimap() {
         ctx.arc(map(p.x), map(p.z), 3.5, 0, Math.PI * 2);
         ctx.fill();
       }
+      if (waypoint) {
+        ctx.strokeStyle = "#e25b4c";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(map(waypoint.x), map(waypoint.z), 7, 0, Math.PI * 2);
+        ctx.stroke();
+      }
       const x = map(sim.x);
       const z = map(sim.z);
       ctx.save();
@@ -54,14 +63,34 @@ export function Minimap() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [collected]);
+  }, [collected, waypoint]);
+
+  const onClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!interactive) return;
+    const canvas = ref.current;
+    if (!canvas) return;
+    const r = canvas.getBoundingClientRect();
+    const nx = ((e.clientX - r.left) / r.width) * 200 - 100;
+    const nz = ((e.clientY - r.top) / r.height) * 200 - 100;
+    let best = PROJECTS[0];
+    let bestD = Infinity;
+    for (const p of PROJECTS) {
+      const d = Math.hypot(p.x - nx, p.z - nz);
+      if (d < bestD) {
+        bestD = d;
+        best = p;
+      }
+    }
+    setWaypoint({ x: best.x, z: best.z, id: best.id });
+  };
 
   return (
     <canvas
       ref={ref}
       width={256}
       height={256}
-      className="pointer-events-none hidden sm:block"
+      onClick={onClick}
+      className={interactive ? "cursor-pointer" : "pointer-events-none"}
       style={{
         width: 112,
         height: 112,

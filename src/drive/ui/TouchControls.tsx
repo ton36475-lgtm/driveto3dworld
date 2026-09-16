@@ -1,10 +1,14 @@
 import { useRef } from "react";
-import { setTouch } from "../systems/input";
+import { setTouch, setTouchBrake } from "../systems/input";
+import { COPY } from "../data/i18n";
+import { useDrive } from "../store";
 
 export function TouchControls() {
   const base = useRef<HTMLDivElement>(null);
   const knob = useRef<HTMLDivElement>(null);
   const idRef = useRef<number | null>(null);
+  const lang = useDrive((s) => s.lang);
+  const c = COPY[lang];
 
   const moveTo = (clientX: number, clientY: number) => {
     const el = base.current;
@@ -32,7 +36,10 @@ export function TouchControls() {
   };
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-end justify-between px-5 pb-5 sm:hidden" style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom))" }}>
+    <div
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-end justify-between px-5 pb-5 sm:hidden"
+      style={{ paddingBottom: "max(20px, env(safe-area-inset-bottom))" }}
+    >
       <div
         ref={base}
         className="pointer-events-auto relative"
@@ -74,13 +81,12 @@ export function TouchControls() {
         style={{ minWidth: 88, minHeight: 52 }}
         onPointerDown={(e) => {
           e.preventDefault();
-          window.dispatchEvent(new KeyboardEvent("keydown", { code: "Space", bubbles: true }));
+          setTouchBrake(true);
         }}
-        onPointerUp={() => {
-          window.dispatchEvent(new KeyboardEvent("keyup", { code: "Space", bubbles: true }));
-        }}
+        onPointerUp={() => setTouchBrake(false)}
+        onPointerCancel={() => setTouchBrake(false)}
       >
-        Brake
+        {c.space.split(" ").slice(-1)[0] === "brake" || lang === "en" ? "Brake" : "เบรก"}
       </button>
     </div>
   );

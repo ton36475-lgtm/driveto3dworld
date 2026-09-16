@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from "react";
 import * as THREE from "three";
-import { ZONES } from "../data/projects";
+import { PROJECTS, ZONES } from "../data/projects";
+import { useDrive } from "../store";
 
 function Label({ text, color }: { text: string; color: string }) {
   const tex = useMemo(() => {
@@ -143,6 +144,66 @@ function LampProduct() {
   );
 }
 
+function MiniHouse({ color }: { color: string }) {
+  return (
+    <group>
+      <mesh position={[0, 0.45, 0]} castShadow>
+        <boxGeometry args={[1.4, 0.9, 1.1]} />
+        <meshStandardMaterial color="#d8d2c8" roughness={0.55} />
+      </mesh>
+      <mesh position={[0, 1.05, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <coneGeometry args={[1.05, 0.7, 4]} />
+        <meshStandardMaterial color={color} metalness={0.2} roughness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+function MiniBust({ color }: { color: string }) {
+  return (
+    <group>
+      <mesh position={[0, 0.25, 0]} castShadow>
+        <cylinderGeometry args={[0.35, 0.45, 0.5, 8]} />
+        <meshStandardMaterial color="#c9c4be" />
+      </mesh>
+      <mesh position={[0, 0.85, 0]} castShadow>
+        <sphereGeometry args={[0.32, 10, 10]} />
+        <meshStandardMaterial color={color} metalness={0.2} roughness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+function MiniWheel({ color }: { color: string }) {
+  return (
+    <group rotation={[0, 0, Math.PI / 2]}>
+      <mesh castShadow>
+        <torusGeometry args={[0.55, 0.12, 8, 18]} />
+        <meshStandardMaterial color="#1a1c20" metalness={0.4} />
+      </mesh>
+      <mesh>
+        <cylinderGeometry args={[0.18, 0.18, 0.16, 8]} />
+        <meshStandardMaterial color={color} metalness={0.6} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+function MiniObject({ color }: { color: string }) {
+  return (
+    <group>
+      <mesh position={[0, 0.45, 0]} castShadow>
+        <cylinderGeometry args={[0.28, 0.34, 0.9, 10]} />
+        <meshStandardMaterial color="#cfc8be" metalness={0.5} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 0.95, 0]}>
+        <sphereGeometry args={[0.22, 10, 10]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.45} />
+      </mesh>
+    </group>
+  );
+}
+
 const SHOW: Record<string, () => ReactNode> = {
   architecture: Pavilion,
   characters: Robot,
@@ -150,7 +211,15 @@ const SHOW: Record<string, () => ReactNode> = {
   products: LampProduct,
 };
 
+const MINI: Record<string, (c: string) => ReactNode> = {
+  architecture: (c) => <MiniHouse color={c} />,
+  characters: (c) => <MiniBust color={c} />,
+  vehicles: (c) => <MiniWheel color={c} />,
+  products: (c) => <MiniObject color={c} />,
+};
+
 export function Landmarks() {
+  const lang = useDrive((s) => s.lang);
   return (
     <group>
       {ZONES.map((z) => {
@@ -162,10 +231,15 @@ export function Landmarks() {
               <meshStandardMaterial color={z.pad} roughness={0.8} />
             </mesh>
             <Piece />
-            <Label text={z.name} color={z.color} />
+            <Label text={z.name[lang]} color={z.color} />
           </group>
         );
       })}
+      {PROJECTS.map((p) => (
+        <group key={p.id} position={[p.x + 2.4, 0, p.z - 1.6]}>
+          {MINI[p.zone](p.color)}
+        </group>
+      ))}
       <mesh position={[0, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <ringGeometry args={[11, 15.5, 48]} />
         <meshStandardMaterial color="#3a3e46" roughness={0.85} />

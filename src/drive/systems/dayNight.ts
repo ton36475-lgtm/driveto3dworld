@@ -21,6 +21,15 @@ const fogDay = new THREE.Color("#a8bcc8");
 const fogDusk = new THREE.Color("#b88870");
 const fogNight = new THREE.Color("#0b0d12");
 
+export function setDayTime(t: number) {
+  dayState.time = ((t % 1) + 1) % 1;
+  stepDayNight(0);
+}
+
+export function setDayPaused(v: boolean) {
+  dayState.paused = v;
+}
+
 export function stepDayNight(dt: number) {
   if (!dayState.paused) dayState.time = (dayState.time + dt * dayState.speed) % 1;
   const t = dayState.time;

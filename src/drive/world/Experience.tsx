@@ -3,16 +3,21 @@ import { Landmarks } from "./Landmarks";
 import { Collectibles } from "./Collectibles";
 import { Weather } from "./Weather";
 import { Car } from "./Car";
+import { Waypoint } from "./Waypoint";
 import { useFrame } from "@react-three/fiber";
 import { zoneAt, sim } from "../systems/sim";
 import { setZoneBed } from "../systems/audio";
-import { useDrive } from "../store";
+import { isDriveBlocked, useDrive } from "../store";
+import { setInputLocked } from "../systems/input";
 
 function Systems() {
   const setZone = useDrive((s) => s.setZone);
   const started = useDrive((s) => s.started);
+  const blocked = useDrive((s) => Boolean(s.activeId) || s.overlay !== "none");
+
   useFrame(() => {
-    if (!started) return;
+    setInputLocked(blocked || !started);
+    if (!started || isDriveBlocked()) return;
     const z = zoneAt(sim.x, sim.z);
     setZone(z);
     setZoneBed(z);
@@ -31,6 +36,7 @@ export function Experience() {
       <Landmarks />
       <Collectibles />
       <Weather />
+      <Waypoint />
       <Car />
       <Systems />
     </>

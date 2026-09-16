@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { sim, BOUNDS } from "../systems/sim";
+import { sim, BOUNDS, onPavement, resolveColliders } from "../systems/sim";
 import {
   attachInput,
   installControlsTest,
@@ -9,19 +9,26 @@ import {
   readAxes,
 } from "../systems/input";
 import { setEngine } from "../systems/audio";
-import { useDrive } from "../store";
+import { isDriveBlocked, useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
+import { installQA } from "../systems/qa";
 
 const MAX_SPEED = 16;
 const ACCEL = 22;
 const REVERSE = 12;
 const DRAG = 2.4;
 const TURN = 2.55;
+const GRIP = 7.5;
 
 export function Car() {
   const group = useRef<THREE.Group>(null);
   const wheels = useRef<THREE.Group[]>([]);
+  const lightL = useRef<THREE.SpotLight>(null);
+  const lightR = useRef<THREE.SpotLight>(null);
+  const targetL = useRef<THREE.Object3D>(null);
+  const targetR = useRef<THREE.Object3D>(null);
   const started = useDrive((s) => s.started);
+  const setSpeedKmh = useDrive((s) => s.setSpeedKmh);
   const tmp = useRef({
     cam: new THREE.Vector3(),
     look: new THREE.Vector3(),
@@ -34,13 +41,20 @@ export function Car() {
       () => sim.yaw,
       () => sim.speed,
     );
+    installQA();
     return detach;
+  }, []);
+
+  useLayoutEffect(() => {
+    if (lightL.current && targetL.current) lightL.current.target = targetL.current;
+    if (lightR.current && targetR.current) lightR.current.target = targetR.current;
   }, []);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.1);
     const g = group.current;
     if (!g) return;
+    const blocked = isDriveBlocked();
 
     if (!started) {
       g.position.set(sim.x, sim.y, sim.z);
@@ -51,32 +65,47 @@ export function Car() {
       return;
     }
 
-    pollGamepad();
-    const { steer, throttle, brake } = readAxes();
-    sim.steer = THREE.MathUtils.damp(sim.steer, steer, 10, dt);
+    if (!blocked) {
+      pollGamepad();
+      const { steer, throttle, brake } = readAxes();
+      sim.steer = THREE.MathUtils.damp(sim.steer, steer, 10, dt);
 
-    if (brake) sim.speed *= Math.pow(0.18, dt);
-    else if (throttle > 0) sim.speed += ACCEL * throttle * dt;
-    else if (throttle < 0) sim.speed += REVERSE * throttle * dt;
-    else sim.speed *= Math.pow(0.22, dt);
+      if (brake) sim.speed *= Math.pow(0.18, dt);
+      else if (throttle > 0) sim.speed += ACCEL * throttle * dt;
+      else if (throttle < 0) sim.speed += REVERSE * throttle * dt;
+      else sim.speed *= Math.pow(0.22, dt);
 
-    const drag = DRAG * dt * Math.sign(sim.speed) * Math.min(1, Math.abs(sim.speed));
-    sim.speed -= drag;
-    sim.speed = THREE.MathUtils.clamp(sim.speed, -MAX_SPEED * 0.55, MAX_SPEED);
+      const road = onPavement(sim.x, sim.z);
+      const dragMul = road ? 1 : 2.6;
+      const drag = DRAG * dragMul * dt * Math.sign(sim.speed) * Math.min(1, Math.abs(sim.speed));
+      sim.speed -= drag;
+      sim.speed = THREE.MathUtils.clamp(sim.speed, -MAX_SPEED * 0.55, MAX_SPEED * (road ? 1 : 0.62));
 
-    const speedFactor = THREE.MathUtils.clamp(Math.abs(sim.speed) / 5, 0.28, 1);
-    const reverse = sim.speed >= 0 ? 1 : -1;
-    sim.yaw += sim.steer * TURN * speedFactor * reverse * dt;
+      const speedFactor = THREE.MathUtils.clamp(Math.abs(sim.speed) / 5, 0.28, 1);
+      const reverse = sim.speed >= 0 ? 1 : -1;
+      sim.yaw += sim.steer * TURN * speedFactor * reverse * dt;
 
-    const fx = -Math.sin(sim.yaw);
-    const fz = -Math.cos(sim.yaw);
-    sim.x += fx * sim.speed * dt;
-    sim.z += fz * sim.speed * dt;
-    sim.x = THREE.MathUtils.clamp(sim.x, -BOUNDS, BOUNDS);
-    sim.z = THREE.MathUtils.clamp(sim.z, -BOUNDS, BOUNDS);
+      sim.lateral += sim.steer * sim.speed * 0.35 * dt;
+      sim.lateral *= Math.exp(-GRIP * (road ? 1 : 0.55) * dt);
 
-    sim.roll = THREE.MathUtils.damp(sim.roll, sim.steer * 0.14 * speedFactor, 8, dt);
-    sim.wheel += sim.speed * dt * 2.4;
+      const fx = -Math.sin(sim.yaw);
+      const fz = -Math.cos(sim.yaw);
+      const rx = Math.cos(sim.yaw);
+      const rz = -Math.sin(sim.yaw);
+      sim.x += (fx * sim.speed + rx * sim.lateral) * dt;
+      sim.z += (fz * sim.speed + rz * sim.lateral) * dt;
+      sim.x = THREE.MathUtils.clamp(sim.x, -BOUNDS, BOUNDS);
+      sim.z = THREE.MathUtils.clamp(sim.z, -BOUNDS, BOUNDS);
+      resolveColliders();
+
+      sim.roll = THREE.MathUtils.damp(sim.roll, sim.steer * 0.14 * speedFactor, 8, dt);
+      sim.wheel += sim.speed * dt * 2.4;
+      setEngine(sim.speed);
+      setSpeedKmh(Math.abs(sim.speed) * 7.2);
+    } else {
+      sim.speed *= Math.pow(0.02, dt);
+      setEngine(0);
+    }
 
     g.position.set(sim.x, sim.y, sim.z);
     g.rotation.order = "YZX";
@@ -90,8 +119,8 @@ export function Car() {
       if (i < 2) w.parent!.rotation.y = sim.steer * 0.42;
     }
 
-    setEngine(sim.speed);
-
+    const fx = -Math.sin(sim.yaw);
+    const fz = -Math.cos(sim.yaw);
     const follow = 8.6;
     const height = 4.4;
     const { desired, look, cam } = tmp.current;
@@ -101,6 +130,16 @@ export function Car() {
     cam.lerp(desired, 1 - Math.exp(-3.4 * dt));
     state.camera.position.copy(cam);
     state.camera.lookAt(look);
+
+    const cam3 = state.camera as THREE.PerspectiveCamera;
+    const targetFov = 50 + Math.min(9, Math.abs(sim.speed) * 0.5);
+    cam3.fov = THREE.MathUtils.damp(cam3.fov, targetFov, 4, dt);
+    cam3.updateProjectionMatrix();
+
+    const night = dayState.night;
+    const hi = night * 6.5;
+    if (lightL.current) lightL.current.intensity = hi;
+    if (lightR.current) lightR.current.intensity = hi;
   });
 
   const night = dayState.night;
@@ -168,6 +207,28 @@ export function Car() {
         <circleGeometry args={[1.3, 12]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.28} />
       </mesh>
+      <object3D ref={targetL} position={[-0.42, 0.1, -10]} />
+      <object3D ref={targetR} position={[0.42, 0.1, -10]} />
+      <spotLight
+        ref={lightL}
+        position={[-0.42, 0.42, -1.15]}
+        angle={0.42}
+        penumbra={0.55}
+        distance={26}
+        color="#fff4e4"
+        intensity={0}
+        castShadow={false}
+      />
+      <spotLight
+        ref={lightR}
+        position={[0.42, 0.42, -1.15]}
+        angle={0.42}
+        penumbra={0.55}
+        distance={26}
+        color="#fff4e4"
+        intensity={0}
+        castShadow={false}
+      />
     </group>
   );
 }
