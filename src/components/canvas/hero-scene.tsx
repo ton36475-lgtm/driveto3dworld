@@ -6,7 +6,7 @@ import { AtelierWorld, type SceneLayout } from "@/components/canvas/atelier-worl
 import type { Quality } from "@/components/canvas/quality";
 import { cameraForPose, framePoses } from "@/lib/frame-layout";
 import { WORKS, type Work } from "@/lib/works";
-import { ContextLossGuard } from "@/components/canvas/runtime";
+import { ContextLossGuard, FirstFrameReady } from "@/components/canvas/runtime";
 
 WORKS.forEach((work) => useTexture.preload(work.image));
 
@@ -23,6 +23,7 @@ type Props = {
   quality: Quality;
   reducedMotion?: boolean;
   onUnavailable: () => void;
+  onReady: () => void;
   selected: string | null;
   onHover: (slug: string | null) => void;
   onSelect: (slug: string) => void;
@@ -39,6 +40,7 @@ export default function HeroScene({
   quality,
   reducedMotion = false,
   onUnavailable,
+  onReady,
   selected,
   onHover,
   onSelect,
@@ -111,6 +113,7 @@ export default function HeroScene({
         target={solo ? [0, 1.22, -0.4] : [0, 1.02, 0]}
       />
       <Preload all />
+      <FirstFrameReady onReady={onReady} />
     </Canvas>
   );
 }

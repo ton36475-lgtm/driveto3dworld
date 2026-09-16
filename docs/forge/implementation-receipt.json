@@ -6,7 +6,7 @@
   "files": [
     {
       "path": ".github/workflows/runtime.yml",
-      "sha256": "aaf43102805cc1208d00cefac4698c1b320e549992add0fb2b1b011ac2d23081"
+      "sha256": "8ffe0333ecb63351cf08897bb4f360e0e08cc4e9b70900f028cb17c5448a2661"
     },
     {
       "path": ".gitignore",
@@ -154,7 +154,7 @@
     },
     {
       "path": "docs/forge/validation.md",
-      "sha256": "0d6bced48f8c6a047dfea983fc298167a7bf283131c1b951adb6a4ee5186db24"
+      "sha256": "6a0c0bbe905886414d135166267940661107b2cf21ede2d0720dac3c7db1150e"
     },
     {
       "path": "docs/runtime-environment.example.json",
@@ -270,7 +270,7 @@
     },
     {
       "path": "scripts/browser-smoke.mjs",
-      "sha256": "0986404efc1cb32c34a2f1bee1a8265e2d7b5bc511bfd283c7c2d1f9347d028b"
+      "sha256": "a20f05b070af29b122298053ccec223582e7f4bc7fdaf65ba20ef70af4c575fe"
     },
     {
       "path": "scripts/browser-spatial.mjs",
@@ -350,7 +350,7 @@
     },
     {
       "path": "src/components/canvas/hero-scene.tsx",
-      "sha256": "5a88e2dde6e9758d040108f978915924cbb0a38cec7aa5808ca02a9f642a741b"
+      "sha256": "e6de69a9d2d65082bf74115dcaffb66435ba39541bd17a9a0267454a6d91e7a2"
     },
     {
       "path": "src/components/canvas/quality.ts",
@@ -362,7 +362,7 @@
     },
     {
       "path": "src/components/canvas/runtime.tsx",
-      "sha256": "8a1f17edcb44031406adb5d46b32b6c835bb105670e0e107cbe63acec0c25843"
+      "sha256": "9a83c79c4ac64f5eb6b31b86083756d3311b5436a9017c45aab7cad7d5449822"
     },
     {
       "path": "src/components/canvas/webgl-boundary.tsx",
@@ -386,7 +386,7 @@
     },
     {
       "path": "src/components/scene-stage.tsx",
-      "sha256": "c34809f32c9429e909a7c8703b3e856e676c48ef2d49f0ab473725784550fb2c"
+      "sha256": "ff6e5293187e228bdebd3e70443c7e48a933bee98aac47475df15a95ecbdfdee"
     },
     {
       "path": "src/components/work-card.tsx",
@@ -394,7 +394,7 @@
     },
     {
       "path": "src/drive/DriveApp.tsx",
-      "sha256": "3d9b9c45aa7d564e6646a1f4f866e19993048cd8e7752f7a99e94942b54bfa57"
+      "sha256": "c023eb4e4a533219da5bc1839db3886ab6a4be9a47d39e580e5b06f1d7dd23e7"
     },
     {
       "path": "src/drive/data/concepts.ts",
@@ -537,6 +537,10 @@
       "sha256": "ca96be07f7f9ea4f9aae9f527a86bb48eca833130312a595bc948387a8dc271d"
     },
     {
+      "path": "src/routes/__root.tsx",
+      "sha256": "435ac779fdbed8f11faea4b9102bac276982866b354948fb0cfa2213030ccebe"
+    },
+    {
       "path": "src/routes/automations.tsx",
       "sha256": "6c09d8d1049aa44c72924b22b3d10c9acec95125034d6d4b93ec19ad6711bcbe"
     },
@@ -550,11 +554,15 @@
     },
     {
       "path": "src/routes/forge.tsx",
-      "sha256": "27177b0dca651cf9ffb92bc3e266c8e625747ef02a448d13b9c692a559062536"
+      "sha256": "fcdea46c8e79d81c9fc84f7936de3dc032d3ab4550461bc7f07dbd6d0b863533"
     },
     {
       "path": "src/routes/gallery.tsx",
       "sha256": "ef44c2a0938b666ea127457cd808b4f059b01835142ffda0a8b40d0e00a88a8e"
+    },
+    {
+      "path": "src/routes/index.tsx",
+      "sha256": "c28b1d8036277d317119ba8256429c1eb7513e7193b08d64ecf80ca2b5840600"
     },
     {
       "path": "src/routes/kit.tsx",

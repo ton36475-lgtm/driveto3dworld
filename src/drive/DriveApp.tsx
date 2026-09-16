@@ -14,7 +14,7 @@ import { setMuted, setAudioActive } from "./systems/audio";
 import { installQA } from "./systems/qa";
 import { useLang } from "@/lib/lang";
 import { isInteractiveTarget, setInputLocked } from "./systems/input";
-import { ContextLossGuard } from "@/components/canvas/runtime";
+import { ContextLossGuard, FirstFrameReady } from "@/components/canvas/runtime";
 import { useReducedMotion, useSceneVisibility } from "@/components/canvas/runtime-hooks";
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
 import { StudyFallback } from "./ui/StudyFallback";
@@ -24,7 +24,9 @@ export default function DriveApp() {
   const live = useSceneVisibility(root);
   const reducedMotion = useReducedMotion();
   const [unavailable, setUnavailable] = useState(false);
+  const [rendered, setRendered] = useState(false);
   const onUnavailable = useCallback(() => setUnavailable(true), []);
+  const onReady = useCallback(() => setRendered(true), []);
   const started = useDrive((s) => s.started);
   const quality = useDrive((s) => s.quality);
   const muted = useDrive((s) => s.muted);
@@ -79,7 +81,13 @@ export default function DriveApp() {
   }, [started, overlay, activeId, closeModal, setOverlay, toggleOverlay, setMutedStore]);
 
   return (
-    <div className="drive-root" ref={root}>
+    <div
+      className="drive-root"
+      ref={root}
+      data-scene-stage="grounds"
+      data-scene-state={unavailable ? "fallback" : rendered ? "ready" : "loading"}
+      data-scene-active={live ? "true" : "false"}
+    >
       {unavailable ? <StudyFallback /> : <WebGLBoundary fallback={<StudyFallback />} onFailure={onUnavailable}>
       <Canvas
         shadows={quality !== "low"}
@@ -95,6 +103,7 @@ export default function DriveApp() {
       >
         <ContextLossGuard onLost={onUnavailable} />
         <Experience />
+        <FirstFrameReady onReady={onReady} />
       </Canvas>
       {!started && overlay === "none" && <StartScreen />}
       {started && overlay !== "pause" && <HUD />}

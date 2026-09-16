@@ -126,7 +126,26 @@ try {
     // networkidle never settles and would burn the whole timeout.
     const resp = await page.goto(url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
     const status = resp?.status() ?? 0;
-    await page.waitForTimeout(1000);
+    // Wait for React's mounted document effect, not a fixed delay that can
+    // snapshot SSR controls while the client is still hydrating them.
+    await page.waitForFunction(() => document.documentElement.dataset.appReady === "true", null, {
+      timeout: timeoutMs,
+    });
+    if (new URL(url).pathname === "/forge")
+      await page.locator('main[data-page-ready="true"]').waitFor({ timeout: timeoutMs });
+    let sceneState = null;
+    if (["/", "/gallery", "/drive", "/forge"].includes(new URL(url).pathname)) {
+      const scene = page.locator("[data-scene-stage]").first();
+      await scene.waitFor({ state: "visible", timeout: timeoutMs });
+      await scene.scrollIntoViewIfNeeded();
+      await page
+        .locator('[data-scene-state="ready"], [data-scene-state="fallback"]')
+        .first()
+        .waitFor({ state: "visible", timeout: timeoutMs });
+      sceneState = await scene.getAttribute("data-scene-state");
+      await page.evaluate(() => window.scrollTo(0, 0));
+    }
+    await page.evaluate(() => document.fonts.ready);
 
     const title = await page.title();
     const hasCanvas = (await page.locator("canvas").count()) > 0;
@@ -138,7 +157,10 @@ try {
       const el = document.documentElement;
       return el.scrollWidth > el.clientWidth + 1;
     });
-    await page.screenshot({ path: vp.screenshot, fullPage: false });
+    // Playwright's default caret hiding writes inline styles to every input.
+    // Preserve page styles so screenshot instrumentation cannot induce a
+    // hydration mismatch in a route that is still resolving lazy content.
+    await page.screenshot({ path: vp.screenshot, fullPage: false, caret: "initial" });
     await page.close();
 
     viewports[vp.name] = {
@@ -147,6 +169,7 @@ try {
       status,
       title,
       hasCanvas,
+      sceneState,
       bodyTextLen: normalizeBodyText(bodyText).length,
       bodyTextHash: normalizedBodyTextHash(bodyText),
       bodyTextPrefix: bodyTextPrefix(bodyText),

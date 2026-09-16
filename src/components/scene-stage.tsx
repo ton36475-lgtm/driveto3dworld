@@ -42,19 +42,28 @@ export function SceneStage({
   const live = useSceneVisibility(wrap);
   const reducedMotion = useReducedMotion();
   const [unavailable, setUnavailable] = useState(false);
+  const [rendered, setRendered] = useState(false);
   const onUnavailable = useCallback(() => setUnavailable(true), []);
+  const onReady = useCallback(() => setRendered(true), []);
   const fallback = <CanvasFallback label={label} works={works} />;
 
   return (
-    <div ref={wrap} className="absolute inset-0">
+    <div
+      ref={wrap}
+      className="absolute inset-0"
+      data-scene-stage="atelier"
+      data-scene-state={unavailable ? "fallback" : rendered ? "ready" : "loading"}
+      data-scene-active={live ? "true" : "false"}
+    >
       <ClientOnly fallback={fallback}>
-        <WebGLBoundary fallback={fallback}>
+        <WebGLBoundary fallback={fallback} onFailure={onUnavailable}>
           {unavailable ? fallback : <Suspense fallback={fallback}>
             <HeroScene
               works={works}
               quality={quality}
               reducedMotion={reducedMotion || paused}
               onUnavailable={onUnavailable}
+              onReady={onReady}
               selected={selected}
               onHover={onHover}
               onSelect={onSelect}
@@ -66,7 +75,7 @@ export function SceneStage({
               frameloop={!live ? "never" : reducedMotion || paused ? "demand" : "always"}
             />
           </Suspense>}
-          {!unavailable && <LoadingVeil label={label} />}
+          {!unavailable && !rendered && <LoadingVeil label={label} />}
         </WebGLBoundary>
       </ClientOnly>
     </div>

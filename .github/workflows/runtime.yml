@@ -49,10 +49,12 @@ jobs:
           npm run lint
           node scripts/validate_template.mjs templates/creative-studio.v1.json
       - name: Start and verify application routes
+        id: route-health
         run: |
           sh startup.sh
           npm run verify:runtime -- http://127.0.0.1:8080 / /gallery /drive /studio /contact /forge /desk /marketing /automations /kit /people/ball /people/ton /people/studio
       - name: Install test browser
+        id: test-browser
         run: node node_modules/playwright/cli.js install --with-deps chromium
       - name: Browser regression at 360, 390, 768 and 1440 pixels
         run: |
@@ -60,13 +62,19 @@ jobs:
           node scripts/browser-smoke.mjs http://127.0.0.1:8080/gallery "$GITHUB_WORKSPACE/screenshots/gallery.png"
           node scripts/browser-smoke.mjs http://127.0.0.1:8080/drive "$GITHUB_WORKSPACE/screenshots/drive.png"
           node scripts/browser-smoke.mjs http://127.0.0.1:8080/forge "$GITHUB_WORKSPACE/screenshots/forge.png"
+      - name: Start production output
+        id: production-start
+        if: ${{ !cancelled() && steps.route-health.outcome == 'success' && steps.test-browser.outcome == 'success' }}
+        run: npm run preview:restart
       - name: Verify production output
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
         run: |
-          npm run preview:restart
           node scripts/browser-smoke.mjs http://127.0.0.1:8081/ "$GITHUB_WORKSPACE/screenshots/production.png" --baseline "$GITHUB_WORKSPACE/screenshots/home.json"
       - name: Exercise operations in the production browser
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
         run: node scripts/browser-ops.mjs http://127.0.0.1:8081
       - name: Exercise spatial fallback and Forge configuration
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
         run: node scripts/browser-spatial.mjs http://127.0.0.1:8081
       - name: Print startup diagnostics on failure
         if: failure()

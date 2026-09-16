@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Download, SlidersHorizontal } from "lucide-react";
 import { SceneStage } from "@/components/scene-stage";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,10 @@ const titles = {
   },
 };
 function ForgePage() {
+  const pageRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (pageRef.current) pageRef.current.dataset.pageReady = "true";
+  }, []);
   const lang = useLocale();
   const th = lang === "th";
   const [config, setConfig] = useState<ForgeConfig>(defaultConfig);
@@ -63,7 +67,7 @@ function ForgePage() {
         } as CSSProperties)
       : undefined;
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-24 pt-28 sm:px-6">
+    <main ref={pageRef} className="mx-auto max-w-6xl px-4 pb-24 pt-28 sm:px-6">
       <p className="flex items-center gap-2 text-xs tracking-[0.22em] text-muted uppercase">
         <SlidersHorizontal size={16} /> Studio tools / 01
       </p>

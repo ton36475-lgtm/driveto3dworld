@@ -1,9 +1,4 @@
-import {
-  createRootRoute,
-  HeadContent,
-  Outlet,
-  Scripts,
-} from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
@@ -73,6 +68,10 @@ function HtmlLang() {
   const lang = useLang((s) => s.lang);
   useEffect(() => {
     document.documentElement.lang = lang;
+    document.documentElement.dataset.appReady = "true";
+    return () => {
+      delete document.documentElement.dataset.appReady;
+    };
   }, [lang]);
   return null;
 }
