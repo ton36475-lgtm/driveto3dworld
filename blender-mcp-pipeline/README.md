@@ -78,3 +78,7 @@ The implementation follows the two-stage idea in [Dev with Bebz workshop 02](htt
 This background workflow requires command access, not an interactive Blender addon. For separately configured interactive sessions, the [MCP for Blender upstream](https://github.com/ahujasid/mcp-for-blender/tree/68e8b99f0e8d95284ea4dcc61002006f85ad5089) is a third-party MIT adapter, formerly `blender-mcp`. Keep its unauthenticated addon socket on localhost; use distinct ports per Blender instance. No tunnel or Mac mini configuration is changed by these scripts.
 
 Using a cheaper capable model for structural work is a routing choice. Cost savings depend on actual model usage, rework and subscription limits; no unlimited/free-usage claim is made.
+
+## Foodtruck concept
+
+The separate [S×B FOOD STUDIO pipeline](FOODTRUCK.md) creates the Drive vehicle body, preserves independent structural/final sources, and renders its actual WebP preview. Wheels and day/night lamps remain runtime responsibilities. This original concept is not a measured reconstruction of the user's real truck.

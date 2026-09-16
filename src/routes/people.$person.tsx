@@ -18,12 +18,14 @@ export const Route = createFileRoute("/people/$person")({
 function PortfolioProfilePage() {
   const profile = Route.useLoaderData();
   const lang = useLocale();
-  const thai = lang === "th";
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 pt-28 sm:px-6">
       <nav
-        aria-label={thai ? "เลือกพอร์ตโฟลิโอ" : "Choose a portfolio"}
+        aria-label={loc(
+          { en: "Choose a portfolio", th: "เลือกพอร์ตโฟลิโอ", zh: "选择作品集" },
+          lang,
+        )}
         className="flex flex-wrap gap-2"
       >
         {PORTFOLIO_PROFILES.map((person) => (
@@ -65,7 +67,7 @@ function PortfolioProfilePage() {
 
       <section className="mt-12" aria-labelledby="profile-focus">
         <h2 id="profile-focus" className="font-display text-2xl tracking-tight">
-          {thai ? "แนวทางงาน" : "Focus"}
+          {loc({ en: "Focus", th: "แนวทางงาน", zh: "创作方向" }, lang)}
         </h2>
         <ul className="mt-6 grid gap-3 sm:grid-cols-3">
           {profile.focus.map((item, index) => (
@@ -95,18 +97,26 @@ function PortfolioProfilePage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild>
             <Link to="/contact">
-              {thai ? "พูดคุยเกี่ยวกับโครงการ" : "Discuss a project"}
+              {loc({ en: "Discuss a project", th: "พูดคุยเกี่ยวกับโครงการ", zh: "洽谈项目" }, lang)}
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
           {profile.id === "studio" ? (
             <Button asChild variant="outline">
-              <Link to="/work">{thai ? "ดูงานศึกษาแนวคิด" : "Explore concept studies"}</Link>
+              <Link to="/work">
+                {loc(
+                  { en: "Explore concept studies", th: "ดูงานศึกษาแนวคิด", zh: "探索概念研究" },
+                  lang,
+                )}
+              </Link>
             </Button>
           ) : (
             <Button asChild variant="outline">
               <Link to="/people/$person" params={{ person: "studio" }}>
-                {thai ? "ดูพื้นที่โครงการร่วม" : "Explore shared projects"}
+                {loc(
+                  { en: "Explore shared projects", th: "ดูพื้นที่โครงการร่วม", zh: "探索合作项目" },
+                  lang,
+                )}
               </Link>
             </Button>
           )}
@@ -122,11 +132,11 @@ function ProfileMissing() {
   return (
     <main className="mx-auto flex min-h-[70svh] max-w-xl flex-col items-center justify-center px-4 text-center">
       <h1 className="font-display text-3xl">
-        {lang === "th" ? "ไม่พบพอร์ตโฟลิโอนี้" : "Portfolio not found"}
+        {loc({ en: "Portfolio not found", th: "ไม่พบพอร์ตโฟลิโอนี้", zh: "未找到此作品集" }, lang)}
       </h1>
       <Button asChild className="mt-8">
         <Link to="/people/$person" params={{ person: "studio" }}>
-          {lang === "th" ? "ดูโครงการร่วม" : "View shared projects"}
+          {loc({ en: "View shared projects", th: "ดูโครงการร่วม", zh: "查看合作项目" }, lang)}
         </Link>
       </Button>
     </main>

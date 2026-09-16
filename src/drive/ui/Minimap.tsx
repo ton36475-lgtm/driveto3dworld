@@ -2,9 +2,11 @@ import { useEffect, useRef } from "react";
 import { PROJECTS, ZONES } from "../data/projects";
 import { sim } from "../systems/sim";
 import { useDrive } from "../store";
+import { COPY } from "../data/i18n";
 
 export function Minimap({ interactive = false }: { interactive?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const lang = useDrive((s) => s.lang);
   const collected = useDrive((s) => s.collected);
   const waypoint = useDrive((s) => s.waypoint);
   const setWaypoint = useDrive((s) => s.setWaypoint);
@@ -98,7 +100,8 @@ export function Minimap({ interactive = false }: { interactive?: boolean }) {
         border: "1px solid color-mix(in oklab, var(--color-fg) 14%, transparent)",
         background: "var(--color-bg)",
       }}
-      aria-hidden
+      role="img"
+      aria-label={COPY[lang].map}
     />
   );
 }

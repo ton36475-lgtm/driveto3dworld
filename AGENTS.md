@@ -2,7 +2,7 @@
 
 This file is for **Codex** (and any clone of the GitHub repo).
 
-Product: bilingual 3D creative atelier. Dark ink / bone / cool silver. No purple, no gold, no emoji in UI.
+Product: trilingual 3D creative atelier (EN/TH/简体中文). Dark ink / bone / cool silver. No purple, no gold, no emoji in UI.
 
 Two 3D rooms, one studio:
 
@@ -32,16 +32,17 @@ npm run build
 | Canvas / orbit | `src/components/canvas/hero-scene.tsx` |
 | Gallery page | `src/routes/gallery.tsx` |
 | Drive world | `src/drive/` |
+| Food truck planner | `src/routes/foodtruck.tsx` `src/lib/foodtruck/` |
 | Drive car / steer | `src/drive/world/Car.tsx` `src/drive/systems/input.ts` |
 | Work data (salon) | `src/lib/works.ts` |
 | Drive studies | `src/drive/data/projects.ts` |
-| EN/TH copy | `src/lib/copy.ts` `src/drive/data/i18n.ts` |
+| EN/TH/zh copy | `src/lib/copy.ts` `src/drive/data/i18n.ts` |
 | GLB pipeline | `blender-mcp-pipeline/` |
 | Agent protocol | `agentic-coding-workflow/` |
 
 ## Hard rules
 
-- Keep EN and TH in sync when you change copy.
+- Keep EN, TH and Simplified Chinese (zh; HTML zh-CN) in sync when you change copy.
 - Keep a geometry fallback until a GLB exists — never blank the WebGL canvas.
 - Drive: **A turns left / D turns right** under the chase camera. Do not invert.
 - Branch as `codex/<task>`, PR into `main`.

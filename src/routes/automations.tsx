@@ -5,6 +5,7 @@ import { LocalData } from "@/components/ops/local-data";
 import { OpsNav } from "@/components/ops/ops-nav";
 import { Button } from "@/components/ui/button";
 import { useCopy, useLocale } from "@/lib/copy";
+import { OPS_DATE_LOCALES, receiptText } from "@/lib/ops/localize";
 import { counts } from "@/lib/ops/engine";
 import { useShallow } from "zustand/react/shallow";
 import { useOps } from "@/lib/ops/store";
@@ -64,9 +65,8 @@ function AutomationsPage() {
                   {copy.ops.jobs[job.kind]} · {copy.ops.jobStatus[job.status]}
                 </p>
                 <p className="mt-1 text-xs text-faint">
-                  {copy.ops.due}{" "}
-                  {new Date(job.dueAt).toLocaleString(lang === "th" ? "th-TH" : "en-GB")}
-                  {job.receipt ? ` · ${job.receipt}` : ""}
+                  {copy.ops.due} {new Date(job.dueAt).toLocaleString(OPS_DATE_LOCALES[lang])}
+                  {job.receipt ? ` · ${receiptText(job.receipt, lang)}` : ""}
                 </p>
               </div>
               {job.status !== "done" && job.status !== "dead_letter" ? (

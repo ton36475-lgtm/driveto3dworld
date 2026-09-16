@@ -12,7 +12,7 @@ export function WorkCard({ work }: { work: Work }) {
     <Link
       to="/work/$slug"
       params={{ slug: work.slug }}
-      className="group block rounded-xl bg-surface p-2 transition-transform duration-200 ease-out hover:-translate-y-0.5"
+      className="portfolio-work-card group block rounded-xl bg-surface p-2 transition-transform duration-200 ease-out hover:-translate-y-0.5"
     >
       <div className="overflow-hidden rounded-lg">
         <img

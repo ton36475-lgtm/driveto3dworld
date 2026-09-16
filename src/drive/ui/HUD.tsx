@@ -28,12 +28,12 @@ export function HUD() {
         setHint("");
         return;
       }
-      setHint(`${c.nearest} · ${t(n.project.title, lang)} · ${n.dist.toFixed(0)}m`);
+      setHint(`${c.nearest} · ${t(n.project.title, lang)} · ${n.dist.toFixed(0)}${c.distanceUnit}`);
     };
     tick();
     const id = window.setInterval(tick, 250);
     return () => window.clearInterval(id);
-  }, [collected, lang, c.nearest]);
+  }, [collected, lang, c.nearest, c.distanceUnit]);
 
   return (
     <div
@@ -54,7 +54,7 @@ export function HUD() {
               {collected.length}/{PROJECTS.length}
             </span>
           </div>
-          <div className="hud-chip hidden sm:inline-flex">{Math.round(speedKmh)} km/h</div>
+          <div className="hud-chip hidden sm:inline-flex">{Math.round(speedKmh)} {c.speedUnit}</div>
           <div className="hud-chip hidden sm:inline-flex">
             {fps} {c.fps}
           </div>
@@ -73,7 +73,7 @@ export function HUD() {
           </button>
           <button type="button" className="hud-chip" onClick={cycleWeather} aria-label={c.weather}>
             <CloudRain className="size-3.5" strokeWidth={1.75} />
-            <span className="hidden sm:inline">{weather}</span>
+            <span className="hidden sm:inline">{{ auto: c.weatherAuto, clear: c.weatherClear, rain: c.weatherRain, snow: c.weatherSnow }[weather]}</span>
           </button>
           <button type="button" className="hud-chip" onClick={() => toggleOverlay("settings")} aria-label={c.settings}>
             <Settings2 className="size-3.5" strokeWidth={1.75} />

@@ -1,29 +1,15 @@
-import { useMemo, type ReactNode } from "react";
-import * as THREE from "three";
+import type { ReactNode } from "react";
+import { Html } from "@react-three/drei";
 import { PROJECTS, ZONES } from "../data/projects";
 import { useDrive } from "../store";
 
 function Label({ text, color }: { text: string; color: string }) {
-  const tex = useMemo(() => {
-    const c = document.createElement("canvas");
-    c.width = 512;
-    c.height = 128;
-    const ctx = c.getContext("2d")!;
-    ctx.clearRect(0, 0, 512, 128);
-    ctx.fillStyle = color;
-    ctx.font = "600 44px Outfit, Segoe UI, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text.toUpperCase(), 256, 64);
-    const t = new THREE.CanvasTexture(c);
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  }, [text, color]);
   return (
-    <mesh position={[0, 4.2, 0]}>
-      <planeGeometry args={[10, 2.4]} />
-      <meshBasicMaterial map={tex} transparent depthWrite={false} />
-    </mesh>
+    <Html position={[0, 4.2, 0]} transform sprite center distanceFactor={22} style={{ pointerEvents: "none" }}>
+      <span className="block whitespace-nowrap rounded-full border border-white/20 bg-[#0b0d10]/85 px-3 py-1.5 text-sm font-semibold shadow-sm" style={{ color }}>
+        {text}
+      </span>
+    </Html>
   );
 }
 

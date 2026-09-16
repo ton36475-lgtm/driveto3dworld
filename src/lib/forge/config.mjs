@@ -28,7 +28,7 @@ export function validateConfig(value) {
   exact(value.family, ["universal-business"], "family");
   exact(value.preset, PRESETS, "preset");
   exact(value.theme, THEMES, "theme");
-  exact(value.locale, ["en", "th"], "locale");
+  exact(value.locale, ["en", "th", "zh"], "locale");
   exact(value.stack, ["tanstack-start"], "stack");
   exact(value.scene, ["salon", "static"], "scene");
   exact(value.motion, ["calm", "paused"], "motion");

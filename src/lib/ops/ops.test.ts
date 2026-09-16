@@ -10,6 +10,7 @@ import {
   markDraftReady,
   quoteInquiry,
   saveDraft,
+  seedDrafts,
   tickJobs,
   validateInquiry,
 } from "./engine.ts";
@@ -176,6 +177,7 @@ import {
   LEGACY_KEY,
   MAX_BACKUP_BYTES,
   migrateLegacy,
+  migrateDraftLanguages,
   readStored,
   STORAGE_KEY,
   validOps,
@@ -225,7 +227,7 @@ test("completed and parked work is not revived by quote or park", () => {
   assert.equal(deadLetter(state, done.id, "Oops").ok, false);
 });
 
-test("both languages must be complete before a draft is ready", () => {
+test("all language bodies must be complete before a draft is ready", () => {
   let state = must(
     saveDraft(
       emptyOps(),
@@ -443,4 +445,148 @@ test("storage and backup share an exact UTF-8 byte boundary and reject overflow 
   assert.equal(writes, 1);
   assert.deepEqual(readStored(storage), state);
   assert.throws(() => exportBackup(state, Infinity), /invalid-timestamp/);
+});
+
+import { DRAFT_FIELDS, draftText, OPS_DATE_LOCALES, receiptText } from "./localize.ts";
+import { opsZh } from "./copy-zh.ts";
+
+test("six new channel drafts contain authored Chinese titles and bodies", () => {
+  const drafts = seedDrafts(1234);
+  assert.equal(drafts.length, 6);
+  for (const draft of drafts) {
+    assert.match(draft.titleZh ?? "", /[\u3400-\u9fff]/);
+    assert.match(draft.bodyZh ?? "", /[\u3400-\u9fff]/);
+    assert.ok((draft.bodyZh?.trim().length ?? 0) >= 20);
+    assert.equal(draft.status, "draft");
+    assert.equal(draft.updatedAt, 1234);
+    const state = must(markDraftReady({ ...emptyOps(), drafts }, draft.id, 2000)).state;
+    assert.equal(state.drafts.find((item) => item.id === draft.id)?.status, "ready");
+  }
+});
+
+test("Chinese editing preserves EN/TH and requires a complete title and body for readiness", () => {
+  const original = emptyOps();
+  let state = must(saveDraft(original, "line", { titleZh: "", bodyZh: "简短说明" }, 2000)).state;
+  state = must(markDraftReady(state, "line", 2001)).state;
+  assert.equal(state.drafts[0]?.status, "blocked");
+  state = must(
+    saveDraft(
+      state,
+      "line",
+      { bodyZh: "这是为音乐、人工智能与网站项目准备的完整中文草稿，仍需人工审核和发送。" },
+      2002,
+    ),
+  ).state;
+  state = must(markDraftReady(state, "line", 2003)).state;
+  assert.equal(
+    state.drafts[0]?.status,
+    "blocked",
+    "A complete body does not substitute for a translated title.",
+  );
+  state = must(saveDraft(state, "line", { titleZh: "项目咨询回复" }, 2004)).state;
+  state = must(markDraftReady(state, "line", 2005)).state;
+  assert.equal(state.drafts[0]?.status, "ready");
+  assert.equal(state.drafts[0]?.bodyEn, original.drafts[0]?.bodyEn);
+  assert.equal(state.drafts[0]?.bodyTh, original.drafts[0]?.bodyTh);
+  assert.equal(state.drafts[0]?.titleEn, original.drafts[0]?.titleEn);
+  assert.equal(state.drafts[0]?.titleTh, original.drafts[0]?.titleTh);
+  assert.equal(saveDraft(state, "line", { bodyZh: "中".repeat(10001) }, 2006).ok, false);
+  assert.equal(saveDraft(state, "line", { titleZh: null } as never, 2006).ok, false);
+});
+
+function oldBilingualState(): OpsState {
+  const legacy = emptyOps();
+  for (const draft of legacy.drafts) {
+    delete draft.titleZh;
+    delete draft.bodyZh;
+    draft.status = "ready";
+    draft.updatedAt = 4321;
+  }
+  legacy.drafts[0]!.titleEn = "Owner's custom title";
+  legacy.drafts[0]!.titleTh = "ชื่อที่เจ้าของเขียนเอง";
+  legacy.drafts[0]!.bodyEn =
+    "Do not replace this customer's carefully edited message with a seeded translation.";
+  legacy.drafts[0]!.bodyTh =
+    "เก็บข้อความภาษาไทยที่เจ้าของแก้ไขไว้ให้ครบ ไม่ใช้ฉบับร่างตัวอย่างเขียนทับ";
+  return legacy;
+}
+
+test("legacy bilingual ready drafts migrate explicitly without adding bytes or changing original content", () => {
+  const legacy = oldBilingualState();
+  const before = JSON.stringify(legacy);
+  const migrated = migrateDraftLanguages(legacy);
+  assert.equal(JSON.stringify(legacy), before, "Migration must not mutate the original backup.");
+  assert.equal(
+    new TextEncoder().encode(JSON.stringify(migrated)).length,
+    new TextEncoder().encode(before).length,
+    "Full-size backups must not grow during language migration.",
+  );
+  for (let index = 0; index < migrated.drafts.length; index++) {
+    assert.deepEqual(migrated.drafts[index], { ...legacy.drafts[index], status: "draft" });
+    assert.deepEqual(draftText(migrated.drafts[index]!, "zh"), { title: "", body: "" });
+  }
+  assert.equal(migrateDraftLanguages(migrated), migrated);
+  assert.equal(counts(migrated).readyDrafts, 0);
+  assert.equal(must(markDraftReady(migrated, "line", 5000)).state.drafts[0]?.status, "blocked");
+});
+
+test("old version-0 storage and version-1 backups retain custom EN/TH content through import and export", () => {
+  const legacy = oldBilingualState();
+  const expected = migrateDraftLanguages(legacy);
+  let stored = JSON.stringify({ state: legacy, version: 0 });
+  const storage = {
+    getItem: () => stored,
+    setItem: (_key: string, raw: string) => {
+      stored = raw;
+    },
+  };
+  assert.deepEqual(readStored(storage), expected);
+  const oldBackup = JSON.stringify({
+    format: "sxb-ops-backup",
+    version: 1,
+    exportedAt: 5000,
+    state: legacy,
+  });
+  const imported = must(importBackup(emptyOps(), oldBackup)).state;
+  assert.deepEqual(imported, expected);
+  assert.equal(
+    must(importBackup(imported, oldBackup)).state,
+    imported,
+    "Repeating the same old backup stays idempotent.",
+  );
+  writeStored(storage, imported);
+  assert.deepEqual(readStored(storage), expected);
+  assert.deepEqual(
+    must(importBackup(emptyOps(), exportBackup(readStored(storage), 6000))).state,
+    expected,
+  );
+  assert.equal(JSON.parse(stored).state.drafts[0].status, "draft");
+  assert.equal(JSON.parse(stored).state.drafts[0].bodyZh, undefined);
+});
+
+test("invalid Chinese fields are rejected while absent legacy fields remain admissible", () => {
+  assert.equal(validOps(oldBilingualState()), true);
+  const state = emptyOps();
+  state.drafts[0]!.bodyZh = 42 as never;
+  assert.equal(validOps(state), false);
+  const invalidBackup = JSON.stringify({ format: "sxb-ops-backup", version: 1, state });
+  assert.equal(importBackup(emptyOps(), invalidBackup).ok, false);
+});
+
+test("draft field routing, dates, system receipts and Chinese action labels use the selected language", () => {
+  assert.equal(DRAFT_FIELDS.zh.title, "titleZh");
+  assert.equal(DRAFT_FIELDS.zh.body, "bodyZh");
+  assert.equal(OPS_DATE_LOCALES.zh, "zh-CN");
+  const draft = seedDrafts(0)[0]!;
+  for (const lang of ["en", "th", "zh"] as const) {
+    assert.equal(draftText(draft, lang).body, draft[DRAFT_FIELDS[lang].body]);
+  }
+  assert.equal(receiptText("sla.overdue@1234", "zh"), "本地任务已逾期");
+  assert.equal(receiptText("inquiry.received → staff_task", "zh"), "已创建本地跟进任务");
+  assert.equal(receiptText("manual-reconcile", "zh"), "已暂存，等待人工核查");
+  assert.match(receiptText("assigned:Ball@1234", "zh"), /本地负责人/);
+  assert.equal(receiptText("Owner's personal review note", "zh"), "Owner's personal review note");
+  assert.match(opsZh.localNotice, /不会发送消息/);
+  assert.match(opsZh.importData, /恢复/);
+  assert.match(opsZh.blockedBody, /英语、泰语和中文/);
 });

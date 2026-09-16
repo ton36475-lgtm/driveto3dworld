@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SceneStage } from "@/components/scene-stage";
 import { Button } from "@/components/ui/button";
-import { useCopy } from "@/lib/copy";
-import { featuredWorks } from "@/lib/works";
+import { useCopy, useLocale } from "@/lib/copy";
+import { featuredWorks, loc } from "@/lib/works";
 
 export const Route = createFileRoute("/studio")({ component: StudioPage });
 
 function StudioPage() {
   const copy = useCopy();
+  const lang = useLocale();
   const maquette = featuredWorks();
 
   return (
@@ -94,22 +95,25 @@ function StudioPage() {
       </div>
 
       <nav
-        aria-label="Profiles"
+        aria-label={loc({ en: "Profiles", th: "โปรไฟล์", zh: "个人与合作作品集" }, lang)}
         className="mx-auto mt-12 flex max-w-6xl flex-wrap gap-3 px-4 sm:px-6"
       >
         <Button asChild variant="outline">
           <Link to="/people/$person" params={{ person: "ball" }}>
-            Ball / พี่บอล
+            {loc({ en: "Ball / พี่บอล", th: "Ball / พี่บอล", zh: "Ball · 个人作品集" }, lang)}
           </Link>
         </Button>
         <Button asChild variant="outline">
           <Link to="/people/$person" params={{ person: "ton" }}>
-            Sirawat / ต้น
+            {loc({ en: "Sirawat / ต้น", th: "Sirawat / ต้น", zh: "Sirawat · 个人作品集" }, lang)}
           </Link>
         </Button>
         <Button asChild variant="outline">
           <Link to="/people/$person" params={{ person: "studio" }}>
-            SIRAWAT × BALL
+            {loc(
+              { en: "SIRAWAT × BALL", th: "SIRAWAT × BALL", zh: "SIRAWAT × BALL · 合作项目" },
+              lang,
+            )}
           </Link>
         </Button>
       </nav>

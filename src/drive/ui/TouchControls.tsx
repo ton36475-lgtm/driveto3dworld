@@ -47,6 +47,8 @@ export function TouchControls() {
     >
       <div
         ref={base}
+        role="group"
+        aria-label={c.joystick}
         className="pointer-events-auto relative"
         style={{
           width: 112,
@@ -99,7 +101,7 @@ export function TouchControls() {
         onKeyUp={() => setTouchBrake(false)}
         onBlur={() => setTouchBrake(false)}
       >
-        {c.space.split(" ").slice(-1)[0] === "brake" || lang === "en" ? "Brake" : "เบรก"}
+        {c.brake}
       </button>
     </div>
   );

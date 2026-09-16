@@ -3,13 +3,14 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCopy } from "@/lib/copy";
-import { useLang } from "@/lib/lang";
+import { LANGUAGE_OPTIONS, useLang, type Lang } from "@/lib/lang";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
   { to: "/work", key: "work" as const },
   { to: "/gallery", key: "gallery" as const },
   { to: "/drive", key: "drive" as const },
+  { to: "/foodtruck", key: "foodtruck" as const },
   { to: "/studio", key: "studio" as const },
   { to: "/contact", key: "contact" as const },
 ];
@@ -19,8 +20,11 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
   const lang = useLang((s) => s.lang);
   const setLang = useLang((s) => s.setLang);
   const extraLinks = [
-    { to: "/forge", label: lang === "th" ? "ปรับเว็บไซต์" : "Customize" },
-    { to: "/desk", label: lang === "th" ? "โต๊ะงาน" : "Desk" },
+    {
+      to: "/forge",
+      label: lang === "zh" ? "定制网站" : lang === "th" ? "ปรับเว็บไซต์" : "Customize",
+    },
+    { to: "/desk", label: copy.ops.desk },
   ] as const;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -44,11 +48,14 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="font-display text-sm tracking-[0.18em] text-foreground">
+        <Link
+          to="/"
+          className="font-display text-xs tracking-[0.08em] text-foreground sm:text-sm sm:tracking-[0.18em]"
+        >
           SIRAWAT × BALL
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 xl:flex">
           {LINKS.map((link) => {
             const active =
               link.to === "/work" ? pathname.startsWith("/work") : pathname === link.to;
@@ -77,7 +84,7 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
           <LangToggle lang={lang} setLang={setLang} />
         </nav>
 
-        <div className="flex items-center gap-1 md:hidden">
+        <div className="flex items-center gap-1 xl:hidden">
           <LangToggle lang={lang} setLang={setLang} />
           <Button
             variant="ghost"
@@ -98,13 +105,13 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
         inert={!open}
         aria-hidden={!open}
         className={cn(
-          "md:hidden overflow-hidden border-b border-line bg-background transition-[max-height,opacity] duration-300 ease-out",
+          "xl:hidden overflow-hidden border-b border-line bg-background transition-[max-height,opacity] duration-300 ease-out",
           open ? "max-h-[100svh] opacity-100" : "max-h-0 opacity-0",
         )}
       >
         <nav
           className="flex flex-col px-4 py-4"
-          aria-label={lang === "th" ? "เมนูมือถือ" : "Mobile menu"}
+          aria-label={lang === "zh" ? "移动菜单" : lang === "th" ? "เมนูมือถือ" : "Mobile menu"}
         >
           {LINKS.map((link) => (
             <Link
@@ -126,40 +133,30 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
   );
 }
 
-function LangToggle({
-  lang,
-  setLang,
-}: {
-  lang: "en" | "th";
-  setLang: (lang: "en" | "th") => void;
-}) {
+function LangToggle({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => void }) {
   return (
-    <div className="ml-2 flex h-11 items-center gap-1 text-xs tracking-widest text-muted">
-      <button
-        type="button"
-        className={cn(
-          "inline-flex h-11 min-w-11 items-center justify-center px-2",
-          lang === "en" ? "text-foreground" : "hover:text-foreground",
-        )}
-        onClick={() => setLang("en")}
-        aria-pressed={lang === "en"}
-      >
-        EN
-      </button>
-      <span aria-hidden className="text-line">
-        /
-      </span>
-      <button
-        type="button"
-        className={cn(
-          "inline-flex h-11 min-w-11 items-center justify-center px-2",
-          lang === "th" ? "text-foreground" : "hover:text-foreground",
-        )}
-        onClick={() => setLang("th")}
-        aria-pressed={lang === "th"}
-      >
-        TH
-      </button>
+    <div
+      role="group"
+      aria-label="Language"
+      className="flex h-11 shrink-0 items-center text-xs text-muted"
+    >
+      {LANGUAGE_OPTIONS.map((option) => (
+        <button
+          key={option.code}
+          type="button"
+          data-language={option.code}
+          aria-label={option.name}
+          lang={option.html}
+          className={cn(
+            "inline-flex h-11 min-w-11 items-center justify-center px-1",
+            lang === option.code ? "text-foreground" : "hover:text-foreground",
+          )}
+          onClick={() => setLang(option.code)}
+          aria-pressed={lang === option.code}
+        >
+          {option.label}
+        </button>
+      ))}
     </div>
   );
 }

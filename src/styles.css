@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@fontsource-variable/noto-sans-sc/wght.css";
 @import "@fontsource/syne/600.css";
 @import "@fontsource/syne/700.css";
 @import "@fontsource/figtree/400.css";
@@ -25,14 +26,655 @@
   --color-border-strong: color-mix(in oklab, var(--color-foreground) 22%, transparent);
   --color-coral: #e25b4c;
   --radius-sheet: 1.75rem;
-  --font-sans: "Figtree", "IBM Plex Sans Thai", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Syne", "IBM Plex Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Figtree", "IBM Plex Sans Thai", "Noto Sans SC Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Syne", "IBM Plex Sans Thai", "Noto Sans SC Variable", ui-sans-serif, system-ui, sans-serif;
   --radius-xs: 0.25rem;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   --radius: 0.75rem;
+}
+
+html:lang(zh-CN) {
+  --font-sans:
+    "Figtree", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+    sans-serif;
+  --font-display:
+    "Syne", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+    sans-serif;
+}
+
+html:lang(th) h1,
+html:lang(th) h2,
+html:lang(zh-CN) h1,
+html:lang(zh-CN) h2 {
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+@keyframes page-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes truck-arrive {
+  from {
+    opacity: 0;
+    transform: translate3d(30px, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.route-content > main:not(:has(.drive-root)) {
+  animation: page-arrive 420ms var(--ease-out) both;
+}
+
+.portfolio-home > section:not(:first-child) h2 {
+  max-width: 22ch;
+}
+
+.portfolio-work-card {
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    transform 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .portfolio-work-card:hover {
+    transform: translateY(-4px);
+  }
+  .portfolio-work-card:hover img {
+    transform: scale(1.035);
+  }
+}
+
+.portfolio-work-card img {
+  transition: transform 450ms var(--ease-out);
+}
+.portfolio-work-card:focus-visible {
+  outline-offset: 6px;
+}
+.editorial-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.7;
+  color: var(--color-accent);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 5px #c5cdd610;
+  flex: none;
+}
+.truck-page {
+  padding-top: 76px;
+  overflow: clip;
+}
+.truck-hero {
+  max-width: 1480px;
+  margin: auto;
+  min-height: min(760px, 90svh);
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  align-items: center;
+  padding: 64px max(24px, 4vw) 80px;
+  gap: 20px;
+}
+.truck-hero-copy {
+  position: relative;
+  z-index: 2;
+}
+.truck-hero h1 {
+  font-size: clamp(40px, 4.7vw, 74px);
+  line-height: 1.06;
+  letter-spacing: -0.055em;
+  margin-top: 30px;
+  font-weight: 600;
+}
+.truck-hero h1 span {
+  display: block;
+}
+.truck-hero h1 span + span {
+  color: var(--color-accent);
+}
+.truck-intro {
+  margin-top: 28px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #a5a29d;
+  max-width: 42ch;
+}
+.truck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.truck-text-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: #c5cdd648;
+  text-underline-offset: 6px;
+}
+.truck-text-link:hover {
+  text-decoration-color: currentColor;
+}
+.truck-visual {
+  position: relative;
+  min-width: 0;
+  isolation: isolate;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #ffffff0c;
+  background: radial-gradient(ellipse at 60% 46%, #41424a24, transparent 64%);
+}
+.truck-visual-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(#c5cdd609 1px, transparent 1px),
+    linear-gradient(90deg, #c5cdd609 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, #000, transparent);
+}
+.truck-visual img {
+  width: 120%;
+  max-width: none;
+  height: auto;
+  margin-left: -10%;
+  object-fit: contain;
+  animation: truck-arrive 850ms var(--ease-out) both;
+  animation-delay: 100ms;
+}
+.truck-visual-index {
+  position: absolute;
+  top: 22px;
+  left: 26px;
+  color: #c5cdd65c;
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+}
+.truck-visual-index span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+.truck-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: #a5a29d;
+}
+.truck-caption > span {
+  margin-left: auto;
+  flex: none;
+}
+.truck-story {
+  border-block: 1px solid var(--color-line);
+  padding: 64px max(24px, 5vw);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  background: #121214;
+}
+.truck-story h2 {
+  margin-top: 22px;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.22;
+  letter-spacing: -0.035em;
+  max-width: 20ch;
+}
+.truck-story > div > p:not(.editorial-kicker) {
+  color: #a5a29d;
+  line-height: 1.85;
+  font-size: 14px;
+  max-width: 58ch;
+}
+.truck-process {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.truck-process > div {
+  border-top: 1px solid #c5cdd630;
+  padding-top: 16px;
+}
+.truck-process span {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+}
+.truck-process p {
+  margin-top: 12px;
+  color: #a5a29d;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.truck-workspace {
+  max-width: 1280px;
+  margin: auto;
+  padding: 84px 28px;
+  scroll-margin-top: 90px;
+}
+.truck-workspace-heading {
+  margin-bottom: 36px;
+  max-width: 680px;
+}
+.truck-workspace-heading h2 {
+  font-size: clamp(26px, 3vw, 40px);
+  margin-top: 16px;
+  letter-spacing: -0.035em;
+}
+.truck-workspace-heading > p:last-child {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #a5a29d;
+  margin-top: 18px;
+}
+.truck-planner-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.4fr);
+  gap: 24px;
+  align-items: start;
+}
+.truck-config,
+.truck-content {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.truck-panel {
+  border: 1px solid #c5cdd61f;
+  border-radius: 16px;
+  padding: 28px;
+  background: linear-gradient(145deg, #19191c, #121214);
+  min-width: 0;
+}
+.truck-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 19px;
+  margin-bottom: 24px;
+}
+.truck-panel h3 svg {
+  color: var(--color-accent);
+  flex: none;
+}
+.truck-panel-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.truck-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: #a5a29d;
+  margin-top: 5px;
+}
+.truck-form {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.truck-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #b5b3af;
+}
+.truck-field input,
+.truck-field select {
+  width: 100%;
+  min-width: 0;
+  color-scheme: dark;
+}
+.truck-field select {
+  min-height: 44px;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--color-elevated);
+  border: 1px solid #c5cdd626;
+  color: var(--color-foreground);
+}
+.truck-pair,
+.truck-language-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.truck-language-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.truck-empty {
+  padding: 24px 0 32px;
+  font-size: 14px;
+  color: #a5a29d;
+  line-height: 1.8;
+}
+.truck-helper {
+  font-size: 12px;
+  color: #a5a29d;
+  line-height: 1.8;
+}
+.truck-add-form {
+  border-top: 1px solid #c5cdd626;
+  padding-top: 26px;
+  margin-top: 28px;
+}
+.truck-add-form legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.truck-add-form .truck-actions {
+  margin-top: 0;
+}
+.truck-menu-list {
+  display: grid;
+}
+.truck-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 20px;
+  border-top: 1px solid #c5cdd616;
+}
+.truck-menu-item h4 {
+  font-size: 16px;
+  word-break: break-word;
+}
+.truck-menu-item p {
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+}
+.truck-menu-item small {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #a5a29d;
+}
+.truck-item-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 4px 12px;
+  font-size: 12px;
+}
+.truck-checkbox {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+}
+.truck-checkbox input {
+  accent-color: var(--color-accent);
+  width: 17px;
+  height: 17px;
+}
+.truck-item-actions button,
+.truck-stop button {
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #c5cdd6;
+}
+.truck-stops {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+.truck-stop {
+  border-left: 2px solid #c5cdd675;
+  padding: 4px 0 4px 20px;
+}
+.truck-stop-state {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--color-accent);
+  line-height: 1.8;
+}
+.truck-stop h4 {
+  font-size: 18px;
+  margin-top: 8px;
+  word-break: break-word;
+}
+.truck-stop > p {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.truck-stop .truck-actions {
+  margin-top: 10px;
+  gap: 16px;
+}
+.truck-import {
+  position: relative;
+  display: block;
+  border: 1px dashed #c5cdd645;
+  border-radius: 8px;
+  min-height: 58px;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.7;
+  cursor: pointer;
+}
+.truck-import input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+.truck-import:focus-within {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+.truck-import-preview {
+  margin-top: 20px;
+  border-top: 1px solid #c5cdd636;
+  padding-top: 20px;
+}
+.truck-import-preview p {
+  color: #b5b3af;
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+.truck-import-preview strong {
+  overflow-wrap: anywhere;
+}
+.truck-notice {
+  padding: 16px 20px;
+  border: 1px solid #c5cdd660;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  line-height: 1.8;
+  background: #c5cdd60b;
+}
+.truck-notice[role="alert"] {
+  border-color: #e25b4c80;
+}
+.truck-panel button:disabled,
+.truck-panel fieldset:disabled {
+  opacity: 0.55;
+}
+.truck-panel a {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 1600px) {
+  .truck-story {
+    padding-inline: max(40px, calc((100vw - 1330px) / 2));
+  }
+}
+@media (max-width: 1023px) {
+  .truck-hero {
+    padding-top: 46px;
+    gap: 0;
+    min-height: auto;
+  }
+  .truck-hero h1 {
+    font-size: clamp(36px, 5vw, 56px);
+  }
+  .truck-story {
+    gap: 32px;
+  }
+  .truck-process {
+    gap: 12px;
+  }
+  .truck-panel {
+    padding: 22px;
+  }
+  .truck-planner-grid {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
+    gap: 16px;
+  }
+  .truck-language-fields,
+  .truck-pair {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 767px) {
+  .truck-page {
+    padding-top: 68px;
+  }
+  .truck-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 38px 22px 42px;
+  }
+  .truck-hero h1 {
+    font-size: clamp(35px, 8.6vw, 54px);
+    margin-top: 22px;
+  }
+  .truck-intro {
+    font-size: 14px;
+    margin-top: 22px;
+  }
+  .truck-hero .truck-actions {
+    gap: 12px 20px;
+  }
+  .truck-visual {
+    margin-top: 36px;
+    aspect-ratio: 1.18 / 1;
+  }
+  .truck-visual img {
+    width: 112%;
+    margin-left: -6%;
+  }
+  .truck-visual-index {
+    font-size: 20px;
+    top: 16px;
+    left: 18px;
+  }
+  .truck-caption {
+    font-size: 9px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .truck-caption > span {
+    display: none;
+  }
+  .truck-story {
+    grid-template-columns: 1fr;
+    padding: 42px 22px;
+    gap: 24px;
+  }
+  .truck-story h2 {
+    max-width: 24ch;
+  }
+  .truck-process {
+    gap: 16px;
+  }
+  .truck-process p {
+    font-size: 11px;
+  }
+  .truck-workspace {
+    padding: 52px 18px;
+  }
+  .truck-planner-grid {
+    grid-template-columns: 1fr;
+  }
+  .truck-panel {
+    padding: 22px 18px;
+  }
+  .truck-menu-item {
+    gap: 12px;
+    align-items: start;
+  }
+  .truck-item-actions {
+    max-width: 140px;
+  }
+  .truck-panel button {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-content > main,
+  .truck-visual img {
+    animation: none;
+  }
+  .portfolio-work-card,
+  .portfolio-work-card img {
+    transition: none;
+  }
+  .portfolio-work-card:hover,
+  .portfolio-work-card:hover img {
+    transform: none;
+  }
 }
 
 @layer base {

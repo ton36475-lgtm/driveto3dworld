@@ -19,7 +19,7 @@ function Home() {
   const hoveredWork = hovered ? getWork(hovered) : undefined;
 
   return (
-    <main>
+    <main className="portfolio-home">
       <section className="relative min-h-[100svh] overflow-hidden bg-background md:h-[100svh] md:min-h-[560px]">
         <div className="relative h-[55svh] min-h-[320px] md:absolute md:inset-0 md:h-auto">
           <SceneStage
@@ -58,6 +58,18 @@ function Home() {
                 </Button>
                 <Button asChild variant="outline">
                   <Link to="/work">{copy.hero.viewWork}</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link to="/foodtruck">
+                    {loc(
+                      {
+                        en: "Explore the food truck",
+                        th: "สำรวจฟู้ดทรัก",
+                        zh: "探索餐车",
+                      },
+                      lang,
+                    )}
+                  </Link>
                 </Button>
               </div>
             </div>

@@ -52,7 +52,7 @@ jobs:
         id: route-health
         run: |
           sh startup.sh
-          npm run verify:runtime -- http://127.0.0.1:8080 / /gallery /drive /studio /contact /forge /desk /marketing /automations /kit /people/ball /people/ton /people/studio
+          npm run verify:runtime -- http://127.0.0.1:8080 / /gallery /drive /foodtruck /studio /contact /forge /desk /marketing /automations /kit /people/ball /people/ton /people/studio
       - name: Install test browser
         id: test-browser
         run: node node_modules/playwright/cli.js install --with-deps chromium
@@ -76,6 +76,12 @@ jobs:
       - name: Exercise spatial fallback and Forge configuration
         if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
         run: node scripts/browser-spatial.mjs http://127.0.0.1:8081
+      - name: Exercise all three languages and food truck planning
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-locales.mjs http://127.0.0.1:8081
+      - name: Drive the real Blender truck and its asset fallback
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-truck.mjs http://127.0.0.1:8081
       - name: Print startup diagnostics on failure
         if: failure()
         run: |

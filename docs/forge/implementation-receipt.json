@@ -6,11 +6,19 @@
   "files": [
     {
       "path": ".github/workflows/runtime.yml",
-      "sha256": "8ffe0333ecb63351cf08897bb4f360e0e08cc4e9b70900f028cb17c5448a2661"
+      "sha256": "a2c04cb9961eab621aa620559c361e1eb75a8534baa346ef0f0d053d54a07827"
     },
     {
       "path": ".gitignore",
       "sha256": "c270a9dc14aca335fa13f32ad0b4a8d6d4a89cf497efb5363444966ba3b259e0"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2bed093177b08b1b0b39da5a53cb731815e0cbbad0147f9904db5b29a6910ae5"
+    },
+    {
+      "path": "AGENTS.project.md",
+      "sha256": "e8907f7cb8dd4ba7b4d8f90e994929c2cfe923bfad43dbc2fca5c48dcc118256"
     },
     {
       "path": "README.md",
@@ -21,12 +29,16 @@
       "sha256": "fd5e4618509dd3dc78a5aa88472f6fed57f11f062ca2dee4664403e67d0921a8"
     },
     {
+      "path": "blender-mcp-pipeline/FOODTRUCK.md",
+      "sha256": "1b23701116d02e1f579d10974968f225dcccef2b83ab60a2cd5cd74b9ab2cd53"
+    },
+    {
       "path": "blender-mcp-pipeline/PROMPTS.md",
       "sha256": "79307fbb732733c5fe708f378a8b0ca026c737af4e00540d0f3fffcbc01336d4"
     },
     {
       "path": "blender-mcp-pipeline/README.md",
-      "sha256": "df2c835c802f87a2eee63bbf943726920df74f67557b004f490d70a7fe98582a"
+      "sha256": "4c97565c2d7e4f779cb087035b52f84efe107a3deb23d7d0301e5689ada66403"
     },
     {
       "path": "blender-mcp-pipeline/WORKERS.md",
@@ -41,8 +53,20 @@
       "sha256": "60615529e66cffaeb6ebd904dea242528d57554bab46ae75e0bc4118e88db6d0"
     },
     {
+      "path": "blender-mcp-pipeline/assets/foodtruck-final.blend",
+      "sha256": "f693f0d81f9c9483e508fac1d5dc4eec6ec2719a2a995b9b1e80256d68c31f49"
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/foodtruck-structural.blend",
+      "sha256": "84ebbf4ae7d6fbbcf43e710bd468fdcbd87e2e8dc84c81bebf43cd461a714ccd"
+    },
+    {
       "path": "blender-mcp-pipeline/build_assets.py",
       "sha256": "116c282f55fc4716c9a96a7150aa0897811cd8133ae5fcebcbcee327c6e8fc5a"
+    },
+    {
+      "path": "blender-mcp-pipeline/build_foodtruck.py",
+      "sha256": "2efcb6d074d78701df2af1bd8036bbf00fcc267f95e4cc155658789f5b50f08d"
     },
     {
       "path": "blender-mcp-pipeline/contract.py",
@@ -55,6 +79,22 @@
     {
       "path": "blender-mcp-pipeline/evidence/build-receipt.json",
       "sha256": "fe5959e5e85b55ce59538c00401f0a4146d142a3536c56c8197b2cd72b97a267"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-baseline.json",
+      "sha256": "3dac62402e4a3d40d180a174b15f096cedfaea973a96d4d1e6d4108d6e435ca7"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-receipt.json",
+      "sha256": "30242686f68924ea878f76d908c08c2e1c7fa2708572e954028467a8d016b701"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/khronos-validation.json",
+      "sha256": "4e62dddf53aaf4a3b82fa248d405ee15d7df16ad202f8eb6a09a79c1552181e1"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/source-verification.json",
+      "sha256": "938ce56e61013b9e889d7188b39a517ed4f5436d4feda6e15465e655359d9701"
     },
     {
       "path": "blender-mcp-pipeline/evidence/gltf-validation.json",
@@ -89,8 +129,16 @@
       "sha256": "b41ef3d8b2cfb1444a385083b1f0ac6421fc6d985893fb5832de189b887ac427"
     },
     {
+      "path": "blender-mcp-pipeline/validate_foodtruck.mjs",
+      "sha256": "fe48815afb2aaab7a92d591e7cdd5c2eeb70cbd59ba5d0e62b969584fba5bc53"
+    },
+    {
       "path": "blender-mcp-pipeline/validate_gltf.mjs",
       "sha256": "671ad99d092b74a1c329a8e1347748316de48d5ebe735d1ed26426a4c36e024e"
+    },
+    {
+      "path": "blender-mcp-pipeline/verify_foodtruck.py",
+      "sha256": "81e72b1a31a8ba2cb8ba0054944e840f64b4196475ea269ac29c2f952578ce39"
     },
     {
       "path": "blender-mcp-pipeline/verify_scene.py",
@@ -150,11 +198,15 @@
     },
     {
       "path": "docs/forge/result-manifest.json",
-      "sha256": "87a97e08f3229e68731b202afa5c29ce949defdb4292fe6bc09828abc9311e27"
+      "sha256": "8fd9f401d022de16cf067a69c201d65861210c2ea63ce6e688f461ea52559a26"
     },
     {
       "path": "docs/forge/source-reconciliation.md",
       "sha256": "4a147232d83736c5d88ae97cc1a4ab473420357cae114e4a50358a870e6d983b"
+    },
+    {
+      "path": "docs/forge/trilingual-foodtruck.md",
+      "sha256": "527bfea82bfd782e52b1b3ba69b9df4dfad1c8ae1de890c429fb03252afe5905"
     },
     {
       "path": "docs/forge/validation.md",
@@ -170,11 +222,11 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "867bd2d22b63d9c31c09abbbe85fef7252bfe0bb4cdd6c210de427d04a524619"
+      "sha256": "3404a9dc65c024baae55a768d552e0f2e129583787971eb42db1049bd16b571f"
     },
     {
       "path": "package.json",
-      "sha256": "7e2e5186776db0eb7e7099d7f41ff05abc739d545088da5af2c69d389d22bd91"
+      "sha256": "02be69fa47b8ae87cc65a3cff2cc7670f9f9db3df828a8db6b1b88bd1680af1a"
     },
     {
       "path": "public/__grok/icon-180.png",
@@ -201,8 +253,16 @@
       "sha256": "ee23e6c84000126692e112ff067b456470493349f993ceaa8b4d3766dd6fad5d"
     },
     {
+      "path": "public/fonts/Noto-Sans-SC-OFL.txt",
+      "sha256": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3"
+    },
+    {
       "path": "public/fonts/figtree-latin-400-normal.woff",
       "sha256": "e75c125ab5ed44c6e11792d60d8e414ab905b3b46712919d977cf54aaf3e64a2"
+    },
+    {
+      "path": "public/images/foodtruck-preview.webp",
+      "sha256": "0595a4d9e9dae19909751571f4f78dfe694af126ea6cead71de6699935493cd6"
     },
     {
       "path": "public/media/garden-night.jpg",
@@ -241,6 +301,10 @@
       "sha256": "230b5c99205846d68888f6eb03a32a6b2467f99cb0df35173b445e3050492cbd"
     },
     {
+      "path": "public/models/foodtruck-body.glb",
+      "sha256": "c850a398b6abddff1f98417649c0e290c652592d4e82ec69288ee1498f326fbe"
+    },
+    {
       "path": "public/models/manifest.json",
       "sha256": "4231a2f3809569eb50d4be0619dcfef8feca53d4d3a8c73d44a2e9c721035dfb"
     },
@@ -259,6 +323,10 @@
     {
       "path": "scripts/brand-check.test.mjs",
       "sha256": "90ee59aedc586832e63b7a0b40376abbb8175d82af3b3603440b73dd5fc46dbc"
+    },
+    {
+      "path": "scripts/browser-locales.mjs",
+      "sha256": "6f237144a585e04db37fa653fec308e005589c1a645404744aa32a7f5e9df15a"
     },
     {
       "path": "scripts/browser-ops.mjs",
@@ -281,6 +349,10 @@
       "sha256": "35ba3b7f3e40410911b285678a6f58fcc7292cf39c52614db4348bf80544b38d"
     },
     {
+      "path": "scripts/browser-truck.mjs",
+      "sha256": "04daf0a01c702565f2dc5b05615457028b189146e409a8551a26e9fac75c6b63"
+    },
+    {
       "path": "scripts/check-auth-invariant.test.mjs",
       "sha256": "bfe2b44543a1981bd4a4127f2ec1f4ddacdff6d951e3b1914aa3028cc43f955b"
     },
@@ -299,6 +371,10 @@
     {
       "path": "scripts/install-page.html",
       "sha256": "0edde3eb47d24c0a21d95fa372531833222bf8cb143d79cd4e96e2a7f37c7edc"
+    },
+    {
+      "path": "scripts/locale.test.mjs",
+      "sha256": "423aecb754bad657fdb11046bbaaaaaaf3ea37afcbdf0e6e32e70004deacd995"
     },
     {
       "path": "scripts/preflight.mjs",
@@ -342,11 +418,11 @@
     },
     {
       "path": "src/components/canvas/atelier-world.tsx",
-      "sha256": "ded632dc2c53221484d9675f2fbbdbd7d5c3f04b3820a12ccef919660384a657"
+      "sha256": "1ac76cbf29f3bd941a1a09187f478866715affb1feb5906271ca9d52028bc6e1"
     },
     {
       "path": "src/components/canvas/canvas-fallback.tsx",
-      "sha256": "3f026adb8935e84310f24b644a837ec79d34e43f409244a515144237f24283a4"
+      "sha256": "9070f1402e9e4b35077177b1df94beca090c5a350a5afc4fcd571b0f0ff3be48"
     },
     {
       "path": "src/components/canvas/frame-asset.tsx",
@@ -355,6 +431,10 @@
     {
       "path": "src/components/canvas/hero-scene.tsx",
       "sha256": "e6de69a9d2d65082bf74115dcaffb66435ba39541bd17a9a0267454a6d91e7a2"
+    },
+    {
+      "path": "src/components/canvas/loading-veil.tsx",
+      "sha256": "6fa322264f9cf46b550fa2ba03704e410dccd9028791c9029af719d39001d480"
     },
     {
       "path": "src/components/canvas/quality.ts",
@@ -381,12 +461,20 @@
       "sha256": "17b982c08e3126a7a552af681260072ed70ca913ddcfc57393bf5a02ea7af23e"
     },
     {
+      "path": "src/components/layout/site-chrome.tsx",
+      "sha256": "033a6f8a82d600b1f3a2399c53f7490b0b162fa578240fcb566e7609a58ccf8e"
+    },
+    {
+      "path": "src/components/layout/site-footer.tsx",
+      "sha256": "b72870aca591d5860512d3242ee9ae4778d2295b24d0747d1e6a6e72c2ea530c"
+    },
+    {
       "path": "src/components/layout/site-nav.tsx",
-      "sha256": "a99dcb977560ec675d13b2fda1fbc2ae0cf8daa35af3a228b62865778e464441"
+      "sha256": "47266ce1fef48c6b630be99f4eef529831d93d9c98aaf0ede84b13b677cd50ef"
     },
     {
       "path": "src/components/ops/local-data.tsx",
-      "sha256": "641d3ed5fad07a6343ea0a84350758b1337f03087b07f73524d5f01c341cd7d1"
+      "sha256": "a96019ea96203773a5a7ec68579d0310249a756707eb1220dbfa4d494fba12cb"
     },
     {
       "path": "src/components/ops/ops-nav.tsx",
@@ -402,15 +490,27 @@
     },
     {
       "path": "src/components/work-card.tsx",
-      "sha256": "761b69ee1dd5ca910607ae7c9f05122c4597b49232a4d0ccf0077b8cc781c541"
+      "sha256": "f41edd77b9b0262d1302e163db8929a3e0bf815f9bc400bd2d7368672f48eeab"
     },
     {
       "path": "src/drive/DriveApp.tsx",
-      "sha256": "d28b9d148bd2a6fb947d740b7d80cadd2daf709d92a2f1bb8f2fd4792ba6142d"
+      "sha256": "429a768328a1b64003fa07540dab5bc405c90a6533c7ffa795b94a3a57019131"
     },
     {
       "path": "src/drive/data/concepts.ts",
-      "sha256": "41ea914d0d96ae2a7d66c7d450c245e664990f605bc51f38c2d572211b9a1028"
+      "sha256": "c87f1a776319ea3ccb010f42e19315a3a6cb44222ad2436bb0802f3b86933e4c"
+    },
+    {
+      "path": "src/drive/data/i18n.ts",
+      "sha256": "42fe97c5c86d8a622a441ef1a8010f239cb0c9f2453531d1fed88a49c0992fcb"
+    },
+    {
+      "path": "src/drive/data/projects.ts",
+      "sha256": "272f5a2cdad02e8940ff455102c91aa128718aa640e6bf014d2ea5406dd08e45"
+    },
+    {
+      "path": "src/drive/data/vehicle.ts",
+      "sha256": "dd5a03ac0e286879a303db9bcdae61cba86e23348bf55232e88f7bdca75a98fa"
     },
     {
       "path": "src/drive/store.ts",
@@ -433,12 +533,20 @@
       "sha256": "4e262091d8e0142998eb052840a64c79ac675e7f9922586c2b57052b3dda2685"
     },
     {
+      "path": "src/drive/systems/localization.test.ts",
+      "sha256": "98e18211496b9b66b46ad680e57ec4424a4a4db6179f8ca8066f9525b2044e16"
+    },
+    {
+      "path": "src/drive/systems/qa.ts",
+      "sha256": "4790ace20b6609b6d6843816711eecfcffda4c0b3537032c95e3cf99b2ea830f"
+    },
+    {
       "path": "src/drive/systems/save.test.ts",
-      "sha256": "3406cc5c219ad9d3e5a8de2dac5a346d2d27ad3428849f46c9bbbfaa82943c3a"
+      "sha256": "52bfc63ed5a46fb044c5304127e853399b107d08b96237208d8792d0f3d0c521"
     },
     {
       "path": "src/drive/systems/save.ts",
-      "sha256": "1ff466051b2dcef1f337b310c996eea2a0d5f8c2b6914c3353d571b1b4620670"
+      "sha256": "404f0ccd1df98ecc7b77657c7f191d4a2aa8323b6d204b2f208c628e950e5ac2"
     },
     {
       "path": "src/drive/systems/sim.test.ts",
@@ -446,11 +554,31 @@
     },
     {
       "path": "src/drive/systems/sim.ts",
-      "sha256": "f998dd0ed919e358841227fdbf8be6bee8eb6fc16ad5bd7bd299e5b924dd491b"
+      "sha256": "76b69cf1778325368662a3bf32223a5c1270d0073d8f4dc309f83209eb9d4a5c"
+    },
+    {
+      "path": "src/drive/systems/truck-asset.test.ts",
+      "sha256": "eaa99f2d5d167ed108d03f1ef7da3c1bacaa1ccdefafdc2dce6b798dcd64f153"
+    },
+    {
+      "path": "src/drive/systems/truck-asset.ts",
+      "sha256": "9e8e7681a4322facb7a69377d4b2aac0fafeb2910a978e6789baba3c868fd81e"
+    },
+    {
+      "path": "src/drive/systems/vehicle.test.ts",
+      "sha256": "18390ae999354595d62736c76f1c5e7651bbf965d339f38d530dd70581c8dd87"
     },
     {
       "path": "src/drive/ui/Catalog.tsx",
       "sha256": "087c83dd9b924a183d8182eeb738c09a125fc9687e5bdc7db28b90d2673b771d"
+    },
+    {
+      "path": "src/drive/ui/HUD.tsx",
+      "sha256": "353c523022ef6294a79035f02c6632fa46c43b1017facb8abbcabe37af436918"
+    },
+    {
+      "path": "src/drive/ui/Minimap.tsx",
+      "sha256": "f7f8d983cd27b402515d58dae8834dbd5af3483743ae253e77c22ef06d899c5a"
     },
     {
       "path": "src/drive/ui/ProjectModal.tsx",
@@ -458,23 +586,23 @@
     },
     {
       "path": "src/drive/ui/Settings.tsx",
-      "sha256": "82e1ac4b06334e34022ec6f50929040fdb98b06fc514544420208117d123b2af"
+      "sha256": "4a33c968d28ca45ff182569e577d01b06fb1246df8b413587167e72c46e75eb4"
     },
     {
       "path": "src/drive/ui/StartScreen.tsx",
-      "sha256": "7a8d7120197aef2467ba45785284d17abcaf8871793f4b82a1d905e930524fdc"
+      "sha256": "40e5da10bc54a6d54b6199b53aa65064128e6cd270ab8c79bdd108ac8e7228e4"
     },
     {
       "path": "src/drive/ui/StudyFallback.tsx",
-      "sha256": "bc1295917f9931de7d2d961d15f6f7727bff734d73b0369d79b494854b59726f"
+      "sha256": "60b8f283b7fe7d10f0b77b2682755bd142ee35cea066088a7a1ddb0eb5705a4d"
     },
     {
       "path": "src/drive/ui/TouchControls.tsx",
-      "sha256": "38283afa4baa3d9295fb33d531c128d0e9c4f3b4bd4ce9f34546f2f234ca021b"
+      "sha256": "f3ff4a6558128dba073837017b048078487bb86036ec211f0c9bed2fdde8870c"
     },
     {
       "path": "src/drive/world/Car.tsx",
-      "sha256": "633a98a5f0664c56b2254487c51f1c81ce12f3f55a171e2615f5adb12aec7e18"
+      "sha256": "68d06e9958ddc45f635d937400a9ad17b207a5b136d452293725c19ffe1d0f05"
     },
     {
       "path": "src/drive/world/Collectibles.tsx",
@@ -487,6 +615,14 @@
     {
       "path": "src/drive/world/Experience.tsx",
       "sha256": "9f9f79d1463a48026ac8c98cb75552d827c8c071f41a02339afe0f07c73296bd"
+    },
+    {
+      "path": "src/drive/world/FoodTruckBody.tsx",
+      "sha256": "66ac3b15912faa7333152386bfc6b42b734f1471fc04053eee4cf255c6b5ad28"
+    },
+    {
+      "path": "src/drive/world/Landmarks.tsx",
+      "sha256": "b74c73b3618af46a48b03e21f4b5fcea3bf8c30d40a0226766c11303e14ee442"
     },
     {
       "path": "src/drive/world/Waypoint.tsx",
@@ -509,52 +645,104 @@
       "sha256": "5b05e49493c1dc52f5eff471ac52918399bda8d472ba791ec5cd813236d04d6d"
     },
     {
+      "path": "src/lib/copy-zh.ts",
+      "sha256": "630f62c9455dcbf523430d61f169a42c1da6052e29c1bf2629ea023e750f2361"
+    },
+    {
       "path": "src/lib/copy.ts",
-      "sha256": "42c096fa5f760e061c44eda31fb582d922da97411bfe44060e4bc811f1806584"
+      "sha256": "ef3494eb1e02702f4ea89d91dd8ada3a26b380ad6b0985ba98bd964590591d76"
+    },
+    {
+      "path": "src/lib/error-component.tsx",
+      "sha256": "20fe79830481efdefcd92b497c3d3c3307607a18de1d4e89a3c1908bdbd55c3d"
+    },
+    {
+      "path": "src/lib/foodtruck/copy.ts",
+      "sha256": "f59fb84469d70e43dffc6030781b23f46633599ae334e9c0b1e65fd38123c6b2"
+    },
+    {
+      "path": "src/lib/foodtruck/model.test.ts",
+      "sha256": "8bfc74dbaeb5fba1482f03da63dfe139284f336e7036812976fd82117b1b296f"
+    },
+    {
+      "path": "src/lib/foodtruck/model.ts",
+      "sha256": "4d79fc1bdf2f13d673fd28bb322fe35513954869366858242e9c844637ec4007"
+    },
+    {
+      "path": "src/lib/foodtruck/use-foodtruck.ts",
+      "sha256": "f9a2c89edb91c755288da3389f7b8a96d7a7441653c8de83324b0512ccc73f87"
     },
     {
       "path": "src/lib/forge/config.d.mts",
-      "sha256": "ea9e743f93eacb421b0e5ffdd3cd81df2d5738021cc5e77eba4973855dcbf9af"
+      "sha256": "362bac25811d9cd1713ad818c58c006a8029496ffca9f715037b2e5ac13383d6"
     },
     {
       "path": "src/lib/forge/config.mjs",
-      "sha256": "6af547b28660aab995d24f57569b4634c2104b03ed0b5c6461d4fced8fab5e47"
+      "sha256": "cc201e5753ef58b3a5a28057f533431c7b316ef0584fc9517346eb66061a424e"
+    },
+    {
+      "path": "src/lib/forge/copy.ts",
+      "sha256": "5835326f479caf564d8473422cac2f8b485f49977238cf16d723c8b1b5f9cea4"
+    },
+    {
+      "path": "src/lib/lang.ts",
+      "sha256": "84cb7127c21094930df16c1b266987bb8bd6652a44d121e12ef7f3d120cf357b"
+    },
+    {
+      "path": "src/lib/locale.d.mts",
+      "sha256": "0fba311ba138a4dea509a7b2deaecd6a4a50d4f2ef29e8953341c761001f7724"
+    },
+    {
+      "path": "src/lib/locale.mjs",
+      "sha256": "8eab5b9c7f0dd0ab67881981c4af735dc5840c10e07de5ebe2b67946386bd5f7"
+    },
+    {
+      "path": "src/lib/ops/copy-zh.ts",
+      "sha256": "3a0e3e3ae74a19f3ee314230c2e11ae916fe54bb8b51bab689576910c2046d8f"
     },
     {
       "path": "src/lib/ops/engine.ts",
-      "sha256": "266548c3936a4b3297b7ab38dd325cf6013b8769273eda63004dbe1a29c625f0"
+      "sha256": "b42c9b447dc77240064722f91dd96fb408ad91b0f8c4c063b2a5e321c45a22cc"
     },
     {
       "path": "src/lib/ops/index.ts",
       "sha256": "6bc8b5eb34e06e023020169a8073520606896e39294cf327c08cc6c140a5cc5b"
     },
     {
+      "path": "src/lib/ops/localize.ts",
+      "sha256": "c0053e60a14925994cbe45111d0b3394721d0a05915706512bcf71440b118472"
+    },
+    {
       "path": "src/lib/ops/ops.test.ts",
-      "sha256": "b77f7e106f90d1d93408d1c8c822b0f214f978e75054dd45f0fa15285d7dcf93"
+      "sha256": "6265aaaf1e42fc168269491deab3be586d3c46091297e98fd92065c874da1350"
     },
     {
       "path": "src/lib/ops/storage.ts",
-      "sha256": "3e6ecbbc5ebd03111226b79cf0b02a79c4827917612c9165143d3f971bde4e30"
+      "sha256": "d4e1bfb524edf6b66795d695068a5509552c2f52d2d7c3c989883b547bd9db63"
     },
     {
       "path": "src/lib/ops/store.ts",
-      "sha256": "c503f929cacd945230ee3e87216d1a68aafd6f57fd88d07ff900010a03845531"
+      "sha256": "126f31dcca6fd320ee335ad732a7bfa86f030d05ff3111c0d84967f181542d1b"
     },
     {
       "path": "src/lib/ops/types.ts",
-      "sha256": "d4ac5810c19724510b09cb26a7c683db2f68866af67a96761c9fb549fca48ccb"
+      "sha256": "4df103cc897858e34c4e7fec9e232b32f458f3be371d67beecd6c76a7d16c9b6"
     },
     {
       "path": "src/lib/portfolio-profiles.ts",
-      "sha256": "ca96be07f7f9ea4f9aae9f527a86bb48eca833130312a595bc948387a8dc271d"
+      "sha256": "b500a405048636dda5142c2dcd6d1ceeb2fdc88729f6ff6ccb29175e51b8a369"
+    },
+    {
+      "path": "src/lib/works.ts",
+      "sha256": "02369c137644add633dcc4294f0c809589913697783fa49fce73fc760a52dfe9"
     },
     {
       "path": "src/routes/__root.tsx",
-      "sha256": "435ac779fdbed8f11faea4b9102bac276982866b354948fb0cfa2213030ccebe"
+      "sha256": "5fa5216ca390e318576175fad33485bb97e4eb36b9ad7397c1a78e3224bf242b"
     },
     {
       "path": "src/routes/automations.tsx",
-      "sha256": "6c09d8d1049aa44c72924b22b3d10c9acec95125034d6d4b93ec19ad6711bcbe"
+      "sha256": "4e893bb69c0d04125c55e18e3c3781cd40a550ac17507161e49330daa611a25e"
     },
     {
       "path": "src/routes/contact.tsx",
@@ -562,11 +750,15 @@
     },
     {
       "path": "src/routes/desk.tsx",
-      "sha256": "30a0ad279bcc44b0ef43cd9baceef38ad2a12bc7f80b8ba1dc631c444f7f3992"
+      "sha256": "fd5b9431ad41c32ec12250e0c3c614c334517091f69db1af5286fdae045fadce"
+    },
+    {
+      "path": "src/routes/foodtruck.tsx",
+      "sha256": "4086a14ddf924ce3bcd0e02be74a61dcac6a24b0beb2c546c1a932c451f31925"
     },
     {
       "path": "src/routes/forge.tsx",
-      "sha256": "6eaaa18b0cb37a15dee6f562428563f034231686586b9a78a489c691ed87265a"
+      "sha256": "90fa54c1790368f69da2642e89fadfc2f8a53bf48b99dd10d856f66e6b692da1"
     },
     {
       "path": "src/routes/gallery.tsx",
@@ -574,7 +766,7 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "sha256": "c28b1d8036277d317119ba8256429c1eb7513e7193b08d64ecf80ca2b5840600"
+      "sha256": "f683f9daae41a0c9f1b043acb25c2fb7329c7a2e75bb4fd9653bddefff9dc99e"
     },
     {
       "path": "src/routes/kit.tsx",
@@ -582,23 +774,23 @@
     },
     {
       "path": "src/routes/marketing.tsx",
-      "sha256": "da6b1f5de976f7fd3f3549fb1d57a7bc94060c58e4e71195cdf99ac84f564bf1"
+      "sha256": "c34548e8d0820ad161fce16e6847e7eadf0a8e367661b3250b16c8fcf38e56fb"
     },
     {
       "path": "src/routes/people.$person.tsx",
-      "sha256": "d00e0fff7ba220eeba1a3bdc0ffa57aa10f6146ac7e82463e9eeaecef62358c5"
+      "sha256": "7c846f92832d6a9cc6598737c992a3820a50e4098e0de95ddafc096920a44e2c"
     },
     {
       "path": "src/routes/studio.tsx",
-      "sha256": "c3562511299a802452bbb241abc4134220459b556c28420ab3f4b1ebbb79a6cf"
+      "sha256": "97531c50ab95beb8def506039eaff760cac0c9de8609c5f7218b64f0f35cce83"
     },
     {
       "path": "src/routes/work.$slug.tsx",
-      "sha256": "924a7ee049d77e7a22a0fba02221abb0211672ff83e6b1a675482ff6ebaa37f4"
+      "sha256": "070b5036f93dd03bed3b33557f0f43eae8f913c82bbee8a8fb5ddc4e82dacb14"
     },
     {
       "path": "src/styles.css",
-      "sha256": "506285f429e340c691f0e70357ac8634f3aeac36ab180e1df77b46b6e235ccc5"
+      "sha256": "ecfc4a4622ec98c9ed44fac13fd01fba7a384bdb41c6e7a05bee0b5cc1ac7bcc"
     },
     {
       "path": "startup.sh",

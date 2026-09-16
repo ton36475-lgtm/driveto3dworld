@@ -55,11 +55,11 @@ export function LocalData({ backup = false }: { backup?: boolean }) {
           >
             {copy.ops.exportData}
           </Button>
-          <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-white/15 px-3">
+          <label className="relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-white/15 px-3 focus-within:ring-2 focus-within:ring-accent">
             {copy.ops.importData}
             <input
               aria-label={copy.ops.importData}
-              className="max-w-44 text-xs"
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
               type="file"
               accept="application/json,.json"
               disabled={!hydrated || Boolean(error)}

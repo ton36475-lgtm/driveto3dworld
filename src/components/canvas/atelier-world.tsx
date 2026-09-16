@@ -5,12 +5,13 @@ import {
   Text,
   useTexture,
 } from "@react-three/drei";
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { Quality } from "@/components/canvas/quality";
 import { framePoses, wallRadius } from "@/lib/frame-layout";
 import type { Work } from "@/lib/works";
+import { useLocale } from "@/lib/copy";
 import { FrameAsset } from "@/components/canvas/frame-asset";
 
 const FRAME_W = 1.78;
@@ -427,19 +428,57 @@ function WorkFrame({
         <boxGeometry args={[0.62, 0.09, 0.03]} />
         <meshStandardMaterial color="#1a1a1c" metalness={0.4} roughness={0.45} />
       </mesh>
-      <Text
-        font="/fonts/figtree-latin-400-normal.woff"
-        fontSize={0.07}
-        position={[0, -FRAME_H / 2 - 0.2, 0.04]}
-        color={active ? "#f1ece4" : "#8c8880"}
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.1}
-      >
-        CONCEPT
-      </Text>
+      <ConceptPlaque active={active} />
     </group>
   );
+}
+
+/** Canvas text uses our self-hosted CSS fonts, including Thai and Chinese glyphs. */
+function ConceptPlaque({ active }: { active: boolean }) {
+  const lang = useLocale();
+  const invalidate = useThree((state) => state.invalidate);
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 96;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    const label = { en: "CONCEPT", th: "แนวคิด", zh: "概念" }[lang];
+    const family = { en: "Figtree", th: "IBM Plex Sans Thai", zh: "Noto Sans SC Variable" }[lang];
+    const font = `500 64px "${family}"`;
+    const next = new THREE.CanvasTexture(canvas);
+    next.colorSpace = THREE.SRGBColorSpace;
+    let disposed = false;
+    const draw = () => {
+      if (disposed) return;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.font = `${font}, sans-serif`;
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = active ? "#f1ece4" : "#8c8880";
+      context.fillText(label, canvas.width / 2, canvas.height / 2, canvas.width - 24);
+      next.needsUpdate = true;
+      invalidate();
+    };
+    draw();
+    setTexture(next);
+    // Request the exact glyph subset; fonts.ready alone may precede the Chinese label.
+    void document.fonts
+      .load(font, label)
+      .then(draw)
+      .catch(() => undefined);
+    return () => {
+      disposed = true;
+      next.dispose();
+    };
+  }, [lang, active, invalidate]);
+  return texture ? (
+    <mesh position={[0, -FRAME_H / 2 - 0.2, 0.04]}>
+      <planeGeometry args={[0.6, 0.1125]} />
+      <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
+    </mesh>
+  ) : null;
 }
 
 function ProceduralFrame({ metal }: { metal: THREE.MeshStandardMaterial }) {

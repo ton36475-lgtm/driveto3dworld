@@ -3,7 +3,7 @@ export type ForgeConfig = {
   family: "universal-business";
   preset: "creative-studio" | "professional-service" | "music-event";
   theme: "ink" | "slate";
-  locale: "en" | "th";
+  locale: "en" | "th" | "zh";
   stack: "tanstack-start";
   scene: "salon" | "static";
   density: 2 | 4 | 8;

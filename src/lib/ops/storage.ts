@@ -85,12 +85,34 @@ export function validOps(value: unknown): value is OpsState {
       member(DRAFT_CHANNELS, row.channel) &&
       text(row.titleEn) &&
       text(row.titleTh) &&
+      (row.titleZh === undefined || text(row.titleZh)) &&
       text(row.bodyEn) &&
       text(row.bodyTh) &&
+      (row.bodyZh === undefined || text(row.bodyZh)) &&
       member(DRAFT_STATUSES, row.status) &&
       time(row.updatedAt) &&
       (row.blockReason === null || text(row.blockReason, 500)),
   );
+}
+
+/**
+ * Additive EN/TH -> EN/TH/ZH migration. Missing translations stay absent: silently
+ * copying English into Chinese would mislabel user content and inflate full backups.
+ * A legacy ready flag becomes draft (same encoded byte length), so even backups at
+ * the 5 MiB boundary remain importable. Original text/timestamps are left untouched.
+ * Reads normalize in memory; the next successful write persists the migrated status.
+ */
+export function migrateDraftLanguages(state: OpsState): OpsState {
+  const missingChinese = (draft: OpsState["drafts"][number]) =>
+    !draft.titleZh?.trim() || !draft.bodyZh?.trim();
+  if (!state.drafts.some((draft) => draft.status === "ready" && missingChinese(draft)))
+    return state;
+  return {
+    ...state,
+    drafts: state.drafts.map((draft) =>
+      draft.status === "ready" && missingChinese(draft) ? { ...draft, status: "draft" } : draft,
+    ),
+  };
 }
 
 function parseJson(raw: string): unknown {
@@ -108,7 +130,7 @@ export function readStored(storage: LocalStorage): OpsState {
   const envelope = parseJson(raw);
   if (!isObject(envelope) || envelope.version !== 0 || !validOps(envelope.state))
     throw new Error("invalid-storage");
-  return envelope.state;
+  return migrateDraftLanguages(envelope.state);
 }
 
 const MAX_TIMESTAMP = 8.64e15;
@@ -120,7 +142,8 @@ function compactBackup(state: OpsState, exportedAt: number): string {
 /** Admit only states whose largest supported backup envelope fits the import limit. */
 function portableState(state: OpsState): OpsState {
   if (!validOps(state)) throw new Error("invalid-state");
-  const data = { inquiries: state.inquiries, jobs: state.jobs, drafts: state.drafts };
+  const migrated = migrateDraftLanguages(state);
+  const data = { inquiries: migrated.inquiries, jobs: migrated.jobs, drafts: migrated.drafts };
   if (new TextEncoder().encode(compactBackup(data, MAX_TIMESTAMP)).length > MAX_BACKUP_BYTES)
     throw new Error("backup-too-large");
   return data;

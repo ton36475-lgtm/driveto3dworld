@@ -30,4 +30,6 @@ test("preferences are typed strictly and time is finite and normalized", () => {
   assert.equal(save.dayTime, 0.75);
   assert.equal(normalizeSave({ dayTime: NaN }, ids).dayTime, 0.32);
   assert.deepEqual(normalizeSave(save, ids), save);
+  assert.equal(normalizeSave({ lang: "zh" }, ids).lang, "zh");
+  assert.equal(normalizeSave({ lang: "unsupported" }, ids).lang, "en");
 });

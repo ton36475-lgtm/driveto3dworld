@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "persisted-final-structure",
+      "status": "PASS",
+      "exitCode": 0,
+      "diagnostic": "{\"objectsCompared\": 22, \"status\": \"PASS\", \"structureHash\": \"d1865b1c23049ad9e29aa46cc1bdd9bfdcc0aa7c6bbb541091016d62b04d5a75\"}\nBlender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\nRead blend: \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build/foodtruck-004/foodtruck-final.blend\"\n\nBlender quit\n"
+    },
+    {
+      "name": "moved-serving-counter-rejected",
+      "status": "PASS",
+      "exitCode": 1,
+      "diagnostic": "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\nRead blend: \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build/foodtruck-004/foodtruck-final.blend\"\n\nBlender quit\nTraceback (most recent call last):\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_foodtruck.py\", line 18, in <module>\n    print(json.dumps(verify(baseline,snapshot()),sort_keys=True))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build_foodtruck.py\", line 264, in verify\n    if changed: raise ValueError('Truck structure changed: '+','.join(changed))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Truck structure changed: Serving_Counter\n\nError: script failed, file: '/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_foodtruck.py', exiting.\n"
+    }
+  ]
+}

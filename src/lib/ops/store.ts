@@ -26,7 +26,10 @@ export type OpsStore = OpsState & {
   close: (id: string) => string | null;
   tick: () => void;
   parkJob: (id: string, reason: string) => string | null;
-  editDraft: (id: string, patch: Partial<Pick<Draft, "bodyEn" | "bodyTh">>) => string | null;
+  editDraft: (
+    id: string,
+    patch: Partial<Pick<Draft, "bodyEn" | "bodyTh" | "bodyZh" | "titleEn" | "titleTh" | "titleZh">>,
+  ) => string | null;
   readyDraft: (id: string) => string | null;
   restore: (raw: string) => string | null;
 };

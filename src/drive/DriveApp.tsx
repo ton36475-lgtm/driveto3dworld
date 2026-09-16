@@ -19,6 +19,7 @@ import { useReducedMotion, useSceneVisibility, useWebGLSupport } from "@/compone
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
 import { CanvasFallback } from "@/components/canvas/canvas-fallback";
 import { StudyFallback } from "./ui/StudyFallback";
+import { COPY } from "./data/i18n";
 
 export default function DriveApp() {
   const root = useRef<HTMLDivElement>(null);
@@ -91,7 +92,7 @@ export default function DriveApp() {
       data-scene-state={unavailable ? "fallback" : rendered ? "ready" : "loading"}
       data-scene-active={live ? "true" : "false"}
     >
-      {unavailable ? <StudyFallback /> : webgl === "checking" ? <CanvasFallback label={siteLang === "th" ? "กำลังเตรียมลาน" : "Preparing the grounds"} /> : <WebGLBoundary fallback={<StudyFallback />} onFailure={onUnavailable}>
+      {unavailable ? <StudyFallback /> : webgl === "checking" ? <CanvasFallback label={COPY[siteLang].loading} /> : <WebGLBoundary fallback={<StudyFallback />} onFailure={onUnavailable}>
       <Canvas
         shadows={quality !== "low"}
         dpr={quality === "low" ? 1 : [1, quality === "medium" ? 1.25 : 1.6]}

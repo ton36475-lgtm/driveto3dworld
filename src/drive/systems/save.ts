@@ -5,7 +5,7 @@ export type DriveSave = {
   collected: string[];
   muted: boolean;
   weather: Weather;
-  lang: "en" | "th";
+  lang: "en" | "th" | "zh";
   quality: Quality;
   dayPaused: boolean;
   dayTime: number;
@@ -24,7 +24,7 @@ export function normalizeSave(raw: unknown, validIds: readonly string[], default
     collected,
     muted: data.muted === true,
     weather: data.weather === "clear" || data.weather === "rain" || data.weather === "snow" ? data.weather : "auto",
-    lang: data.lang === "th" ? "th" : "en",
+    lang: data.lang === "th" || data.lang === "zh" ? data.lang : "en",
     quality: data.quality === "high" || data.quality === "medium" || data.quality === "low" ? data.quality : defaultQuality,
     dayPaused: data.dayPaused === true,
     dayTime: typeof data.dayTime === "number" && Number.isFinite(data.dayTime)

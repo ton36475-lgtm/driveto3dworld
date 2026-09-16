@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { sim, advanceSimulation } from "../systems/sim";
@@ -13,6 +13,8 @@ import { isDriveBlocked, useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
 import { installQA } from "../systems/qa";
 import { useReducedMotion } from "@/components/canvas/runtime-hooks";
+import { FoodTruckBody } from "./FoodTruckBody";
+import { FOOD_TRUCK, TRUCK_WHEELS } from "../data/vehicle";
 
 export function Car() {
   const reducedMotion = useReducedMotion();
@@ -24,6 +26,11 @@ export function Car() {
   const targetR = useRef<THREE.Object3D>(null);
   const started = useDrive((s) => s.started);
   const setSpeedKmh = useDrive((s) => s.setSpeedKmh);
+  const lamps = useMemo(() => ({
+    front: new THREE.MeshStandardMaterial({ color: "#f4efe6", emissive: "#f4efe6", emissiveIntensity: 0.4 }),
+    rear: new THREE.MeshStandardMaterial({ color: "#a9403b", emissive: "#a9403b", emissiveIntensity: 0.3 }),
+  }), []);
+  useEffect(() => () => { lamps.front.dispose(); lamps.rear.dispose(); }, [lamps]);
   const tmp = useRef({
     cam: new THREE.Vector3(),
     look: new THREE.Vector3(),
@@ -50,16 +57,18 @@ export function Car() {
     const g = group.current;
     if (!g) return;
     const blocked = isDriveBlocked();
+    lamps.front.emissiveIntensity = 0.4 + dayState.night * 2.2;
+    lamps.rear.emissiveIntensity = 0.3 + dayState.night * 1.6;
 
     if (!started) {
       g.position.set(sim.x, sim.y, sim.z);
       g.rotation.y = sim.yaw;
-      if (reducedMotion) state.camera.position.set(14, 8, 14);
+      if (reducedMotion) state.camera.position.set(sim.x + 7.2, sim.y + 4.8, sim.z + 8.5);
       else {
-        const t = state.clock.elapsedTime * 0.12;
-        state.camera.position.lerp(tmp.current.desired.set(Math.sin(t) * 16, 7.5, Math.cos(t) * 16), 1 - Math.exp(-2.2 * dt));
+        const t = state.clock.elapsedTime * 0.08 + 0.7;
+        state.camera.position.lerp(tmp.current.desired.set(sim.x + Math.sin(t) * 10, sim.y + 4.8, sim.z + Math.cos(t) * 10), 1 - Math.exp(-2.2 * dt));
       }
-      state.camera.lookAt(0, 0.6, 0);
+      state.camera.lookAt(sim.x, sim.y + 1, sim.z);
       return;
     }
 
@@ -76,7 +85,7 @@ export function Car() {
     g.position.set(sim.x, sim.y, sim.z);
     g.rotation.order = "YZX";
     g.rotation.y = sim.yaw;
-    g.rotation.z = reducedMotion ? 0 : sim.roll;
+    g.rotation.z = reducedMotion ? 0 : sim.roll * 0.35;
 
     for (let i = 0; i < wheels.current.length; i++) {
       const w = wheels.current[i];
@@ -87,11 +96,11 @@ export function Car() {
 
     const fx = -Math.sin(sim.yaw);
     const fz = -Math.cos(sim.yaw);
-    const follow = 8.6;
-    const height = 4.4;
+    const follow = 10.6;
+    const height = 6;
     const { desired, look, cam } = tmp.current;
     desired.set(sim.x - fx * follow, sim.y + height, sim.z - fz * follow);
-    look.set(sim.x + fx * 5.5, sim.y + 0.85, sim.z + fz * 5.5);
+    look.set(sim.x + fx * 5.5, sim.y + 1.15, sim.z + fz * 5.5);
     cam.copy(state.camera.position);
     cam.lerp(desired, reducedMotion ? 1 : 1 - Math.exp(-3.4 * dt));
     state.camera.position.copy(cam);
@@ -108,50 +117,22 @@ export function Car() {
     if (lightR.current) lightR.current.intensity = hi;
   });
 
-  const night = dayState.night;
-
   return (
     <group ref={group} position={[sim.x, sim.y, sim.z]}>
-      <mesh castShadow position={[0, 0.28, -0.12]}>
-        <boxGeometry args={[1.28, 0.36, 2.28]} />
-        <meshStandardMaterial color="#e25b4c" metalness={0.35} roughness={0.38} />
-      </mesh>
-      <mesh castShadow position={[0, 0.52, 0.18]}>
-        <boxGeometry args={[1.08, 0.34, 1.12]} />
-        <meshStandardMaterial color="#1a1c20" metalness={0.2} roughness={0.25} />
-      </mesh>
-      <mesh position={[0, 0.58, 0.16]}>
-        <boxGeometry args={[0.98, 0.22, 0.92]} />
-        <meshStandardMaterial color="#8fb4c8" metalness={0.7} roughness={0.12} transparent opacity={0.45} />
-      </mesh>
-      <mesh position={[0, 0.22, -1.22]}>
-        <boxGeometry args={[1.18, 0.12, 0.12]} />
-        <meshStandardMaterial color="#cfc8be" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[-0.42, 0.28, -1.18]}>
+      <FoodTruckBody />
+      <mesh position={[-0.655, 0.645, -1.711]} material={lamps.front}>
         <boxGeometry args={[0.18, 0.1, 0.08]} />
-        <meshStandardMaterial color="#f4efe6" emissive="#f4efe6" emissiveIntensity={0.4 + night * 2.2} />
       </mesh>
-      <mesh position={[0.42, 0.28, -1.18]}>
+      <mesh position={[0.655, 0.645, -1.711]} material={lamps.front}>
         <boxGeometry args={[0.18, 0.1, 0.08]} />
-        <meshStandardMaterial color="#f4efe6" emissive="#f4efe6" emissiveIntensity={0.4 + night * 2.2} />
       </mesh>
-      <mesh position={[-0.4, 0.3, 1.08]}>
+      <mesh position={[-0.72, 0.58, 1.71]} material={lamps.rear}>
         <boxGeometry args={[0.22, 0.08, 0.06]} />
-        <meshStandardMaterial color="#e25b4c" emissive="#e25b4c" emissiveIntensity={0.3 + night * 1.6} />
       </mesh>
-      <mesh position={[0.4, 0.3, 1.08]}>
+      <mesh position={[0.72, 0.58, 1.71]} material={lamps.rear}>
         <boxGeometry args={[0.22, 0.08, 0.06]} />
-        <meshStandardMaterial color="#e25b4c" emissive="#e25b4c" emissiveIntensity={0.3 + night * 1.6} />
       </mesh>
-      {(
-        [
-          [-0.58, 0.18, -0.72],
-          [0.58, 0.18, -0.72],
-          [-0.58, 0.18, 0.78],
-          [0.58, 0.18, 0.78],
-        ] as const
-      ).map((p, i) => (
+      {TRUCK_WHEELS.map((p, i) => (
         <group key={i} position={[p[0], p[1], p[2]]}>
           <group
             ref={(el) => {
@@ -159,25 +140,25 @@ export function Car() {
             }}
           >
             <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-              <cylinderGeometry args={[0.22, 0.22, 0.16, 10]} />
+              <cylinderGeometry args={[FOOD_TRUCK.wheelRadius, FOOD_TRUCK.wheelRadius, 0.22, 16]} />
               <meshStandardMaterial color="#141416" roughness={0.7} />
             </mesh>
             <mesh rotation={[0, 0, Math.PI / 2]}>
-              <cylinderGeometry args={[0.1, 0.1, 0.17, 8]} />
+              <cylinderGeometry args={[0.17, 0.17, 0.23, 12]} />
               <meshStandardMaterial color="#cfc8be" metalness={0.7} roughness={0.25} />
             </mesh>
           </group>
         </group>
       ))}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-        <circleGeometry args={[1.3, 12]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.31, 0]} scale={[1, 1.75, 1]} receiveShadow>
+        <circleGeometry args={[1.28, 24]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.28} />
       </mesh>
-      <object3D ref={targetL} position={[-0.42, 0.1, -10]} />
-      <object3D ref={targetR} position={[0.42, 0.1, -10]} />
+      <object3D ref={targetL} position={[-0.67, 0.05, -12]} />
+      <object3D ref={targetR} position={[0.67, 0.05, -12]} />
       <spotLight
         ref={lightL}
-        position={[-0.42, 0.42, -1.15]}
+        position={[-0.67, 0.72, -1.75]}
         angle={0.42}
         penumbra={0.55}
         distance={26}
@@ -187,7 +168,7 @@ export function Car() {
       />
       <spotLight
         ref={lightR}
-        position={[0.42, 0.42, -1.15]}
+        position={[0.67, 0.72, -1.75]}
         angle={0.42}
         penumbra={0.55}
         distance={26}

@@ -46,8 +46,11 @@ export type Draft = {
   channel: DraftChannel;
   titleEn: string;
   titleTh: string;
+  /** Absent in legacy EN/TH backups until the owner supplies a translation. */
+  titleZh?: string;
   bodyEn: string;
   bodyTh: string;
+  bodyZh?: string;
   status: DraftStatus;
   updatedAt: number;
   blockReason: string | null;

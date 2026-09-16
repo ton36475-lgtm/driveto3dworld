@@ -1,0 +1,47 @@
+{
+  "filename": "foodtruck-body.glb",
+  "validator": "2.0.0-dev.3.10",
+  "sha256": "c850a398b6abddff1f98417649c0e290c652592d4e82ec69288ee1498f326fbe",
+  "status": "PASS",
+  "report": {
+    "uri": "foodtruck-body.glb",
+    "mimeType": "model/gltf-binary",
+    "validatorVersion": "2.0.0-dev.3.10",
+    "validatedAt": "2026-09-16T08:07:04.465Z",
+    "issues": {
+      "numErrors": 0,
+      "numWarnings": 0,
+      "numInfos": 0,
+      "numHints": 0,
+      "messages": [],
+      "truncated": false
+    },
+    "info": {
+      "version": "2.0",
+      "generator": "Khronos glTF Blender I/O v4.5.51",
+      "extensionsUsed": [
+        "KHR_materials_emissive_strength"
+      ],
+      "resources": [
+        {
+          "pointer": "/buffers/0",
+          "mimeType": "application/gltf-buffer",
+          "storage": "glb",
+          "byteLength": 370620
+        }
+      ],
+      "animationCount": 0,
+      "materialCount": 7,
+      "hasMorphTargets": false,
+      "hasSkins": false,
+      "hasTextures": false,
+      "hasDefaultScene": true,
+      "drawCallCount": 17,
+      "totalVertexCount": 13908,
+      "totalTriangleCount": 6886,
+      "maxUVs": 0,
+      "maxInfluences": 0,
+      "maxAttributes": 2
+    }
+  }
+}

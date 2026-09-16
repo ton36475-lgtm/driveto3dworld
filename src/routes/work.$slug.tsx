@@ -83,26 +83,36 @@ function CaseStudyPage() {
       <div className="mx-auto mt-14 grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_16rem]">
         <div className="max-w-2xl space-y-5 text-base leading-relaxed text-muted">
           <h2 className="font-display text-2xl text-foreground">
-            {lang === "th" ? "สำรวจแนวคิด" : "Explore the concept"}
+            {loc({ en: "Explore the concept", th: "สำรวจแนวคิด", zh: "探索设计概念" }, lang)}
           </h2>
           <p>
-            {lang === "th"
-              ? "ใช้ภาพและห้องสามมิติเพื่อสำรวจองค์ประกอบ วัสดุ แสง และการนำเสนอ เปรียบเทียบแนวทางกับงานศึกษาอื่นในแกลเลอรีได้"
-              : "Use the image and 3D room to explore composition, materials, light and presentation. Compare this visual direction with the other studies in the gallery."}
+            {loc(
+              {
+                en: "Use the image and 3D room to explore composition, materials, light and presentation. Compare this visual direction with the other studies in the gallery.",
+                th: "ใช้ภาพและห้องสามมิติเพื่อสำรวจองค์ประกอบ วัสดุ แสง และการนำเสนอ เปรียบเทียบแนวทางกับงานศึกษาอื่นในแกลเลอรีได้",
+                zh: "通过图像与三维展厅探索构图、材料、光线及呈现方式，并与画廊中的其他概念研究比较视觉方向。",
+              },
+              lang,
+            )}
           </p>
           <p>
-            {lang === "th"
-              ? "ข้อมูลโครงการและเครดิตจะเพิ่มเติมเมื่อมีหลักฐานยืนยัน หน้านี้ยังไม่แสดงชื่อลูกค้า บทบาทผู้สร้าง หรือผลลัพธ์การส่งมอบจริง"
-              : "Project details and credits can be added when supporting evidence is available. Client commissions, creator roles and delivery outcomes remain unverified."}
+            {loc(
+              {
+                en: "Project details and credits can be added when supporting evidence is available. Client commissions, creator roles and delivery outcomes remain unverified.",
+                th: "ข้อมูลโครงการและเครดิตจะเพิ่มเติมเมื่อมีหลักฐานยืนยัน หน้านี้ยังไม่แสดงชื่อลูกค้า บทบาทผู้สร้าง หรือผลลัพธ์การส่งมอบจริง",
+                zh: "待有相关证据后，将补充项目详情与创作署名。客户委托、创作者职责及交付成果均尚未核实。",
+              },
+              lang,
+            )}
           </p>
         </div>
         <aside className="space-y-6 text-sm">
           <Meta
-            label={lang === "th" ? "สถานะ" : "Status"}
+            label={loc({ en: "Status", th: "สถานะ", zh: "状态" }, lang)}
             value={loc(CONCEPT_EVIDENCE.label, lang)}
           />
           <Meta
-            label={lang === "th" ? "หัวข้อศึกษา" : "Study areas"}
+            label={loc({ en: "Study areas", th: "หัวข้อศึกษา", zh: "研究方向" }, lang)}
             value={work.disciplines.map((discipline) => copy.filters[discipline]).join(" · ")}
           />
           <Button asChild variant="outline" className="w-full">

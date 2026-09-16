@@ -1,11 +1,14 @@
 import { useLang, type Lang } from "@/lib/lang";
+import { copyZh } from "./copy-zh";
 
 export const copy = {
+  zh: copyZh,
   en: {
     nav: {
       work: "Work",
       gallery: "3D Gallery",
       drive: "Drive",
+      foodtruck: "Food truck",
       studio: "Studio",
       contact: "Contact",
       open: "Open menu",
@@ -178,6 +181,7 @@ export const copy = {
       work: "Work",
       gallery: "3D Gallery",
       drive: "Drive",
+      foodtruck: "Food truck",
       studio: "Studio",
       contact: "Contact",
     },
@@ -251,11 +255,15 @@ export const copy = {
       },
       marketingTitle: "Channel drafts.",
       marketingLede:
-        "LINE, Facebook, Instagram, TikTok, Google, and the site. Drafts live here. Ready means the copy is long enough — not that it was sent. There is no live publish from this room.",
+        "Draft English, Thai, and Chinese copy for LINE, Facebook, Instagram, TikTok, Google, and the site. Ready checks titles and minimum body length in all three languages; it does not fact-check, send, or publish anything.",
       editDraft: "Edit draft",
+      editDraftTitle: "Edit draft title",
+      needsTranslation:
+        "This older draft has no Chinese translation. Add a Chinese title and body before marking all three languages ready.",
       markReady: "Mark ready",
       noSend: "Send is off",
-      blockedBody: "Write a fuller body in both voices before this can be ready.",
+      blockedBody:
+        "Write a title and at least 20 characters of body text in English, Thai, and Chinese before marking this draft ready.",
       draftStatus: {
         draft: "Draft",
         ready: "Ready",
@@ -273,7 +281,7 @@ export const copy = {
       autoLede:
         "Local reminders are evaluated when this page opens and every 15 seconds while it stays open. Overdue items remain visible when you return. There is no background worker or external delivery.",
       runTick: "Run SLA tick",
-      emptyJobs: "No jobs yet. Send an enquiry to open the first two.",
+      emptyJobs: "No jobs yet. Save a brief locally to create the first two.",
       due: "Due",
       park: "Park",
       statOpen: "Open",
@@ -324,7 +332,7 @@ export const copy = {
         "Enquiry → staff task + SLA",
         "Desk assign / quote / close",
         "Marketing drafts with a ready gate",
-        "EN / TH in lockstep",
+        "EN / TH / 中文 together",
       ],
       blockedTitle: "Not on this host",
       blockedItems: [
@@ -345,6 +353,7 @@ export const copy = {
       work: "งาน",
       gallery: "แกลเลอรี 3D",
       drive: "ขับ",
+      foodtruck: "ฟู้ดทรัก",
       studio: "สตูดิโอ",
       contact: "ติดต่อ",
       open: "เปิดเมนู",
@@ -517,6 +526,7 @@ export const copy = {
       work: "งาน",
       gallery: "แกลเลอรี 3D",
       drive: "ขับ",
+      foodtruck: "ฟู้ดทรัก",
       studio: "สตูดิโอ",
       contact: "ติดต่อ",
     },
@@ -590,11 +600,15 @@ export const copy = {
       },
       marketingTitle: "ฉบับร่างช่องทาง",
       marketingLede:
-        "LINE เฟซบุ๊ก อินสตาแกรม ติ๊กต็อก กูเกิล และเว็บ ฉบับร่างอยู่ที่นี่ พร้อม หมายถึงข้อความยาวพอ — ไม่ได้แปลว่าส่งแล้ว ห้องนี้ไม่มีปุ่มปล่อยสด",
+        "ร่างข้อความอังกฤษ ไทย และจีนสำหรับ LINE เฟซบุ๊ก อินสตาแกรม ติ๊กต็อก กูเกิล และเว็บ สถานะพร้อมตรวจชื่อและความยาวเนื้อหาขั้นต่ำครบสามภาษา ไม่ได้ตรวจข้อเท็จจริง ส่ง หรือเผยแพร่ข้อความ",
       editDraft: "แก้ฉบับร่าง",
+      editDraftTitle: "แก้ชื่อฉบับร่าง",
+      needsTranslation:
+        "ฉบับร่างเดิมยังไม่มีคำแปลจีน เพิ่มชื่อและเนื้อหาภาษาจีนก่อนตั้งทั้งสามภาษาเป็นพร้อม",
       markReady: "ตั้งเป็นพร้อม",
       noSend: "ส่งยังปิด",
-      blockedBody: "เขียนเนื้อให้ครบสองภาษา ก่อนจะตั้งเป็นพร้อมได้",
+      blockedBody:
+        "ใส่ชื่อและเนื้อหาอย่างน้อย 20 ตัวอักษรในภาษาอังกฤษ ไทย และจีน ก่อนตั้งฉบับร่างเป็นพร้อม",
       draftStatus: {
         draft: "ร่าง",
         ready: "พร้อม",
@@ -612,7 +626,7 @@ export const copy = {
       autoLede:
         "ตรวจการเตือนในเครื่องเมื่อเปิดหน้านี้และทุก 15 วินาทีขณะเปิดหน้า รายการเกินกำหนดจะแสดงเมื่อกลับมา ไม่มีตัวทำงานเบื้องหลังหรือการส่งออกภายนอก",
       runTick: "เดินนาฬิกา SLA",
-      emptyJobs: "ยังไม่มีงาน ส่งข้อความเพื่อเปิดสองงานแรก",
+      emptyJobs: "ยังไม่มีงาน บันทึกบรีฟในเครื่องเพื่อสร้างสองงานแรก",
       due: "ครบกำหนด",
       park: "พักไว้",
       statOpen: "เปิด",
@@ -663,7 +677,7 @@ export const copy = {
         "ข้อความ → งานพนักงาน + SLA",
         "โต๊ะงาน มอบหมาย / ร่างใบเสนอ / ปิด",
         "ฉบับร่างการตลาดพร้อมเกณฑ์ความยาว",
-        "EN / TH คู่กัน",
+        "EN / TH / 中文 พร้อมกัน",
       ],
       blockedTitle: "ไม่บนโฮสต์นี้",
       blockedItems: [

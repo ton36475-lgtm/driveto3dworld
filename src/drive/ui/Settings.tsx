@@ -1,4 +1,4 @@
-import { COPY } from "../data/i18n";
+import { COPY, LANGUAGE_LABELS } from "../data/i18n";
 import { useDrive, saveDaySettings, type Quality, type Weather } from "../store";
 import { dayState, setDayPaused, setDayTime } from "../systems/dayNight";
 import { useEffect, useState, type ReactNode } from "react";
@@ -67,14 +67,15 @@ export function Settings() {
 
         <Field label={c.language}>
           <div className="flex gap-2">
-            {(["en", "th"] as const).map((l) => (
+            {(["th", "zh", "en"] as const).map((l) => (
               <button
                 key={l}
                 type="button"
                 className={lang === l ? "primary-btn !min-h-10 !px-4" : "ghost-btn !min-h-10 !px-4"}
                 onClick={() => setLang(l)}
+                aria-pressed={lang === l}
               >
-                {l.toUpperCase()}
+                {LANGUAGE_LABELS[l]}
               </button>
             ))}
           </div>

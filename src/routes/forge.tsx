@@ -4,6 +4,7 @@ import { Download, SlidersHorizontal } from "lucide-react";
 import { SceneStage } from "@/components/scene-stage";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/lib/copy";
+import { forgeCopy } from "@/lib/forge/copy";
 import { WORKS } from "@/lib/works";
 import {
   defaultConfig,
@@ -14,24 +15,13 @@ import {
 } from "@/lib/forge/config.mjs";
 
 export const Route = createFileRoute("/forge")({ component: ForgePage });
-const titles = {
-  "creative-studio": { en: "A space for creative work.", th: "พื้นที่สำหรับงานสร้างสรรค์" },
-  "professional-service": {
-    en: "Turn an idea into a clear brief.",
-    th: "เปลี่ยนไอเดียเป็นบรีฟที่ชัดเจน",
-  },
-  "music-event": {
-    en: "Make room for the next performance.",
-    th: "เปิดพื้นที่ให้การแสดงครั้งต่อไป",
-  },
-};
 function ForgePage() {
   const pageRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (pageRef.current) pageRef.current.dataset.pageReady = "true";
   }, []);
   const lang = useLocale();
-  const th = lang === "th";
+  const t = forgeCopy[lang];
   const [config, setConfig] = useState<ForgeConfig>(defaultConfig);
   const [selected, setSelected] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -43,7 +33,7 @@ function ForgePage() {
   const exportConfig = () => {
     const errors = validateConfig(c);
     if (errors.length) {
-      setNotice(errors.join(", "));
+      setNotice(`${t.invalid}: ${errors.join(", ")}`);
       return;
     }
     const url = URL.createObjectURL(
@@ -54,7 +44,7 @@ function ForgePage() {
     link.download = `sxb-${c.preset}.v1.json`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setNotice(th ? "ส่งออกการตั้งค่าแล้ว" : "Configuration exported");
+    setNotice(t.exported);
   };
   const field =
     "mt-2 min-h-11 w-full rounded-lg border border-line bg-background px-3 py-2 text-sm";
@@ -69,74 +59,58 @@ function ForgePage() {
   return (
     <main ref={pageRef} className="mx-auto max-w-6xl px-4 pb-24 pt-28 sm:px-6">
       <p className="flex items-center gap-2 text-xs tracking-[0.22em] text-muted uppercase">
-        <SlidersHorizontal size={16} /> Studio tools / 01
+        <SlidersHorizontal size={16} /> {t.kicker}
       </p>
-      <h1 className="mt-4 font-display text-4xl sm:text-6xl">
-        {th ? "ออกแบบพื้นที่ของคุณ" : "Shape your space"}
-      </h1>
-      <p className="mt-4 max-w-2xl text-muted">
-        {th
-          ? "เลือกแนวทาง ปรับบรรยากาศ และดาวน์โหลดการตั้งค่าเพื่อนำไปใช้ต่อ"
-          : "Choose a direction, adjust the atmosphere, and export your configuration to reuse."}
-      </p>
+      <h1 className="mt-4 font-display text-4xl sm:text-6xl">{t.title}</h1>
+      <p className="mt-4 max-w-2xl text-muted">{t.lede}</p>
       <div className="mt-10 grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <section
-          aria-label={th ? "การตั้งค่า" : "Configuration"}
+          aria-label={t.configuration}
           className="rounded-xl border border-line bg-surface p-5 space-y-5"
         >
           <label className="block text-sm">
-            {th ? "รูปแบบงาน" : "Business preset"}
+            {t.preset}
             <select
-              aria-label={th ? "รูปแบบงาน" : "Business preset"}
+              aria-label={t.preset}
               className={field}
               value={c.preset}
               onChange={(e) => update("preset", e.target.value as ForgeConfig["preset"])}
             >
               {PRESETS.map((p) => (
                 <option key={p} value={p}>
-                  {p === "creative-studio"
-                    ? th
-                      ? "สตูดิโอสร้างสรรค์"
-                      : "Creative studio"
-                    : p === "professional-service"
-                      ? th
-                        ? "บริการวิชาชีพ"
-                        : "Professional service"
-                      : th
-                        ? "ดนตรีและอีเวนต์"
-                        : "Music & event"}
+                  {t.presets[p]}
                 </option>
               ))}
             </select>
           </label>
           <label className="block text-sm">
-            {th ? "บรรยากาศ" : "Theme"}
+            {t.theme}
             <select
-              aria-label={th ? "บรรยากาศ" : "Theme"}
+              aria-label={t.theme}
               className={field}
               value={c.theme}
               onChange={(e) => update("theme", e.target.value as ForgeConfig["theme"])}
             >
-              <option value="ink">Ink</option>
-              <option value="slate">Slate</option>
+              <option value="ink">{t.themes.ink}</option>
+              <option value="slate">{t.themes.slate}</option>
             </select>
           </label>
           <label className="block text-sm">
-            {th ? "มุมมอง" : "Scene"}
+            {t.scene}
             <select
-              aria-label={th ? "มุมมอง" : "Scene"}
+              aria-label={t.scene}
               className={field}
               value={c.scene}
               onChange={(e) => update("scene", e.target.value as ForgeConfig["scene"])}
             >
-              <option value="salon">{th ? "ห้องแสดง 3D" : "3D salon"}</option>
-              <option value="static">{th ? "แกลเลอรีภาพ" : "Static gallery"}</option>
+              <option value="salon">{t.salon}</option>
+              <option value="static">{t.static}</option>
             </select>
           </label>
           <label className="block text-sm">
-            {th ? "จำนวนผลงาน" : "Work count"}
+            {t.count}
             <select
-              aria-label={th ? "จำนวนผลงาน" : "Work count"}
+              aria-label={t.count}
               className={field}
               value={c.density}
               onChange={(e) => {
@@ -157,16 +131,10 @@ function ForgePage() {
             aria-pressed={c.motion === "paused"}
             onClick={() => update("motion", c.motion === "paused" ? "calm" : "paused")}
           >
-            {c.motion === "paused"
-              ? th
-                ? "เริ่มการเคลื่อนไหว"
-                : "Resume motion"
-              : th
-                ? "หยุดการเคลื่อนไหว"
-                : "Pause motion"}
+            {c.motion === "paused" ? t.resume : t.pause}
           </button>
           <fieldset>
-            <legend className="text-sm">{th ? "ส่วนประกอบ" : "Sections"}</legend>
+            <legend className="text-sm">{t.sections}</legend>
             {SECTIONS.map((s) => (
               <label key={s} className="flex min-h-11 items-center gap-3 text-sm">
                 <input
@@ -182,46 +150,32 @@ function ForgePage() {
                     )
                   }
                 />
-                {s === "profile"
-                  ? th
-                    ? "แนะนำ"
-                    : "Introduction"
-                  : s === "work"
-                    ? th
-                      ? "ผลงาน"
-                      : "Work"
-                    : th
-                      ? "ติดต่อ"
-                      : "Contact"}
+                {t.sectionLabels[s]}
               </label>
             ))}
           </fieldset>
-          <p className="text-xs text-muted">TanStack Start · React · JSON v1</p>
+          <p className="text-xs text-muted">{t.format}</p>
           <Button className="w-full" onClick={exportConfig}>
             <Download size={16} />
-            {th ? "ดาวน์โหลดการตั้งค่า" : "Export configuration"}
+            {t.export}
           </Button>
           <p role="status" className="text-sm text-muted">
             {notice}
           </p>
         </section>
         <section
-          aria-label={th ? "ตัวอย่างเว็บไซต์" : "Website preview"}
+          aria-label={t.preview}
           style={surface}
           className="min-w-0 overflow-hidden rounded-xl border border-line bg-background"
         >
           <div className="border-b border-line px-5 py-3 text-xs text-muted">
-            {th ? "ตัวอย่างที่ปรับได้ · ภาพแนวคิด" : "Live preview · concept imagery"} / {c.theme}
+            {t.previewLabel} / {t.themes[c.theme]}
           </div>
           {c.sections.includes("profile") && (
             <div className="p-6">
               <p className="text-xs tracking-widest text-muted uppercase">SIRAWAT × BALL</p>
-              <h2 className="mt-3 font-display text-3xl">{titles[c.preset][lang]}</h2>
-              <p className="mt-3 text-sm text-muted">
-                {th
-                  ? "ตัวอย่างโครงสร้างสำหรับปรับใช้ ยังไม่ใช่ผลงานลูกค้าที่ได้รับการยืนยัน"
-                  : "A configurable starting point. These studies are not verified client work."}
-              </p>
+              <h2 className="mt-3 font-display text-3xl">{t.titles[c.preset]}</h2>
+              <p className="mt-3 text-sm text-muted">{t.evidence}</p>
             </div>
           )}
           {c.sections.includes("work") &&
@@ -234,7 +188,7 @@ function ForgePage() {
                   onSelect={setSelected}
                   autoRotate={c.motion === "calm"}
                   paused={c.motion === "paused"}
-                  label={th ? "ผลงานแนวคิด" : "Concept studies"}
+                  label={t.studies}
                   focus={c.motion !== "paused"}
                 />
               </div>
@@ -256,29 +210,21 @@ function ForgePage() {
           {c.sections.includes("contact") && (
             <div className="p-6">
               <Button asChild variant="outline">
-                <Link to="/contact">{th ? "เตรียมบรีฟงาน" : "Prepare a project brief"}</Link>
+                <Link to="/contact">{t.brief}</Link>
               </Button>
             </div>
           )}
         </section>
       </div>
       <dl className="mt-8 grid gap-3 sm:grid-cols-3">
-        {[
-          th ? "การส่งบรีฟสำเร็จ" : "Brief completion",
-          th ? "เวลาสู่การเลือกผลงาน" : "Time to first selection",
-          th ? "การเข้าถึงเนื้อหา" : "Accessible experience",
-        ].map((label) => (
+        {t.metrics.map((label) => (
           <div key={label} className="rounded-xl bg-surface p-4">
             <dt className="text-xs text-muted">{label}</dt>
-            <dd className="mt-2 font-display text-2xl">N/A</dd>
+            <dd className="mt-2 font-display text-2xl">{t.unavailable}</dd>
           </div>
         ))}
       </dl>
-      <p className="mt-3 text-xs text-muted">
-        {th
-          ? "ยังไม่ได้เชื่อมระบบวัดผล การส่งบรีฟใช้วิธีส่งเอง"
-          : "Analytics are not connected. Brief delivery is manual."}
-      </p>
+      <p className="mt-3 text-xs text-muted">{t.analytics}</p>
     </main>
   );
 }

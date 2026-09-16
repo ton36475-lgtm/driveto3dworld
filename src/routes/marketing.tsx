@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { downloadText } from "@/lib/ops/storage";
 import { OpsNav } from "@/components/ops/ops-nav";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DRAFT_FIELDS, draftText } from "@/lib/ops/localize";
 import { Textarea } from "@/components/ui/textarea";
 import { useCopy, useLocale } from "@/lib/copy";
 import { useOps } from "@/lib/ops/store";
@@ -45,8 +47,9 @@ function MarketingPage() {
 
       <div className="grid gap-6 md:grid-cols-2">
         {drafts.map((draft) => {
-          const title = lang === "th" ? draft.titleTh : draft.titleEn;
-          const body = lang === "th" ? draft.bodyTh : draft.bodyEn;
+          const { title, body } = draftText(draft, lang);
+          const fields = DRAFT_FIELDS[lang];
+          const needsTranslation = !draft.titleZh?.trim() || !draft.bodyZh?.trim();
           return (
             <article key={draft.id} className="overflow-hidden rounded-xl bg-surface">
               <img
@@ -64,21 +67,30 @@ function MarketingPage() {
                     {copy.ops.draftStatus[draft.status]}
                   </p>
                 </div>
-                <h2 className="mt-3 font-display text-2xl">{title}</h2>
+                <h2 className="mt-3 font-display text-2xl">
+                  {title || copy.ops.channels[draft.channel]}
+                </h2>
+                <label className="mt-4 block">
+                  <span className="sr-only">{copy.ops.editDraftTitle}</span>
+                  <Input
+                    maxLength={10000}
+                    value={title}
+                    placeholder={copy.ops.editDraftTitle}
+                    onChange={(event) =>
+                      perform(editDraft(draft.id, { [fields.title]: event.target.value }))
+                    }
+                  />
+                </label>
+                {needsTranslation ? (
+                  <p className="mt-3 text-xs text-muted">{copy.ops.needsTranslation}</p>
+                ) : null}
                 <label className="mt-4 block">
                   <span className="sr-only">{copy.ops.editDraft}</span>
                   <Textarea
                     maxLength={10000}
                     value={body}
                     onChange={(event) =>
-                      perform(
-                        editDraft(
-                          draft.id,
-                          lang === "th"
-                            ? { bodyTh: event.target.value }
-                            : { bodyEn: event.target.value },
-                        ),
-                      )
+                      perform(editDraft(draft.id, { [fields.body]: event.target.value }))
                     }
                     className="min-h-32"
                   />

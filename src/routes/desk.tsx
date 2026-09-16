@@ -6,6 +6,7 @@ import { OpsNav } from "@/components/ops/ops-nav";
 import { Button } from "@/components/ui/button";
 import { useCopy, useLocale } from "@/lib/copy";
 import { useOps } from "@/lib/ops/store";
+import { OPS_DATE_LOCALES } from "@/lib/ops/localize";
 import type { InquiryStatus } from "@/lib/ops/types";
 
 export const Route = createFileRoute("/desk")({ component: DeskPage });
@@ -85,7 +86,7 @@ function DeskPage() {
                   {item.message}
                 </p>
                 <p className="mt-3 text-xs text-faint">
-                  {new Date(item.at).toLocaleString(lang === "th" ? "th-TH" : "en-GB")}
+                  {new Date(item.at).toLocaleString(OPS_DATE_LOCALES[lang])}
                   {item.assignee ? ` · ${item.assignee}` : ""}
                 </p>
                 <ul className="mt-4 flex flex-wrap gap-2">

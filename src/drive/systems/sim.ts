@@ -1,5 +1,6 @@
 import { ZONES } from "../data/projects.ts";
 import type { Axes } from "./input.ts";
+import { FOOD_TRUCK } from "../data/vehicle.ts";
 
 export const WORLD = 200;
 export const HALF = WORLD / 2;
@@ -7,7 +8,7 @@ export const BOUNDS = 94;
 
 export const sim = {
   x: 0,
-  y: 0.42,
+  y: FOOD_TRUCK.rideHeight,
   z: 10,
   yaw: 0,
   speed: 0,
@@ -30,11 +31,11 @@ export const perfState = {
 export type Collider = { x: number; z: number; r: number };
 
 export const COLLIDERS: Collider[] = [
-  { x: 0, z: 0, r: 2.05 },
-  { x: -42, z: -42, r: 4.4 },
-  { x: 42, z: -42, r: 2.15 },
-  { x: 42, z: 42, r: 2.5 },
-  { x: -42, z: 42, r: 1.7 },
+  { x: 0, z: 0, r: 1.56 + FOOD_TRUCK.collisionRadius },
+  { x: -42, z: -42, r: 5.95 + FOOD_TRUCK.collisionRadius },
+  { x: 42, z: -42, r: 1.6 + FOOD_TRUCK.collisionRadius },
+  { x: 42, z: 42, r: 2.4 + FOOD_TRUCK.collisionRadius },
+  { x: -42, z: 42, r: 1.56 + FOOD_TRUCK.collisionRadius },
 ];
 
 export function zoneAt(x: number, z: number): string | null {

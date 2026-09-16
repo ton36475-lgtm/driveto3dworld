@@ -235,13 +235,13 @@ export function deadLetter(state: OpsState, jobId: string, reason: string): Engi
 export function saveDraft(
   state: OpsState,
   draftId: string,
-  patch: Partial<Pick<Draft, "bodyEn" | "bodyTh" | "titleEn" | "titleTh">>,
+  patch: Partial<Pick<Draft, "bodyEn" | "bodyTh" | "bodyZh" | "titleEn" | "titleTh" | "titleZh">>,
   now: number,
 ): EngineResult {
   const draft = state.drafts.find((item) => item.id === draftId);
   if (!draft) return { ok: false, error: "missing" };
   const safePatch: typeof patch = {};
-  for (const key of ["bodyEn", "bodyTh", "titleEn", "titleTh"] as const) {
+  for (const key of ["bodyEn", "bodyTh", "bodyZh", "titleEn", "titleTh", "titleZh"] as const) {
     if (patch[key] !== undefined) {
       if (typeof patch[key] !== "string" || patch[key]!.length > 10000)
         return { ok: false, error: "draft" };
@@ -268,8 +268,10 @@ export function markDraftReady(state: OpsState, draftId: string, now: number): E
   if (
     draft.bodyEn.trim().length < 20 ||
     draft.bodyTh.trim().length < 20 ||
+    (draft.bodyZh?.trim().length ?? 0) < 20 ||
     !draft.titleEn.trim() ||
-    !draft.titleTh.trim()
+    !draft.titleTh.trim() ||
+    !draft.titleZh?.trim()
   ) {
     return {
       ok: true,
@@ -319,6 +321,8 @@ function draft(
   titleTh: string,
   bodyEn: string,
   bodyTh: string,
+  titleZh: string,
+  bodyZh: string,
 ): Draft {
   return {
     id: channel,
@@ -327,6 +331,8 @@ function draft(
     titleTh,
     bodyEn,
     bodyTh,
+    titleZh,
+    bodyZh,
     status: "draft",
     updatedAt: 0,
     blockReason: null,
@@ -339,15 +345,19 @@ export function seedDrafts(now: number): Draft[] {
       "line",
       "LINE OA — first reply",
       "LINE OA — ข้อความแรก",
-      "SIRAWAT × BALL, Phitsanulok. Send the brief here. The 3D salon and the grounds are on the site — we answer in this chat, not through an OTA.",
-      "SIRAWAT × BALL พิษณุโลก ส่งบรีฟมาที่แชตนี้ แกลเลอรี 3D และลานขับอยู่บนเว็บ — เราตอบในแชต ไม่ผ่านตัวกลางจอง",
+      "SIRAWAT × BALL, Phitsanulok. Tell us about your website, creative media, or music project. Explore the 3D gallery, then share your brief through your chosen contact channel.",
+      "SIRAWAT × BALL พิษณุโลก เล่าโครงการเว็บไซต์ สื่อสร้างสรรค์ หรือดนตรีของคุณ ชมแกลเลอรี 3D แล้วส่งบรีฟผ่านช่องทางติดต่อที่คุณเลือก",
+      "LINE 官方账号 — 首次回复",
+      "SIRAWAT × BALL，来自彭世洛。欢迎介绍您的网站、创意媒体或音乐项目。先浏览三维展厅，再通过您选择的联系渠道分享需求说明。",
     ),
     draft(
       "facebook",
       "Facebook — atelier note",
       "Facebook — บันทึกห้องทำงาน",
-      "Two principals. One room. Brand systems and spatial 3D from Phitsanulok. Inquire on the site or LINE — this post is not a booking.",
-      "สองคน หนึ่งห้อง ระบบแบรนด์และสามมิติจากพิษณุโลก สอบถามบนเว็บหรือ LINE — โพสต์นี้ไม่ใช่การจอง",
+      "AI, websites, and music from Phitsanulok. Explore Sirawat’s technology projects, Ball Anekprasong’s folk music, and ideas for future collaborations in the shared portfolio.",
+      "AI เว็บไซต์ และดนตรีจากพิษณุโลก ชมโครงการเทคโนโลยีของศิรวัฒน์ ดนตรีโฟลคของพี่บอลอเนกประสงค์ และแนวทางทำงานร่วมกันในพอร์ตโฟลิโอ",
+      "Facebook — 创作札记",
+      "来自彭世洛的人工智能、网站与音乐。在共同作品集中，了解 Sirawat 的技术项目、Ball Anekprasong 的民谣音乐，以及未来合作的构想。",
     ),
     draft(
       "instagram",
@@ -355,6 +365,8 @@ export function seedDrafts(now: number): Draft[] {
       "Instagram — ภาพห้อง",
       "Orbit the octagon. Click a frame. The site is the room, not a grid.",
       "โคจรในห้องแปดเหลี่ยม คลิกกรอบภาพ เว็บคือห้อง ไม่ใช่ตารางรูป",
+      "Instagram — 展厅影像",
+      "环绕八角形展厅，点击画框探索作品。在这个网站中，每件作品都是空间体验的一部分，邀请您从不同角度了解创作。",
     ),
     draft(
       "tiktok",
@@ -362,20 +374,26 @@ export function seedDrafts(now: number): Draft[] {
       "TikTok — ขับในลาน",
       "WASD through four zones. Twelve studies. A turns left. Cut: night plaza, coral car, crystal.",
       "WASD สี่โซน สิบสองชิ้นงาน A เลี้ยวซ้าย ตัดภาพ: ลานกลางคืน รถ คริสตัล",
+      "TikTok — 驾驶探索",
+      "使用 WASD 在四个区域中驾驶，探索十二个作品节点，A 键向左转。短片镜头建议：夜间广场、汽车与水晶。",
     ),
     draft(
       "google",
       "Google Business — facts only",
       "Google Business — เฉพาะข้อเท็จจริง",
-      "Category: Design studio. City: Phitsanulok. No live rate. Photos: salon, grounds, bench. Review ask after a finished commission, via LINE.",
-      "หมวด: สตูดิโอออกแบบ เมือง: พิษณุโลก ไม่มีเรทสด รูป: ห้อง ลาน โต๊ะงาน ขอรีวิวหลังจบงาน ผ่าน LINE",
+      "Location: Phitsanulok. Work: AI, websites, and music. Use current, verified contact information. Show portfolio concepts as concepts; do not present them as completed client work.",
+      "ที่ตั้ง: พิษณุโลก งาน: AI เว็บไซต์ และดนตรี ใช้ข้อมูลติดต่อที่ตรวจสอบล่าสุด ระบุงานแนวคิดในพอร์ตตามจริง ไม่กล่าวอ้างว่าเป็นงานลูกค้าที่ส่งมอบแล้ว",
+      "Google 商家资料 — 事实信息",
+      "所在地：彭世洛。工作方向：人工智能、网站与音乐。使用经过核实的最新联系方式；作品集中的概念方案应明确标注，不能宣称为已交付的客户项目。",
     ),
     draft(
       "web",
       "Site — source of truth",
       "เว็บ — ต้นฉบับ",
-      "The site holds the 3D salon, the grounds, and the enquiry. LINE is the conversation. Google is discovery. Nothing here is a confirmed reservation.",
-      "เว็บถือแกลเลอรี 3D ลาน และข้อความ LINE คือบทสนทนา Google คือการค้นพบ ไม่มีการยืนยันจองในระบบนี้",
+      "Explore the 3D gallery, driving grounds, and individual portfolios. Save your brief locally, download it, then share it through your preferred contact channel. Saving does not send the brief.",
+      "ชมแกลเลอรี 3D ลานขับ และพอร์ตของแต่ละคน บันทึกบรีฟในเครื่อง ดาวน์โหลด แล้วส่งต่อผ่านช่องทางที่คุณเลือก การบันทึกยังไม่ใช่การส่งบรีฟ",
+      "网站 — 项目信息",
+      "探索三维展厅、驾驶场景和个人作品集。将需求说明保存在本地并下载，再通过您选择的联系渠道分享。保存操作不会自动发送需求说明。",
     ),
   ].map((item) => ({ ...item, updatedAt: now }));
 }
