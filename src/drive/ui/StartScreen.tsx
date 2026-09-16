@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { unlockAudio, startAudio } from "../systems/audio";
 import { useDrive } from "../store";
 import { COPY } from "../data/i18n";
+import { CONCEPT_COPY } from "../data/concepts";
 
 export function StartScreen() {
   const start = useDrive((s) => s.start);
@@ -36,7 +37,8 @@ export function StartScreen() {
           </button>
         </div>
         <h1 className="text-fg font-display mb-2 text-5xl leading-[0.95] tracking-tight sm:text-6xl">{c.title}</h1>
-        <p className="text-muted mb-6 max-w-sm text-sm leading-relaxed">{c.tagline}</p>
+        <p className="text-muted mb-3 max-w-sm text-sm leading-relaxed">{c.tagline}</p>
+        <p className="text-faint mb-6 text-xs leading-relaxed">{CONCEPT_COPY[lang].notice}</p>
         <ul className="text-muted mb-7 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
           <li>{c.w}</li>
           <li>{c.s}</li>

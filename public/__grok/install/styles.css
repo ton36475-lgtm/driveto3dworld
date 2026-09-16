@@ -1,0 +1,113 @@
+:root {
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b0b0c;
+  color: #f1ece4;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+.page {
+  min-height: 100svh;
+  width: min(100%, 52rem);
+  margin: auto;
+  padding: max(2rem, env(safe-area-inset-top)) 1.5rem 3rem;
+}
+.powered {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  color: #a2a5aa;
+  font-size: 0.8rem;
+}
+.powered-brand {
+  color: #f1ece4;
+  font-weight: 600;
+}
+.content {
+  min-height: 70svh;
+  display: grid;
+  place-items: center;
+}
+.copy {
+  width: 100%;
+  max-width: 36rem;
+}
+h1 {
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.13;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+.steps {
+  margin-top: 2.5rem;
+}
+.step {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  line-height: 1.8;
+}
+.muted,
+.desktop-note {
+  color: #a2a5aa;
+}
+.glass,
+.add-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #3a3c40;
+  border-radius: 0.65rem;
+  background: #18191c;
+}
+.glass--icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  justify-content: center;
+}
+.step-ios27,
+.loc-ipad,
+.content-desktop {
+  display: none;
+}
+.ios-27-plus .step-ios27 {
+  display: flex;
+}
+.ios-27-plus .step-ios-legacy {
+  display: none;
+}
+.device-tablet .loc-phone {
+  display: none;
+}
+.device-tablet .loc-ipad {
+  display: inline;
+}
+.device-desktop .content {
+  display: none;
+}
+.device-desktop .content-desktop {
+  display: grid;
+}
+.desktop-note {
+  line-height: 1.65;
+}
+.desktop-open {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.85rem 1.2rem;
+  color: #0b0b0c;
+  background: #f1ece4;
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+a:focus-visible {
+  outline: 2px solid #c5cdd6;
+  outline-offset: 5px;
+}

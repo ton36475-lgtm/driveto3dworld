@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { useCopy, useLocale } from "@/lib/copy";
 import { loc, type Work } from "@/lib/works";
+import { PortfolioEvidence } from "@/components/portfolio-evidence";
 
 export function WorkCard({ work }: { work: Work }) {
   const lang = useLocale();
@@ -23,10 +24,8 @@ export function WorkCard({ work }: { work: Work }) {
       </div>
       <div className="flex items-start justify-between gap-3 px-2 pb-3 pt-4">
         <div>
-          <p className="text-xs tracking-widest text-muted uppercase">
-            {work.year} · {loc(work.location, lang)}
-          </p>
-          <h3 className="mt-1 font-display text-xl tracking-tight text-foreground">
+          <PortfolioEvidence compact />
+          <h3 className="mt-3 font-display text-xl tracking-tight text-foreground">
             {loc(work.title, lang)}
           </h3>
           <p className="mt-1 line-clamp-2 text-sm text-muted">{loc(work.subtitle, lang)}</p>

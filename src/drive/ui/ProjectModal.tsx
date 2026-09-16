@@ -3,6 +3,7 @@ import { PROJECTS, ZONE_BY_ID, t } from "../data/projects";
 import { COPY } from "../data/i18n";
 import { useDrive } from "../store";
 import { unlockAudio, startAudio } from "../systems/audio";
+import { CONCEPT_COPY, CONCEPT_DIRECTIONS } from "../data/concepts";
 
 export function ProjectModal() {
   const activeId = useDrive((s) => s.activeId);
@@ -14,6 +15,7 @@ export function ProjectModal() {
   const openProject = useDrive((s) => s.openProject);
   const project = PROJECTS.find((p) => p.id === activeId);
   const c = COPY[lang];
+  const concept = CONCEPT_COPY[lang];
 
   useEffect(() => {
     if (!project) return;
@@ -52,24 +54,19 @@ export function ProjectModal() {
           aria-hidden
         />
         <p className="text-muted mb-2 text-[11px] tracking-[0.22em] uppercase">
-          {t(zone.name, lang)} · {project.year} · {t(project.medium, lang)}
+          {t(zone.name, lang)}
         </p>
         <h2 id="project-title" className="text-fg font-display mb-3 text-3xl leading-tight">
           {t(project.title, lang)}
         </h2>
-        <p className="text-muted mb-3 text-sm leading-relaxed">{t(project.description, lang)}</p>
-        <p className="text-faint mb-5 text-sm leading-relaxed">{t(project.detail, lang)}</p>
-        <div className="mb-6 flex flex-wrap gap-1.5">
-          {project.tags.map((tag) => (
-            <span
-              key={tag.en}
-              className="text-muted rounded-full px-2.5 py-1 text-[11px] tracking-wide"
-              style={{ border: "1px solid var(--color-border)" }}
-            >
-              {t(tag, lang)}
-            </span>
-          ))}
-        </div>
+        <p className="mb-4 inline-block rounded-full border border-white/20 px-3 py-1 text-[11px] tracking-wide">{concept.label}</p>
+        <p className="text-muted mb-2 text-[11px] tracking-widest uppercase">{concept.direction}</p>
+        <p className="text-muted mb-4 text-sm leading-relaxed">{CONCEPT_DIRECTIONS[project.id]?.[lang]}</p>
+        <dl className="mb-4 grid grid-cols-2 gap-3 rounded-lg border border-white/10 p-3 text-xs">
+          <div><dt className="text-faint mb-1">{concept.metrics}</dt><dd>{concept.pending}</dd></div>
+          <div><dt className="text-faint mb-1">{concept.production}</dt><dd>{concept.unverified}</dd></div>
+        </dl>
+        <p className="text-faint mb-6 text-xs leading-relaxed">{concept.notice}</p>
         {related.length > 0 && (
           <div className="mb-6">
             <p className="text-faint mb-2 text-[11px] tracking-[0.18em] uppercase">{c.related}</p>
@@ -90,7 +87,7 @@ export function ProjectModal() {
           </div>
         )}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-faint text-xs tracking-wide">{c.collected}</span>
+          <span className="text-faint text-xs tracking-wide">{collected.includes(project.id) ? c.collected : c.hidden}</span>
           <div className="flex gap-2">
             <button
               type="button"

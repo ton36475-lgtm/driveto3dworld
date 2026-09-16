@@ -27,3 +27,10 @@ npm run dev
 1. Read [AGENTS.md](./AGENTS.md) in this repo
 2. Paste [agentic-coding-workflow/CODEX_PROMPT.md](agentic-coding-workflow/CODEX_PROMPT.md) into Codex
 3. Export models with [blender-mcp-pipeline/README.md](blender-mcp-pipeline/README.md)
+
+
+## Reviewed production-hardening branch
+
+Start with [the product contract](docs/forge/product-contract.md), [source reconciliation](docs/forge/source-reconciliation.md), and [runtime setup](docs/runtime.md). This branch adds local operations, separate personal profiles, configurable `/forge`, robust spatial fallbacks, and a guarded Blender asset pipeline. Live delivery, remote MCP connections and public deployment are separate capabilities; local saves and sample studies are labeled explicitly.
+
+Run `npm run bootstrap`, `npm run doctor`, `npm test`, `npm run build`, `npm run typecheck`, and `npm run lint`. Use `node scripts/validate_template.mjs templates/creative-studio.v1.json` to validate an exported preset. See the runtime documentation for startup and CI evidence.

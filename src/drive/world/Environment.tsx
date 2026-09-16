@@ -1,10 +1,11 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { ZONES } from "../data/projects";
 import { dayState, stepDayNight } from "../systems/dayNight";
 import { perfState } from "../systems/sim";
 import { isDriveBlocked, useDrive } from "../store";
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
 
 function mulberry32(a: number) {
   return function () {
@@ -88,15 +89,16 @@ function makeGroundTexture() {
 }
 
 export function Lighting() {
+  const reducedMotion = useReducedMotion();
   const sun = useRef<THREE.DirectionalLight>(null);
   const hemi = useRef<THREE.HemisphereLight>(null);
-  const { scene, gl } = useThree();
+  const { scene, setDpr } = useThree();
   const setFps = useDrive((s) => s.setFps);
   const quality = useDrive((s) => s.quality);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1);
-    if (!isDriveBlocked()) stepDayNight(dt);
+    stepDayNight(!isDriveBlocked() && !reducedMotion ? dt : 0);
     const d = dayState;
     scene.background = d.sky;
     scene.fog = scene.fog ?? new THREE.Fog(d.fog, 40, 150);
@@ -121,7 +123,7 @@ export function Lighting() {
       const next = perfState.fps < 32 ? 1 : Math.min(window.devicePixelRatio || 1, cap);
       if (Math.abs(next - perfState.dpr) > 0.05) {
         perfState.dpr = next;
-        gl.setPixelRatio(next);
+        setDpr(next);
       }
       perfState.shadows = quality !== "low" && perfState.fps >= 28;
       if (sun.current) sun.current.castShadow = perfState.shadows;
@@ -133,7 +135,7 @@ export function Lighting() {
       <hemisphereLight ref={hemi} args={["#d8e4ee", "#2a241c", 0.4]} />
       <directionalLight
         ref={sun}
-        castShadow
+        castShadow={quality !== "low"}
         intensity={1.2}
         position={[40, 55, 18]}
         shadow-mapSize={quality === "high" ? [1024, 1024] : [512, 512]}
@@ -151,6 +153,7 @@ export function Lighting() {
 
 export function Ground() {
   const tex = useMemo(() => makeGroundTexture(), []);
+  useEffect(() => () => tex.dispose(), [tex]);
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
       <planeGeometry args={[200, 200, 1, 1]} />

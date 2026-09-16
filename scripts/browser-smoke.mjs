@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { chromium } from "playwright";
 import { checkedOutputPath, checkedUrl } from "./browser-guard.mjs";
 import { computeBrandWarnings } from "./brand-check.mjs";
+import { projectRoot } from "./with-app-env.mjs";
 import {
   authInvariantWarnings,
   buildAuthEnabled,
@@ -20,17 +21,21 @@ import {
   parseSmokeArgs,
 } from "./browser-smoke-verdict.mjs";
 
-const args = parseSmokeArgs(process.argv.slice(2), process.env);
+const ROOT = projectRoot();
+const args = parseSmokeArgs(process.argv.slice(2), {
+  BROWSER_SMOKE_OUTPUT: join(ROOT, "screenshots/app-builder-preview.png"),
+  ...process.env,
+});
 if (args.error) {
   console.error(JSON.stringify({ ok: false, error: args.error }, null, 2));
   process.exit(1);
 }
 
 const url = checkedUrl(args.url);
-const outPng = checkedOutputPath(args.outPng, ["/workspace"]);
+const outPng = checkedOutputPath(args.outPng, [ROOT]);
 const derived = derivedPaths(outPng);
-const mobilePng = checkedOutputPath(derived.mobilePng, ["/workspace"]);
-const outJson = checkedOutputPath(derived.verdictJson, ["/workspace"], "verdict JSON");
+const mobilePng = checkedOutputPath(derived.mobilePng, [ROOT]);
+const outJson = checkedOutputPath(derived.verdictJson, [ROOT], "verdict JSON");
 
 const MAX_BASELINE_BYTES = 1024 * 1024;
 const baselineRequested = Boolean(args.baseline);
@@ -38,7 +43,7 @@ let baselinePath = null;
 let baselineResolveError = null;
 if (baselineRequested) {
   try {
-    baselinePath = checkedOutputPath(realpathSync(args.baseline), ["/workspace"], "baseline");
+    baselinePath = checkedOutputPath(realpathSync(args.baseline), [ROOT], "baseline");
   } catch (err) {
     baselineResolveError = err?.code ?? "unresolvable path";
   }
@@ -62,8 +67,20 @@ if (baselineRequested) {
 const timeoutMs = Number(process.env.BROWSER_SMOKE_TIMEOUT_MS || 45000);
 
 const VIEWPORTS = [
-  { name: "desktop", width: 1280, height: 800, screenshot: outPng },
+  { name: "desktop", width: 1440, height: 900, screenshot: outPng },
   { name: "mobile", width: 390, height: 844, screenshot: mobilePng },
+  {
+    name: "smallMobile",
+    width: 360,
+    height: 800,
+    screenshot: checkedOutputPath(outPng.replace(/\.png$/i, "") + "-360.png", [ROOT]),
+  },
+  {
+    name: "tablet",
+    width: 768,
+    height: 1024,
+    screenshot: checkedOutputPath(outPng.replace(/\.png$/i, "") + "-768.png", [ROOT]),
+  },
 ];
 
 mkdirSync(dirname(outPng), { recursive: true });
@@ -140,7 +157,10 @@ try {
     };
   }
 
-  const brandWarnings = computeBrandWarnings({ hasCanvas: viewports.desktop.hasCanvas });
+  const brandWarnings = computeBrandWarnings({
+    hasCanvas: viewports.desktop.hasCanvas,
+    workspaceRoot: ROOT,
+  });
   // Only a dev server answers /__app-env, so smoking the built output reads as
   // indeterminate — report a divergence, never the absence of an observation.
   const authWarnings = authInvariantWarnings(
@@ -163,6 +183,7 @@ try {
   // teardown always runs (agents typically smoke twice per turn; leaking
   // Chromium accumulates across retries).
   process.exitCode = exitCodeFor(viewports);
+  if (verdict.divergesFromBaseline && process.exitCode === 0) process.exitCode = 4;
 } catch (err) {
   const failure = { ok: false, url, error: String(err?.message || err) };
   try {

@@ -22,6 +22,7 @@ const fogDusk = new THREE.Color("#b88870");
 const fogNight = new THREE.Color("#0b0d12");
 
 export function setDayTime(t: number) {
+  if (!Number.isFinite(t)) return;
   dayState.time = ((t % 1) + 1) % 1;
   stepDayNight(0);
 }
@@ -31,6 +32,7 @@ export function setDayPaused(v: boolean) {
 }
 
 export function stepDayNight(dt: number) {
+  dt = Number.isFinite(dt) ? Math.min(0.1, Math.max(0, dt)) : 0;
   if (!dayState.paused) dayState.time = (dayState.time + dt * dayState.speed) % 1;
   const t = dayState.time;
   const angle = t * Math.PI * 2;
@@ -47,11 +49,11 @@ export function stepDayNight(dt: number) {
     dayState.sky.copy(skyDay);
     dayState.fog.copy(fogDay);
   } else if (elev > -0.15) {
-    const k = THREE.MathUtils.smoothstep(-0.15, 0.15, elev);
+    const k = THREE.MathUtils.smoothstep(elev, -0.15, 0.15);
     dayState.sky.copy(skyDusk).lerp(skyDay, k);
     dayState.fog.copy(fogDusk).lerp(fogDay, k);
   } else {
-    const k = THREE.MathUtils.smoothstep(-0.5, -0.15, elev);
+    const k = THREE.MathUtils.smoothstep(elev, -0.5, -0.15);
     dayState.sky.copy(skyNight).lerp(skyDusk, k);
     dayState.fog.copy(fogNight).lerp(fogDusk, k);
   }

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { sim, BOUNDS, onPavement, resolveColliders } from "../systems/sim";
+import { sim, advanceSimulation } from "../systems/sim";
 import {
   attachInput,
   installControlsTest,
@@ -12,15 +12,10 @@ import { setEngine } from "../systems/audio";
 import { isDriveBlocked, useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
 import { installQA } from "../systems/qa";
-
-const MAX_SPEED = 16;
-const ACCEL = 22;
-const REVERSE = 12;
-const DRAG = 2.4;
-const TURN = 2.55;
-const GRIP = 7.5;
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
 
 export function Car() {
+  const reducedMotion = useReducedMotion();
   const group = useRef<THREE.Group>(null);
   const wheels = useRef<THREE.Group[]>([]);
   const lightL = useRef<THREE.SpotLight>(null);
@@ -59,47 +54,18 @@ export function Car() {
     if (!started) {
       g.position.set(sim.x, sim.y, sim.z);
       g.rotation.y = sim.yaw;
-      const t = state.clock.elapsedTime * 0.12;
-      state.camera.position.lerp(tmp.current.desired.set(Math.sin(t) * 16, 7.5, Math.cos(t) * 16), 1 - Math.exp(-2.2 * dt));
+      if (reducedMotion) state.camera.position.set(14, 8, 14);
+      else {
+        const t = state.clock.elapsedTime * 0.12;
+        state.camera.position.lerp(tmp.current.desired.set(Math.sin(t) * 16, 7.5, Math.cos(t) * 16), 1 - Math.exp(-2.2 * dt));
+      }
       state.camera.lookAt(0, 0.6, 0);
       return;
     }
 
     if (!blocked) {
       pollGamepad();
-      const { steer, throttle, brake } = readAxes();
-      sim.steer = THREE.MathUtils.damp(sim.steer, steer, 10, dt);
-
-      if (brake) sim.speed *= Math.pow(0.18, dt);
-      else if (throttle > 0) sim.speed += ACCEL * throttle * dt;
-      else if (throttle < 0) sim.speed += REVERSE * throttle * dt;
-      else sim.speed *= Math.pow(0.22, dt);
-
-      const road = onPavement(sim.x, sim.z);
-      const dragMul = road ? 1 : 2.6;
-      const drag = DRAG * dragMul * dt * Math.sign(sim.speed) * Math.min(1, Math.abs(sim.speed));
-      sim.speed -= drag;
-      sim.speed = THREE.MathUtils.clamp(sim.speed, -MAX_SPEED * 0.55, MAX_SPEED * (road ? 1 : 0.62));
-
-      const speedFactor = THREE.MathUtils.clamp(Math.abs(sim.speed) / 5, 0.28, 1);
-      const reverse = sim.speed >= 0 ? 1 : -1;
-      sim.yaw += sim.steer * TURN * speedFactor * reverse * dt;
-
-      sim.lateral += sim.steer * sim.speed * 0.35 * dt;
-      sim.lateral *= Math.exp(-GRIP * (road ? 1 : 0.55) * dt);
-
-      const fx = -Math.sin(sim.yaw);
-      const fz = -Math.cos(sim.yaw);
-      const rx = Math.cos(sim.yaw);
-      const rz = -Math.sin(sim.yaw);
-      sim.x += (fx * sim.speed + rx * sim.lateral) * dt;
-      sim.z += (fz * sim.speed + rz * sim.lateral) * dt;
-      sim.x = THREE.MathUtils.clamp(sim.x, -BOUNDS, BOUNDS);
-      sim.z = THREE.MathUtils.clamp(sim.z, -BOUNDS, BOUNDS);
-      resolveColliders();
-
-      sim.roll = THREE.MathUtils.damp(sim.roll, sim.steer * 0.14 * speedFactor, 8, dt);
-      sim.wheel += sim.speed * dt * 2.4;
+      advanceSimulation(readAxes(), dt);
       setEngine(sim.speed);
       setSpeedKmh(Math.abs(sim.speed) * 7.2);
     } else {
@@ -110,7 +76,7 @@ export function Car() {
     g.position.set(sim.x, sim.y, sim.z);
     g.rotation.order = "YZX";
     g.rotation.y = sim.yaw;
-    g.rotation.z = sim.roll;
+    g.rotation.z = reducedMotion ? 0 : sim.roll;
 
     for (let i = 0; i < wheels.current.length; i++) {
       const w = wheels.current[i];
@@ -127,12 +93,12 @@ export function Car() {
     desired.set(sim.x - fx * follow, sim.y + height, sim.z - fz * follow);
     look.set(sim.x + fx * 5.5, sim.y + 0.85, sim.z + fz * 5.5);
     cam.copy(state.camera.position);
-    cam.lerp(desired, 1 - Math.exp(-3.4 * dt));
+    cam.lerp(desired, reducedMotion ? 1 : 1 - Math.exp(-3.4 * dt));
     state.camera.position.copy(cam);
     state.camera.lookAt(look);
 
     const cam3 = state.camera as THREE.PerspectiveCamera;
-    const targetFov = 50 + Math.min(9, Math.abs(sim.speed) * 0.5);
+    const targetFov = reducedMotion ? 50 : 50 + Math.min(9, Math.abs(sim.speed) * 0.5);
     cam3.fov = THREE.MathUtils.damp(cam3.fov, targetFov, 4, dt);
     cam3.updateProjectionMatrix();
 

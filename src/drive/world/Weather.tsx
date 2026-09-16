@@ -1,18 +1,21 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { sim, zoneAt } from "../systems/sim";
 import { useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
 
 export function Weather() {
+  const reducedMotion = useReducedMotion();
   const rainRef = useRef<THREE.Points>(null);
   const snowRef = useRef<THREE.Points>(null);
   const mode = useDrive((s) => s.weather);
+  const quality = useDrive((s) => s.quality);
 
   const rain = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    const n = 280;
+    const n = quality === "low" ? 80 : quality === "medium" ? 160 : 280;
     const a = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) {
       a[i * 3] = (Math.random() - 0.5) * 40;
@@ -21,11 +24,11 @@ export function Weather() {
     }
     g.setAttribute("position", new THREE.BufferAttribute(a, 3));
     return g;
-  }, []);
+  }, [quality]);
 
   const snow = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    const n = 180;
+    const n = quality === "low" ? 50 : quality === "medium" ? 100 : 180;
     const a = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) {
       a[i * 3] = (Math.random() - 0.5) * 40;
@@ -34,9 +37,16 @@ export function Weather() {
     }
     g.setAttribute("position", new THREE.BufferAttribute(a, 3));
     return g;
-  }, []);
+  }, [quality]);
+
+  useEffect(() => () => { rain.dispose(); snow.dispose(); }, [rain, snow]);
 
   useFrame((_, delta) => {
+    if (reducedMotion) {
+      if (rainRef.current) rainRef.current.visible = false;
+      if (snowRef.current) snowRef.current.visible = false;
+      return;
+    }
     const dt = Math.min(delta, 0.1);
     const zone = zoneAt(sim.x, sim.z);
     let rainOn = mode === "rain";

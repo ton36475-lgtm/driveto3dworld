@@ -1,6 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
-type Props = { children: ReactNode; fallback: ReactNode };
+type Props = { children: ReactNode; fallback: ReactNode; onFailure?: () => void };
 
 export class WebGLBoundary extends Component<Props, { failed: boolean }> {
   state = { failed: false };
@@ -11,6 +11,7 @@ export class WebGLBoundary extends Component<Props, { failed: boolean }> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.warn("WebGL scene failed", error, info);
+    this.props.onFailure?.();
   }
 
   render() {

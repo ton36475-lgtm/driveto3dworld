@@ -1,7 +1,7 @@
 import { COPY } from "../data/i18n";
-import { useDrive, type Quality, type Weather } from "../store";
+import { useDrive, saveDaySettings, type Quality, type Weather } from "../store";
 import { dayState, setDayPaused, setDayTime } from "../systems/dayNight";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 export function Settings() {
   const overlay = useDrive((s) => s.overlay);
@@ -18,6 +18,13 @@ export function Settings() {
   const [day, setDay] = useState(dayState.time);
   const [frozen, setFrozen] = useState(dayState.paused);
   const c = COPY[lang];
+
+  useEffect(() => {
+    if (overlay === "settings") {
+      setDay(dayState.time);
+      setFrozen(dayState.paused);
+    }
+  }, [overlay]);
 
   if (overlay !== "settings") return null;
 
@@ -120,6 +127,7 @@ export function Settings() {
                 const v = Number(e.target.value) / 100;
                 setDay(v);
                 setDayTime(v);
+                saveDaySettings();
               }}
               className="h-2 flex-1"
               aria-label={c.dayNight}
@@ -131,6 +139,7 @@ export function Settings() {
                 const next = !frozen;
                 setFrozen(next);
                 setDayPaused(next);
+                saveDaySettings();
               }}
             >
               {frozen ? c.playCycle : c.freezeCycle}

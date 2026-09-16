@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import type { SceneLayout } from "@/components/canvas/atelier-world";
 import { CanvasFallback } from "@/components/canvas/canvas-fallback";
 import { ClientOnly } from "@/components/canvas/client-only";
@@ -6,6 +6,7 @@ import { LoadingVeil } from "@/components/canvas/loading-veil";
 import { getQuality } from "@/components/canvas/quality";
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
 import type { Work } from "@/lib/works";
+import { useReducedMotion, useSceneVisibility } from "@/components/canvas/runtime-hooks";
 
 const HeroScene = lazy(() => import("@/components/canvas/hero-scene"));
 
@@ -20,6 +21,7 @@ type Props = {
   label?: string;
   layout?: SceneLayout;
   focus?: boolean;
+  paused?: boolean;
 };
 
 export function SceneStage({
@@ -33,30 +35,26 @@ export function SceneStage({
   label,
   layout = "ring",
   focus = false,
+  paused = false,
 }: Props) {
   const quality = useMemo(() => getQuality(), []);
   const wrap = useRef<HTMLDivElement>(null);
-  const [live, setLive] = useState(true);
-
-  useEffect(() => {
-    const el = wrap.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      ([entry]) => setLive(entry.isIntersecting),
-      { threshold: 0.08 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  const live = useSceneVisibility(wrap);
+  const reducedMotion = useReducedMotion();
+  const [unavailable, setUnavailable] = useState(false);
+  const onUnavailable = useCallback(() => setUnavailable(true), []);
+  const fallback = <CanvasFallback label={label} works={works} />;
 
   return (
     <div ref={wrap} className="absolute inset-0">
-      <ClientOnly fallback={<CanvasFallback label={label} />}>
-        <WebGLBoundary fallback={<CanvasFallback label={label} />}>
-          <Suspense fallback={<CanvasFallback label={label} />}>
+      <ClientOnly fallback={fallback}>
+        <WebGLBoundary fallback={fallback}>
+          {unavailable ? fallback : <Suspense fallback={fallback}>
             <HeroScene
               works={works}
               quality={quality}
+              reducedMotion={reducedMotion || paused}
+              onUnavailable={onUnavailable}
               selected={selected}
               onHover={onHover}
               onSelect={onSelect}
@@ -65,10 +63,10 @@ export function SceneStage({
               cameraZ={cameraZ}
               layout={layout}
               focus={focus}
-              frameloop={live ? "always" : "never"}
+              frameloop={!live ? "never" : reducedMotion || paused ? "demand" : "always"}
             />
-          </Suspense>
-          <LoadingVeil label={label} />
+          </Suspense>}
+          {!unavailable && <LoadingVeil label={label} />}
         </WebGLBoundary>
       </ClientOnly>
     </div>

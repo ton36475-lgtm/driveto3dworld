@@ -22,6 +22,15 @@ let currentZone: string | null = null;
 let muted = false;
 let unlocked = false;
 let visHooked = false;
+let active = false;
+
+export function setAudioActive(next: boolean) {
+  active = next;
+  if (!bus) return;
+  const shouldPlay = active && unlocked && document.visibilityState === "visible";
+  if (shouldPlay && bus.ctx.state === "suspended") void bus.ctx.resume().catch(() => {});
+  else if (!shouldPlay && bus.ctx.state === "running") void bus.ctx.suspend().catch(() => {});
+}
 
 function ensure(): Bus | null {
   if (typeof window === "undefined") return null;
@@ -45,12 +54,12 @@ function ensure(): Bus | null {
 export function unlockAudio() {
   const b = ensure();
   if (!b) return;
-  if (b.ctx.state === "suspended") void b.ctx.resume();
+  if (b.ctx.state === "suspended") void b.ctx.resume().catch(() => {});
   unlocked = true;
   if (!visHooked) {
     visHooked = true;
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && b.ctx.state === "suspended") void b.ctx.resume();
+      setAudioActive(active);
     });
   }
 }
@@ -60,6 +69,7 @@ async function loadBuffer(key: string, url: string) {
   if (!b || buffers.has(key)) return;
   try {
     const res = await fetch(url);
+    if (!res.ok) return;
     const raw = await res.arrayBuffer();
     const decoded = await b.ctx.decodeAudioData(raw.slice(0));
     buffers.set(key, decoded);
@@ -113,6 +123,7 @@ export async function startAudio() {
   if (!loops.has("engine")) startLoop("engine", b.music, 0.12);
   if (!loops.has("wind")) startLoop("wind", b.music, 0.08);
   setMuted(muted);
+  setAudioActive(active);
 }
 
 export function setEngine(speed: number) {

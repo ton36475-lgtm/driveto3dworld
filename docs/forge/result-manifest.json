@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "date": "2026-09-16",
+  "canonicalRepository": "ton36475-lgtm/driveto3dworld",
+  "branch": "codex/agm-forge-production",
+  "baseCommit": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",
+  "sourceCoverage": {
+    "fileOccurrences": 480,
+    "uniqueByteStreams": 209,
+    "manualLineByLineAllFiles": false
+  },
+  "checks": {
+    "nodeTests": {
+      "passed": 289,
+      "failed": 0,
+      "skipped": 4
+    },
+    "pythonTests": {
+      "passed": 16
+    },
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "httpRoutes": 13,
+    "gltfValidator": {
+      "assets": 3,
+      "errors": 0,
+      "warnings": 0
+    },
+    "independentSourceReview": "COMPLETE",
+    "browserInThisSession": "BLOCKED",
+    "remoteCI": "PENDING",
+    "ownerMacMCP": "NOT_VERIFIED"
+  },
+  "productionReady": false,
+  "rollback": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",
+  "nextSafePacket": "OWNER-HOST-BLENDER-VERIFY-001"
+}

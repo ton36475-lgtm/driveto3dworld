@@ -4,6 +4,8 @@ import { SceneStage } from "@/components/scene-stage";
 import { Button } from "@/components/ui/button";
 import { useCopy, useLocale } from "@/lib/copy";
 import { adjacentWork, getWork, loc } from "@/lib/works";
+import { PortfolioEvidence } from "@/components/portfolio-evidence";
+import { CONCEPT_EVIDENCE } from "@/lib/portfolio-profiles";
 
 export const Route = createFileRoute("/work/$slug")({
   loader: ({ params }) => {
@@ -22,7 +24,6 @@ function CaseStudyPage() {
   const prev = adjacentWork(work.slug, -1);
   const next = adjacentWork(work.slug, 1);
 
-
   return (
     <main className="pb-24 pt-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -32,24 +33,26 @@ function CaseStudyPage() {
             {copy.case.back}
           </Link>
         </Button>
-        <p className="mt-8 text-xs tracking-[0.22em] text-muted uppercase">
-          {work.year} · {loc(work.location, lang)}
-        </p>
+        <PortfolioEvidence compact className="mt-8" />
         <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-6xl">
           {loc(work.title, lang)}
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-muted">{loc(work.subtitle, lang)}</p>
+        <PortfolioEvidence className="mt-6" />
       </div>
 
       <div className="mx-auto mt-10 max-w-6xl px-4 sm:px-6">
-        <div className="overflow-hidden rounded-xl bg-surface p-2">
+        <figure className="overflow-hidden rounded-xl bg-surface p-2">
           <img
             src={work.image}
             alt={loc(work.title, lang)}
             className="media-frame aspect-[16/10] w-full rounded-lg object-cover"
             crossOrigin="anonymous"
           />
-        </div>
+          <figcaption className="px-2 py-3 text-xs leading-relaxed text-muted">
+            {loc(CONCEPT_EVIDENCE.imageCaption, lang)}
+          </figcaption>
+        </figure>
       </div>
 
       <section className="mx-auto mt-6 max-w-6xl px-4 sm:px-6">
@@ -65,9 +68,7 @@ function CaseStudyPage() {
             label={copy.gallery.loading}
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3">
-            <p className="text-xs tracking-widest text-muted uppercase">
-              {copy.case.inRoom}
-            </p>
+            <p className="text-xs tracking-widest text-muted uppercase">{copy.case.inRoom}</p>
             <div className="pointer-events-auto">
               <Button asChild variant="outline" size="sm">
                 <Link to="/gallery" search={{ work: work.slug }}>
@@ -81,16 +82,29 @@ function CaseStudyPage() {
 
       <div className="mx-auto mt-14 grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_16rem]">
         <div className="max-w-2xl space-y-5 text-base leading-relaxed text-muted">
-          {work.body[lang].map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+          <h2 className="font-display text-2xl text-foreground">
+            {lang === "th" ? "สำรวจแนวคิด" : "Explore the concept"}
+          </h2>
+          <p>
+            {lang === "th"
+              ? "ใช้ภาพและห้องสามมิติเพื่อสำรวจองค์ประกอบ วัสดุ แสง และการนำเสนอ เปรียบเทียบแนวทางกับงานศึกษาอื่นในแกลเลอรีได้"
+              : "Use the image and 3D room to explore composition, materials, light and presentation. Compare this visual direction with the other studies in the gallery."}
+          </p>
+          <p>
+            {lang === "th"
+              ? "ข้อมูลโครงการและเครดิตจะเพิ่มเติมเมื่อมีหลักฐานยืนยัน หน้านี้ยังไม่แสดงชื่อลูกค้า บทบาทผู้สร้าง หรือผลลัพธ์การส่งมอบจริง"
+              : "Project details and credits can be added when supporting evidence is available. Client commissions, creator roles and delivery outcomes remain unverified."}
+          </p>
         </div>
         <aside className="space-y-6 text-sm">
-          <Meta label={copy.case.client} value={loc(work.client, lang)} />
-          <Meta label={copy.case.year} value={work.year} />
-          <Meta label={copy.case.location} value={loc(work.location, lang)} />
-          <Meta label={copy.case.role} value={loc(work.roles, lang)} />
-          <Meta label={copy.case.outcome} value={loc(work.outcome, lang)} />
+          <Meta
+            label={lang === "th" ? "สถานะ" : "Status"}
+            value={loc(CONCEPT_EVIDENCE.label, lang)}
+          />
+          <Meta
+            label={lang === "th" ? "หัวข้อศึกษา" : "Study areas"}
+            value={work.disciplines.map((discipline) => copy.filters[discipline]).join(" · ")}
+          />
           <Button asChild variant="outline" className="w-full">
             <Link to="/gallery" search={{ work: work.slug }}>
               {copy.case.openGallery}

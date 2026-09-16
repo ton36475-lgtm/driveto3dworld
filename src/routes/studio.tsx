@@ -32,9 +32,7 @@ function StudioPage() {
             label={copy.gallery.loading}
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3">
-            <p className="text-xs tracking-widest text-muted uppercase">
-              {copy.gallery.inRoom}
-            </p>
+            <p className="text-xs tracking-widest text-muted uppercase">{copy.gallery.inRoom}</p>
             <div className="pointer-events-auto">
               <Button asChild variant="outline" size="sm">
                 <Link to="/gallery">{copy.work.open3d}</Link>
@@ -95,6 +93,26 @@ function StudioPage() {
         </article>
       </div>
 
+      <nav
+        aria-label="Profiles"
+        className="mx-auto mt-12 flex max-w-6xl flex-wrap gap-3 px-4 sm:px-6"
+      >
+        <Button asChild variant="outline">
+          <Link to="/people/$person" params={{ person: "ball" }}>
+            Ball / พี่บอล
+          </Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link to="/people/$person" params={{ person: "ton" }}>
+            Sirawat / ต้น
+          </Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link to="/people/$person" params={{ person: "studio" }}>
+            SIRAWAT × BALL
+          </Link>
+        </Button>
+      </nav>
       <div className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
         <Button asChild size="lg">
           <Link to="/contact">{copy.cta.button}</Link>

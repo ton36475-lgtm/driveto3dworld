@@ -4,44 +4,17 @@ import type { Lang } from "./data/i18n";
 import { setMuted as setAudioMuted } from "./systems/audio";
 import { dayState } from "./systems/dayNight";
 import { useLang } from "@/lib/lang";
+import { getQuality } from "@/components/canvas/quality";
+import { normalizeSave, type DriveSave, type Quality, type Weather } from "./systems/save";
+
+export type { Quality, Weather } from "./systems/save";
 
 const SAVE_KEY = "atelier-drive-v2";
 const LEGACY_KEY = "atelier-drive-v1";
 
-export type Weather = "auto" | "clear" | "rain" | "snow";
-export type Quality = "high" | "medium" | "low";
 export type Overlay = "none" | "catalog" | "settings" | "pause" | "complete";
-
-type SaveBlob = {
-  version: number;
-  collected?: string[];
-  muted?: boolean;
-  weather?: Weather;
-  lang?: Lang;
-  quality?: Quality;
-  dayPaused?: boolean;
-  dayTime?: number;
-};
-
-function migrate(raw: SaveBlob): Required<Omit<SaveBlob, "version">> & { version: number } {
-  const collected = (raw.collected ?? []).filter((id) => PROJECTS.some((p) => p.id === id));
-  const lang: Lang = raw.lang === "th" ? "th" : "en";
-  const weather: Weather =
-    raw.weather === "clear" || raw.weather === "rain" || raw.weather === "snow" || raw.weather === "auto"
-      ? raw.weather
-      : "auto";
-  const quality: Quality = raw.quality === "medium" || raw.quality === "low" ? raw.quality : "high";
-  return {
-    version: 2,
-    collected,
-    muted: Boolean(raw.muted),
-    weather,
-    lang,
-    quality,
-    dayPaused: Boolean(raw.dayPaused),
-    dayTime: typeof raw.dayTime === "number" ? raw.dayTime : 0.32,
-  };
-}
+const projectIds = PROJECTS.map((project) => project.id);
+const migrate = (raw: unknown) => normalizeSave(raw, projectIds, getQuality() === "low" ? "low" : "high");
 
 function loadSave() {
   if (typeof window === "undefined") {
@@ -50,21 +23,25 @@ function loadSave() {
   try {
     const raw = localStorage.getItem(SAVE_KEY) ?? localStorage.getItem(LEGACY_KEY);
     if (!raw) return migrate({ version: 2 });
-    return migrate(JSON.parse(raw) as SaveBlob);
+    return migrate(JSON.parse(raw));
   } catch {
     return migrate({ version: 2 });
   }
 }
 
-function persist(partial: Partial<SaveBlob>) {
+function persist(partial: Partial<DriveSave>) {
   if (typeof window === "undefined") return;
   try {
     const cur = loadSave();
-    const next = { ...cur, ...partial, version: 2 };
+    const next = migrate({ ...cur, ...partial, version: 2 });
     localStorage.setItem(SAVE_KEY, JSON.stringify(next));
   } catch {
     /* quota */
   }
+}
+
+export function saveDaySettings() {
+  persist({ dayPaused: dayState.paused, dayTime: dayState.time });
 }
 
 const initial = loadSave();
@@ -128,6 +105,7 @@ export const useDrive = create<DriveState>((set, get) => ({
     set({ muted });
   },
   collect: (id) => {
+    if (!projectIds.includes(id)) return;
     const { collected } = get();
     const next = collected.includes(id) ? collected : [...collected, id];
     persist({ collected: next });
@@ -139,7 +117,9 @@ export const useDrive = create<DriveState>((set, get) => ({
       completeSeen: done ? get().completeSeen : false,
     });
   },
-  openProject: (id) => set({ activeId: id, overlay: "none" }),
+  openProject: (id) => {
+    if (projectIds.includes(id)) set({ activeId: id, overlay: "none" });
+  },
   closeModal: () => {
     const { collected, completeSeen } = get();
     const show = collected.length >= PROJECTS.length && !completeSeen;
@@ -172,7 +152,10 @@ export const useDrive = create<DriveState>((set, get) => ({
     const cur = get().overlay;
     set({ overlay: cur === o ? "none" : o, activeId: null });
   },
-  setWaypoint: (waypoint) => set({ waypoint }),
+  setWaypoint: (waypoint) => {
+    if (waypoint && (!Number.isFinite(waypoint.x) || !Number.isFinite(waypoint.z))) return;
+    set({ waypoint });
+  },
   setSpeedKmh: (speedKmh) => {
     if (Math.abs(speedKmh - get().speedKmh) >= 1) set({ speedKmh });
   },

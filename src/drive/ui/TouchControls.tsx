@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { setTouch, setTouchBrake } from "../systems/input";
 import { COPY } from "../data/i18n";
 import { useDrive } from "../store";
@@ -9,6 +9,11 @@ export function TouchControls() {
   const idRef = useRef<number | null>(null);
   const lang = useDrive((s) => s.lang);
   const c = COPY[lang];
+
+  useEffect(() => () => {
+    setTouch(0, 0, false);
+    setTouchBrake(false);
+  }, []);
 
   const moveTo = (clientX: number, clientY: number) => {
     const el = base.current;
@@ -49,8 +54,10 @@ export function TouchControls() {
           borderRadius: "50%",
           border: "1px solid color-mix(in oklab, var(--color-fg) 16%, transparent)",
           background: "color-mix(in oklab, var(--color-surface) 70%, transparent)",
+          touchAction: "none",
         }}
         onPointerDown={(e) => {
+          if (idRef.current !== null) return;
           idRef.current = e.pointerId;
           e.currentTarget.setPointerCapture(e.pointerId);
           moveTo(e.clientX, e.clientY);
@@ -61,6 +68,7 @@ export function TouchControls() {
         }}
         onPointerUp={end}
         onPointerCancel={end}
+        onLostPointerCapture={end}
       >
         <div
           ref={knob}
@@ -78,13 +86,18 @@ export function TouchControls() {
       <button
         type="button"
         className="pointer-events-auto ghost-btn"
-        style={{ minWidth: 88, minHeight: 52 }}
+        style={{ minWidth: 88, minHeight: 52, touchAction: "none" }}
         onPointerDown={(e) => {
           e.preventDefault();
+          e.currentTarget.setPointerCapture(e.pointerId);
           setTouchBrake(true);
         }}
         onPointerUp={() => setTouchBrake(false)}
         onPointerCancel={() => setTouchBrake(false)}
+        onLostPointerCapture={() => setTouchBrake(false)}
+        onKeyDown={(e) => { if (e.code === "Space" || e.code === "Enter") setTouchBrake(true); }}
+        onKeyUp={() => setTouchBrake(false)}
+        onBlur={() => setTouchBrake(false)}
       >
         {c.space.split(" ").slice(-1)[0] === "brake" || lang === "en" ? "Brake" : "เบรก"}
       </button>
