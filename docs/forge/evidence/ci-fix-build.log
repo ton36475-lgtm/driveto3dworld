@@ -1,0 +1,268 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> prebuild
+> node scripts/preflight.mjs
+
+[preflight] Installing reviewed lockfile dependencies (lifecycle scripts disabled).
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn deprecated recharts@2.15.4: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 480 packages in 22s
+[preflight] Dependency and native checks passed.
+
+> build
+> node scripts/with-app-env.mjs vite build && npm run db:migrate
+
+[nitro:vercel] ℹ Using nodejs24.x runtime.
+[nitro:vercel] ℹ Using web entry format.
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 2466 modules transformed.
+rendering chunks...
+computing gzip size...
+.vercel/output/static/assets/syne-greek-600-normal-BpFII5Ja.woff2                      4.65 kB
+.vercel/output/static/assets/syne-greek-700-normal-RbvlO3f8.woff2                      4.66 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-400-normal-n-X-g5Z4.woff     4.84 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-500-normal-DcylQI4B.woff     4.85 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-600-normal-iH120vlL.woff     4.87 kB
+.vercel/output/static/assets/syne-greek-600-normal-BJs4kvyH.woff                       6.02 kB
+.vercel/output/static/assets/syne-greek-700-normal-C01yjWE_.woff                       6.03 kB
+.vercel/output/static/assets/figtree-latin-ext-500-normal-Du0rIuHj.woff2               6.15 kB
+.vercel/output/static/assets/figtree-latin-ext-400-normal-CXAzuTZb.woff2               6.18 kB
+.vercel/output/static/assets/figtree-latin-ext-600-normal-DJlfifZj.woff2               6.24 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-500-normal-n470B0cW.woff2    6.24 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-600-normal-BXI6PlF4.woff2    6.27 kB
+.vercel/output/static/assets/syne-latin-ext-700-normal-DuyXglMe.woff2                  6.27 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-ext-400-normal-DBkYO1u-.woff2    6.35 kB
+.vercel/output/static/assets/syne-latin-ext-600-normal-ZnizrDKU.woff2                  6.37 kB
+.vercel/output/static/assets/figtree-latin-ext-500-normal-BOEJvrb_.woff                8.32 kB
+.vercel/output/static/assets/figtree-latin-ext-400-normal-Gbh-3PTk.woff                8.33 kB
+.vercel/output/static/assets/figtree-latin-ext-600-normal-CQqsimlV.woff                8.36 kB
+.vercel/output/static/assets/syne-latin-ext-700-normal-C-qCH-vM.woff                   8.47 kB
+.vercel/output/static/assets/syne-latin-ext-600-normal-DEzBMW8B.woff                   8.49 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-500-normal-BoHUoq0p.woff         10.35 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-400-normal-DKc8V4lk.woff         10.41 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-600-normal-BOwfviun.woff         10.48 kB
+.vercel/output/static/assets/figtree-latin-400-normal-g7Dtegnw.woff2                  11.38 kB
+.vercel/output/static/assets/figtree-latin-500-normal-BWnGEVsr.woff2                  11.43 kB
+.vercel/output/static/assets/figtree-latin-600-normal-Cv_xCTDl.woff2                  11.54 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-500-normal-BrMc1XKn.woff2        11.71 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-400-normal-Bt1rR4gi.woff2        11.80 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-thai-600-normal-DvfsyWAn.woff2        11.80 kB
+.vercel/output/static/assets/syne-latin-700-normal-AF3Rs61n.woff2                     14.07 kB
+.vercel/output/static/assets/syne-latin-600-normal-BiwQbQXw.woff2                     14.34 kB
+.vercel/output/static/assets/figtree-latin-400-normal-BD4aNku5.woff                   15.03 kB
+.vercel/output/static/assets/figtree-latin-500-normal-B_yy1phn.woff                   15.04 kB
+.vercel/output/static/assets/figtree-latin-600-normal-BM_oTo4n.woff                   15.21 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-400-normal-YXrLwNa7.woff        16.22 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-500-normal-h5t7erDE.woff        17.34 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-600-normal-P_JjY83V.woff        17.55 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-400-normal-CwmoKdEh.woff2       17.73 kB
+.vercel/output/static/assets/syne-latin-700-normal-Cd-_iCn5.woff                      18.08 kB
+.vercel/output/static/assets/syne-latin-600-normal-dRu9QuIh.woff                      18.23 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-500-normal-DQcnnbdd.woff2       18.52 kB
+.vercel/output/static/assets/ibm-plex-sans-thai-latin-600-normal-BR-dhaTH.woff2       18.99 kB
+.vercel/output/static/assets/styles-CX_Nn4fN.css                                      61.09 kB │ gzip:  16.88 kB
+.vercel/output/static/assets/root-DLTE-HSj.js                                          0.03 kB │ gzip:   0.05 kB
+.vercel/output/static/assets/not-found-i5RsCZif.js                                     0.11 kB │ gzip:   0.11 kB
+.vercel/output/static/assets/work-D9nr-xFH.js                                          0.14 kB │ gzip:   0.13 kB
+.vercel/output/static/assets/matchContext-DyXrH4xk.js                                  0.14 kB │ gzip:   0.12 kB
+.vercel/output/static/assets/arrow-right-qp_FgNlU.js                                   0.15 kB │ gzip:   0.15 kB
+.vercel/output/static/assets/vanilla-DZJGj1NY.js                                       0.32 kB │ gzip:   0.23 kB
+.vercel/output/static/assets/textarea-DbCDNsEs.js                                      0.44 kB │ gzip:   0.30 kB
+.vercel/output/static/assets/work._slug-DQStih7Z.js                                    0.58 kB │ gzip:   0.34 kB
+.vercel/output/static/assets/useStore-DlcMHmGe.js                                      0.66 kB │ gzip:   0.38 kB
+.vercel/output/static/assets/people._person-CMWlsTqU.js                                0.67 kB │ gzip:   0.47 kB
+.vercel/output/static/assets/portfolio-evidence-JloAIv1L.js                            0.68 kB │ gzip:   0.38 kB
+.vercel/output/static/assets/drive-9HMiDeiz.js                                         1.19 kB │ gzip:   0.62 kB
+.vercel/output/static/assets/work-card-BNpB-Qt_.js                                     1.43 kB │ gzip:   0.72 kB
+.vercel/output/static/assets/work.index-BZGJvBeh.js                                    1.60 kB │ gzip:   0.75 kB
+.vercel/output/static/assets/with-selector-dQnI5o1Q.js                                 1.62 kB │ gzip:   0.71 kB
+.vercel/output/static/assets/canvas-fallback-CBCHyyU2.js                               1.76 kB │ gzip:   0.95 kB
+.vercel/output/static/assets/ops-nav-CFF9vuPk.js                                       1.87 kB │ gzip:   0.90 kB
+.vercel/output/static/assets/scene-stage-Djl62pMJ.js                                   2.34 kB │ gzip:   1.16 kB
+.vercel/output/static/assets/lang-BvWEmFsX.js                                          2.41 kB │ gzip:   1.21 kB
+.vercel/output/static/assets/automations-DjFm4-hO.js                                   2.47 kB │ gzip:   1.07 kB
+.vercel/output/static/assets/kit-DyeEAf_3.js                                           2.56 kB │ gzip:   0.75 kB
+.vercel/output/static/assets/marketing-DtpDNwoX.js                                     2.63 kB │ gzip:   1.12 kB
+.vercel/output/static/assets/desk-D_5HKI4R.js                                          3.30 kB │ gzip:   1.27 kB
+.vercel/output/static/assets/people._person-D8EMUhYF.js                                3.30 kB │ gzip:   1.34 kB
+.vercel/output/static/assets/studio-MH_otHx7.js                                        4.19 kB │ gzip:   1.19 kB
+.vercel/output/static/assets/gallery-DQI-h5-M.js                                       4.49 kB │ gzip:   1.92 kB
+.vercel/output/static/assets/work._slug-ClJOb6Mh.js                                    5.18 kB │ gzip:   2.05 kB
+.vercel/output/static/assets/contact-BlgvAux7.js                                       5.32 kB │ gzip:   1.89 kB
+.vercel/output/static/assets/routes-BHZMv7JY.js                                        6.40 kB │ gzip:   1.58 kB
+.vercel/output/static/assets/jsx-runtime-B-hcVAMW.js                                   8.55 kB │ gzip:   3.26 kB
+.vercel/output/static/assets/forge-tJg86kCw.js                                        10.24 kB │ gzip:   3.97 kB
+.vercel/output/static/assets/local-data-CzzsmYy0.js                                   13.61 kB │ gzip:   5.13 kB
+.vercel/output/static/assets/link-KtPQBuLp.js                                         19.43 kB │ gzip:   7.50 kB
+.vercel/output/static/assets/DriveApp-CkxvdfWO.js                                     83.82 kB │ gzip:  25.78 kB
+.vercel/output/static/assets/hero-scene-TvZ_Qva-.js                                  233.99 kB │ gzip:  76.50 kB
+.vercel/output/static/assets/runtime-hooks-PRD9Wp_x.js                               378.41 kB │ gzip: 101.08 kB
+.vercel/output/static/assets/index-BMegLsL0.js                                       500.78 kB │ gzip: 153.82 kB
+.vercel/output/static/assets/runtime-BzOR4OV8.js                                     521.68 kB │ gzip: 138.72 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.33s
+vite v8.2.2 building ssr environment for production...
+transforming...
+✓ 146 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/syne-greek-600-normal-BpFII5Ja.woff2                      4.65 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-greek-700-normal-RbvlO3f8.woff2                      4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-400-normal-n-X-g5Z4.woff     4.84 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-500-normal-DcylQI4B.woff     4.85 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-600-normal-iH120vlL.woff     4.87 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-greek-600-normal-BJs4kvyH.woff                       6.02 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-greek-700-normal-C01yjWE_.woff                       6.03 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-500-normal-Du0rIuHj.woff2               6.15 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-400-normal-CXAzuTZb.woff2               6.18 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-600-normal-DJlfifZj.woff2               6.24 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-500-normal-n470B0cW.woff2    6.24 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-600-normal-BXI6PlF4.woff2    6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-ext-700-normal-DuyXglMe.woff2                  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-ext-400-normal-DBkYO1u-.woff2    6.35 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-ext-600-normal-ZnizrDKU.woff2                  6.37 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-500-normal-BOEJvrb_.woff                8.32 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-400-normal-Gbh-3PTk.woff                8.33 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-ext-600-normal-CQqsimlV.woff                8.36 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-ext-700-normal-C-qCH-vM.woff                   8.47 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-ext-600-normal-DEzBMW8B.woff                   8.49 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-500-normal-BoHUoq0p.woff         10.35 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-400-normal-DKc8V4lk.woff         10.41 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-600-normal-BOwfviun.woff         10.48 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-400-normal-g7Dtegnw.woff2                  11.38 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-500-normal-BWnGEVsr.woff2                  11.43 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-600-normal-Cv_xCTDl.woff2                  11.54 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-500-normal-BrMc1XKn.woff2        11.71 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-400-normal-Bt1rR4gi.woff2        11.80 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-thai-600-normal-DvfsyWAn.woff2        11.80 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-700-normal-AF3Rs61n.woff2                     14.07 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-600-normal-BiwQbQXw.woff2                     14.34 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-400-normal-BD4aNku5.woff                   15.03 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-500-normal-B_yy1phn.woff                   15.04 kB
+node_modules/.nitro/vite/services/ssr/assets/figtree-latin-600-normal-BM_oTo4n.woff                   15.21 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-400-normal-YXrLwNa7.woff        16.22 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-500-normal-h5t7erDE.woff        17.34 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-600-normal-P_JjY83V.woff        17.55 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-400-normal-CwmoKdEh.woff2       17.73 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-700-normal-Cd-_iCn5.woff                      18.08 kB
+node_modules/.nitro/vite/services/ssr/assets/syne-latin-600-normal-dRu9QuIh.woff                      18.23 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-500-normal-DQcnnbdd.woff2       18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/ibm-plex-sans-thai-latin-600-normal-BR-dhaTH.woff2       18.99 kB
+node_modules/.nitro/vite/services/ssr/assets/styles-CX_Nn4fN.css                                      61.09 kB │ gzip: 16.88 kB
+node_modules/.nitro/vite/services/ssr/assets/start-5Z2QO8AU.js                                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-D9UWiqvJ.js                         0.22 kB │ gzip:  0.16 kB
+node_modules/.nitro/vite/services/ssr/assets/work-4KK0cFTh.js                                          0.25 kB │ gzip:  0.19 kB
+node_modules/.nitro/vite/services/ssr/assets/lang-MibnIkK3.js                                          0.33 kB │ gzip:  0.22 kB
+node_modules/.nitro/vite/services/ssr/assets/textarea-DpHAVx-Y.js                                      0.55 kB │ gzip:  0.37 kB
+node_modules/.nitro/vite/services/ssr/assets/runtime-DpVsP3qF.js                                       0.58 kB │ gzip:  0.34 kB
+node_modules/.nitro/vite/services/ssr/assets/work._slug-DZvuTF6f.js                                    0.93 kB │ gzip:  0.47 kB
+node_modules/.nitro/vite/services/ssr/assets/people._person-3pmfVO-Q.js                                1.01 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/drive-BwajFsKV.js                                         1.02 kB │ gzip:  0.48 kB
+node_modules/.nitro/vite/services/ssr/assets/portfolio-evidence-CdvOzf7d.js                            1.15 kB │ gzip:  0.53 kB
+node_modules/.nitro/vite/services/ssr/assets/ops-nav-BBybVbWn.js                                       1.65 kB │ gzip:  0.77 kB
+node_modules/.nitro/vite/services/ssr/assets/runtime-hooks-BbPGg-Ey.js                                 1.77 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/work-card-CCCE7Uzh.js                                     1.95 kB │ gzip:  0.84 kB
+node_modules/.nitro/vite/services/ssr/assets/scene-stage-CPvJr6Gw.js                                   2.41 kB │ gzip:  1.02 kB
+node_modules/.nitro/vite/services/ssr/assets/work.index-3N1wabsv.js                                    2.56 kB │ gzip:  1.00 kB
+node_modules/.nitro/vite/services/ssr/assets/canvas-fallback-BEGTJc7o.js                               2.65 kB │ gzip:  1.19 kB
+node_modules/.nitro/vite/services/ssr/assets/kit-Cxy4IviW.js                                           3.86 kB │ gzip:  1.00 kB
+node_modules/.nitro/vite/services/ssr/assets/automations-C3V-AEyL.js                                   3.96 kB │ gzip:  1.39 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-C0EFJm-T.js                    4.25 kB │ gzip:  1.01 kB
+node_modules/.nitro/vite/services/ssr/assets/marketing-CykwZvtf.js                                     4.41 kB │ gzip:  1.46 kB
+node_modules/.nitro/vite/services/ssr/assets/people._person-BBfnHCC1.js                                4.97 kB │ gzip:  1.68 kB
+node_modules/.nitro/vite/services/ssr/assets/desk-BC5v7yBm.js                                          5.44 kB │ gzip:  1.68 kB
+node_modules/.nitro/vite/services/ssr/assets/studio-rAuAPS36.js                                        6.33 kB │ gzip:  1.49 kB
+node_modules/.nitro/vite/services/ssr/assets/portfolio-profiles-CR0njwLR.js                            7.14 kB │ gzip:  2.25 kB
+node_modules/.nitro/vite/services/ssr/assets/gallery-BppxztNI.js                                       7.22 kB │ gzip:  2.39 kB
+node_modules/.nitro/vite/services/ssr/assets/work._slug-CMK2kdxM.js                                    7.41 kB │ gzip:  2.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-DC8xXUzR.js                                       8.62 kB │ gzip:  2.43 kB
+node_modules/.nitro/vite/services/ssr/assets/routes-DjFBik9H.js                                       10.28 kB │ gzip:  2.15 kB
+node_modules/.nitro/vite/services/ssr/assets/forge-Bxfq_Dsv.js                                        13.68 kB │ gzip:  4.41 kB
+node_modules/.nitro/vite/services/ssr/assets/works-CCDBxnzm.js                                        18.77 kB │ gzip:  5.69 kB
+node_modules/.nitro/vite/services/ssr/assets/hero-scene-Bqx0Gmzu.js                                   19.20 kB │ gzip:  5.27 kB
+node_modules/.nitro/vite/services/ssr/assets/local-data-B-zDpFOH.js                                   22.22 kB │ gzip:  6.65 kB
+node_modules/.nitro/vite/services/ssr/assets/router-BjEyM3SP.js                                       28.00 kB │ gzip:  7.95 kB
+node_modules/.nitro/vite/services/ssr/assets/utils-lT7nPJ2m.js                                        34.48 kB │ gzip:  9.26 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                        62.55 kB │ gzip: 15.91 kB
+node_modules/.nitro/vite/services/ssr/assets/DriveApp-BIXQHAJO.js                                    124.90 kB │ gzip: 30.98 kB
+
+✓ built in 1.60s
+
+[nitro] ◐ Building [Nitro] (preset: vercel, compatibility: 2026-09-16)
+[nitro] ✔ Generated public .vercel/output/static
+vite v8.2.2 building nitro environment for production...
+transforming...
+✓ 2458 modules transformed.
+rendering chunks...
+computing gzip size...
+.vercel/output/functions/__server.func/_ssr/start-5Z2QO8AU.mjs                           0.14 kB │ gzip:   0.13 kB
+.vercel/output/functions/__server.func/_ssr/empty-plugin-adapters-D9UWiqvJ.mjs           0.23 kB │ gzip:   0.16 kB
+.vercel/output/functions/__server.func/_libs/babel__runtime.mjs                          0.39 kB │ gzip:   0.26 kB
+.vercel/output/functions/__server.func/_ssr/work-4KK0cFTh.mjs                            0.41 kB │ gzip:   0.26 kB
+.vercel/output/functions/__server.func/_ssr/textarea-DpHAVx-Y.mjs                        0.70 kB │ gzip:   0.44 kB
+.vercel/output/functions/__server.func/_ssr/runtime-DpVsP3qF.mjs                         0.81 kB │ gzip:   0.46 kB
+.vercel/output/functions/__server.func/_chunks/ssr-renderer.mjs                          0.96 kB │ gzip:   0.49 kB
+.vercel/output/functions/__server.func/_ssr/work._slug-DZvuTF6f.mjs                      1.18 kB │ gzip:   0.54 kB
+.vercel/output/functions/__server.func/_ssr/people._person-3pmfVO-Q.mjs                  1.23 kB │ gzip:   0.68 kB
+.vercel/output/functions/__server.func/_ssr/portfolio-evidence-CdvOzf7d.mjs              1.32 kB │ gzip:   0.59 kB
+.vercel/output/functions/__server.func/_ssr/drive-BwajFsKV.mjs                           1.51 kB │ gzip:   0.60 kB
+.vercel/output/functions/__server.func/_runtime.mjs                                      1.58 kB │ gzip:   0.74 kB
+.vercel/output/functions/__server.func/_ssr/ops-nav-BBybVbWn.mjs                         1.90 kB │ gzip:   0.84 kB
+.vercel/output/functions/__server.func/_ssr/runtime-hooks-BbPGg-Ey.mjs                   1.93 kB │ gzip:   0.86 kB
+.vercel/output/functions/__server.func/_ssr/work-card-CCCE7Uzh.mjs                       2.38 kB │ gzip:   0.93 kB
+.vercel/output/functions/__server.func/_ssr/scene-stage-CPvJr6Gw.mjs                     2.90 kB │ gzip:   1.13 kB
+.vercel/output/functions/__server.func/_ssr/canvas-fallback-BEGTJc7o.mjs                 3.03 kB │ gzip:   1.29 kB
+.vercel/output/functions/__server.func/_libs/class-variance-authority+clsx.mjs           3.17 kB │ gzip:   1.24 kB
+.vercel/output/functions/__server.func/_ssr/work.index-3N1wabsv.mjs                      3.20 kB │ gzip:   1.12 kB
+.vercel/output/functions/__server.func/_tanstack-start-manifest_v-C0EFJm-T.mjs           4.31 kB │ gzip:   1.04 kB
+.vercel/output/functions/__server.func/_ssr/kit-Cxy4IviW.mjs                             4.76 kB │ gzip:   1.08 kB
+.vercel/output/functions/__server.func/_ssr/automations-C3V-AEyL.mjs                     4.84 kB │ gzip:   1.52 kB
+.vercel/output/functions/__server.func/_ssr/marketing-CykwZvtf.mjs                       5.09 kB │ gzip:   1.54 kB
+.vercel/output/functions/__server.func/_libs/radix-ui__react-slot.mjs                    5.61 kB │ gzip:   1.73 kB
+.vercel/output/functions/__server.func/_ssr/people._person-BBfnHCC1.mjs                  5.69 kB │ gzip:   1.74 kB
+.vercel/output/functions/__server.func/_ssr/desk-BC5v7yBm.mjs                            6.47 kB │ gzip:   1.81 kB
+.vercel/output/functions/__server.func/_libs/zustand.mjs                                 6.81 kB │ gzip:   2.15 kB
+.vercel/output/functions/__server.func/_ssr/studio-rAuAPS36.mjs                          7.51 kB │ gzip:   1.56 kB
+.vercel/output/functions/__server.func/_ssr/gallery-BppxztNI.mjs                         8.28 kB │ gzip:   2.53 kB
+.vercel/output/functions/__server.func/_ssr/work._slug-CMK2kdxM.mjs                      8.53 kB │ gzip:   2.48 kB
+.vercel/output/functions/__server.func/_libs/h3-v2+rou3.mjs                              9.83 kB │ gzip:   3.05 kB
+.vercel/output/functions/__server.func/_ssr/contact-DC8xXUzR.mjs                        10.06 kB │ gzip:   2.55 kB
+.vercel/output/functions/__server.func/_libs/lucide-react.mjs                           10.82 kB │ gzip:   2.55 kB
+.vercel/output/functions/__server.func/_libs/tanstack__history.mjs                      12.26 kB │ gzip:   3.48 kB
+.vercel/output/functions/__server.func/_ssr/routes-DjFBik9H.mjs                         12.30 kB │ gzip:   2.29 kB
+.vercel/output/functions/__server.func/_ssr/forge-Bxfq_Dsv.mjs                          15.16 kB │ gzip:   4.54 kB
+.vercel/output/functions/__server.func/_libs/@radix-ui/react-compose-refs+[...].mjs     16.79 kB │ gzip:   4.66 kB
+.vercel/output/functions/__server.func/_ssr/hero-scene-Bqx0Gmzu.mjs                     21.57 kB │ gzip:   5.40 kB
+.vercel/output/functions/__server.func/_libs/h3+rou3+srvx.mjs                           22.57 kB │ gzip:   6.12 kB
+.vercel/output/functions/__server.func/_ssr/local-data-B-zDpFOH.mjs                     22.60 kB │ gzip:   6.73 kB
+.vercel/output/functions/__server.func/index.mjs                                        31.38 kB │ gzip:   9.86 kB
+.vercel/output/functions/__server.func/_ssr/utils-lT7nPJ2m.mjs                          34.91 kB │ gzip:   9.47 kB
+.vercel/output/functions/__server.func/_libs/sonner.mjs                                 53.69 kB │ gzip:  12.13 kB
+.vercel/output/functions/__server.func/_ssr/router-BjEyM3SP.mjs                         54.33 kB │ gzip:  15.31 kB
+.vercel/output/functions/__server.func/_ssr/ssr.mjs                                     60.95 kB │ gzip:  15.86 kB
+.vercel/output/functions/__server.func/_libs/tailwind-merge.mjs                         88.13 kB │ gzip:  15.66 kB
+.vercel/output/functions/__server.func/_libs/@tanstack/router-core+[...].mjs           123.11 kB │ gzip:  25.92 kB
+.vercel/output/functions/__server.func/_ssr/DriveApp-BIXQHAJO.mjs                      134.10 kB │ gzip:  31.27 kB
+.vercel/output/functions/__server.func/_libs/zod.mjs                                   159.58 kB │ gzip:  34.87 kB
+.vercel/output/functions/__server.func/_libs/@tanstack/react-router+[...].mjs          656.31 kB │ gzip: 137.96 kB
+.vercel/output/functions/__server.func/_libs/@react-three/drei+[...].mjs             2,596.59 kB │ gzip: 546.03 kB
+
+✓ built in 2.11s
+ℹ Generated .vercel/output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> db:migrate
+> node scripts/migrate.mjs
+
+[migrate] DATABASE_URL not set — skipping (the PGLite fallback migrates itself).

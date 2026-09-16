@@ -35,12 +35,19 @@ run bootstrap to force a clean locked installation.
 ## Flags and secrets
 
 The default portfolio needs no accounts, database credentials or API keys.
-`docs/runtime-environment.example.json` is a public build-flag example for the
-existing `.grok/app-env.json` wrapper; it contains no credentials. To explicitly
-disable auth for a provider-controlled build, set `VITE_AUTH_ENABLED=false` in
-that provider's build environment. Existing process environment values take
-precedence over the local app-env file. Never put secrets in any `VITE_` value:
-these values are compiled into browser code.
+The tracked `scripts/with-app-env.mjs` wrapper supplies `VITE_AUTH_ENABLED=false`
+for dev, build and preview, including a fresh checkout with no local files.
+Optional `.grok/app-env.json` values override that repository default; explicit
+process or provider build environment values override both. For a
+provider-controlled build that injects auth flags, set `VITE_AUTH_ENABLED=false`
+there to keep the portfolio's auth-off setting. The underlying auth helper's
+default is unchanged, so invoking Vite directly bypasses the repository default;
+use the npm commands above.
+
+`docs/runtime-environment.example.json` illustrates the optional public build
+flags and contains no credentials. Never put secrets in any `VITE_` value:
+these values are compiled into browser code. The wrapper does not configure a
+database or create accounts.
 
 `APP_READY_TIMEOUT_MS` changes startup's HTTP timeout (default 60000; allowed
 1000–300000). This variable is an ordinary shell/process value, not a Vite flag.

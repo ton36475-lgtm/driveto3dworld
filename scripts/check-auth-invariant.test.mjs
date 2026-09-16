@@ -93,10 +93,16 @@ test("only a divergence warns the smoke verdict", () => {
 test("the build side resolves a workspace's app-env and explicit override", (t) => {
   const root = mkdtempSync(join(tmpdir(), "auth-build-env-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
+  // The same defaults used by a fresh checkout's startup also govern its build.
+  assert.equal(buildAuthEnabled(root, {}), false);
+  assert.equal(buildAuthEnabled(root, { VITE_AUTH_ENABLED: "true" }), true);
   mkdirSync(join(root, ".grok"));
   writeFileSync(join(root, ".grok/app-env.json"), JSON.stringify({ VITE_AUTH_ENABLED: "false" }));
   assert.equal(buildAuthEnabled(root, {}), false);
   assert.equal(buildAuthEnabled(root, { VITE_AUTH_ENABLED: "true" }), true);
+  writeFileSync(join(root, ".grok/app-env.json"), JSON.stringify({ VITE_AUTH_ENABLED: "true" }));
+  assert.equal(buildAuthEnabled(root, {}), true);
+  assert.equal(buildAuthEnabled(root, { VITE_AUTH_ENABLED: "false" }), false);
 });
 
 test("the CLI reports rather than silently passing when run via a symlink", async () => {

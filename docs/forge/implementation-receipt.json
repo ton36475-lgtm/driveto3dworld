@@ -6,7 +6,7 @@
   "files": [
     {
       "path": ".github/workflows/runtime.yml",
-      "sha256": "edb393fe0f24bd0cc8236c58b633bfd2356c81a1c0f41642c73fe87e43186477"
+      "sha256": "aaf43102805cc1208d00cefac4698c1b320e549992add0fb2b1b011ac2d23081"
     },
     {
       "path": ".gitignore",
@@ -97,6 +97,22 @@
       "sha256": "bc0aaf962c27e2a09a31c005c598962b77df477b73c2ec17390f034904f883c6"
     },
     {
+      "path": "docs/forge/evidence/ci-fix-build.log",
+      "sha256": "363b2719956f584782b3aca4679beafbe798d3132690cd0adf67db50d4281b37"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-lint.log",
+      "sha256": "1c5da7755d6102106816b01f84b643b60122d1dc2d14a682e9be884803c40be8"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-tests.log",
+      "sha256": "2e7ceaac456540bed991b9ece1f546844a835a8e5a5d87447551484d6c89cd16"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-typecheck.log",
+      "sha256": "b19be1a127b43f4b12ff880203cd55855c61667abffe84f9f625a6078c3acec4"
+    },
+    {
       "path": "docs/forge/evidence/final-build.log",
       "sha256": "8a2205d44d6a37d830669fe8a36c1e5b13341db87b0d4cac7ace7b07a07a4019"
     },
@@ -118,7 +134,7 @@
     },
     {
       "path": "docs/forge/evidence/npm-audit.json",
-      "sha256": "9a38b52b039b085fb3b23322495482fc76c0db474eb09870edb8f64e01a6ab23"
+      "sha256": "d85b592dc4756073c0c217993711d71409a8db2859a168265357682dc5b56230"
     },
     {
       "path": "docs/forge/operator-packet.md",
@@ -130,7 +146,7 @@
     },
     {
       "path": "docs/forge/result-manifest.json",
-      "sha256": "874f5dabdacc527c60dd8215a65cdb6671eb1196ee234dd804ca0920846d2a63"
+      "sha256": "c438e3a0c3410ceaa38dfbb08d4d40b7ecfdfdb7afcb0db29ed7f67d99271601"
     },
     {
       "path": "docs/forge/source-reconciliation.md",
@@ -138,7 +154,7 @@
     },
     {
       "path": "docs/forge/validation.md",
-      "sha256": "1d64fc76f5fc49a7aa235f7bfa23f45c9a7c9a355c66c4a6fb3c355ee0491d2c"
+      "sha256": "0d6bced48f8c6a047dfea983fc298167a7bf283131c1b951adb6a4ee5186db24"
     },
     {
       "path": "docs/runtime-environment.example.json",
@@ -146,11 +162,11 @@
     },
     {
       "path": "docs/runtime.md",
-      "sha256": "a2b3d09c1ad4741ca6729f278c0bb4f15844b90cd63fb1b15f1524ddd2c06260"
+      "sha256": "e6efbae9e6f563bc62e2461f078fb1a10ebba7f5be36173fcd4c062293040e0c"
     },
     {
       "path": "package-lock.json",
-      "sha256": "7d4681a429334abeb4d89fe73f48de8d2cc6030c374a4818fb11e36efa48db36"
+      "sha256": "867bd2d22b63d9c31c09abbbe85fef7252bfe0bb4cdd6c210de427d04a524619"
     },
     {
       "path": "package.json",
@@ -241,6 +257,10 @@
       "sha256": "90ee59aedc586832e63b7a0b40376abbb8175d82af3b3603440b73dd5fc46dbc"
     },
     {
+      "path": "scripts/browser-ops.mjs",
+      "sha256": "607fdfa27679b44b71b1bf497e05c95fca84a5f10e208525045729db62e2fa32"
+    },
+    {
       "path": "scripts/browser-smoke-verdict.mjs",
       "sha256": "a3c330b4334d9f6e55fc4d7ad98449208e36545ded566f4a8e91f209337eedb2"
     },
@@ -253,8 +273,12 @@
       "sha256": "0986404efc1cb32c34a2f1bee1a8265e2d7b5bc511bfd283c7c2d1f9347d028b"
     },
     {
+      "path": "scripts/browser-spatial.mjs",
+      "sha256": "f0feaf25d215c241b254995dd9ca18791377bacc204d8eec980ac8f4f4e6882c"
+    },
+    {
       "path": "scripts/check-auth-invariant.test.mjs",
-      "sha256": "a4959937e1784e442bc8e22daf1ea0d42cf317d3f2ed6e3ccf8ab90e5655b42e"
+      "sha256": "bfe2b44543a1981bd4a4127f2ec1f4ddacdff6d951e3b1914aa3028cc43f955b"
     },
     {
       "path": "scripts/doctor.mjs",
@@ -301,8 +325,12 @@
       "sha256": "e07bc60d8ffe3cc3d0f11319518b8af830983477831eb4e59c2f19dc6a95a0be"
     },
     {
+      "path": "scripts/with-app-env.mjs",
+      "sha256": "08638df33eb0a8b2e80b9805648395a972e474e4171752ea9c8c58220dce8e70"
+    },
+    {
       "path": "scripts/with-app-env.test.mjs",
-      "sha256": "ce4561f1be95c395b3c0dc2a2ccf2c692c539852820bbce80c6941423e4cc52f"
+      "sha256": "163359a8958af85e294f596bebf0d5e8ea630b936533917e24bd9fac4423eed1"
     },
     {
       "path": "scripts/write-atomic.test.mjs",
@@ -459,6 +487,10 @@
     {
       "path": "src/lib/app-data/client.server.ts",
       "sha256": "f9990503f08ece0f2782c8c61a4da127084b8c7404951b891b0e94e74da9deec"
+    },
+    {
+      "path": "src/lib/auth/gate-identity.test.ts",
+      "sha256": "bdab2610d80a911a7c3ac208c98f4e196c80193dcbda0a7030950338e9c0700d"
     },
     {
       "path": "src/lib/auth/use-current-user.ts",

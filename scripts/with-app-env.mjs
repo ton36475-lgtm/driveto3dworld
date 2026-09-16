@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Run a command with `.grok/app-env.json` merged into its environment.
+ * Run a command with repository defaults and optional `.grok/app-env.json`
+ * overrides merged into its environment.
  *
  * `dev`, `build` and `preview` all route through this wrapper, so the dev
  * server, the built bundle and the preview server can never disagree about
@@ -11,10 +12,8 @@
  * a secret store, and only `VITE_` vars reach the browser anyway. A real
  * `process.env` entry always wins, so an explicit override still works.
  *
- * That precedence also means the file governs this workspace only. A deployed
- * build runs with the provider's project env, where the deployer sets
- * `VITE_AUTH_ENABLED` itself (today unconditionally `"true"`), so the deployed
- * flag is the platform's, not this file's.
+ * The portfolio defaults to auth off even in a fresh checkout without the
+ * ignored local file. A provider's explicit build environment still wins.
  *
  * Vite picks the values up because `loadEnv` prefix-matches entries already in
  * `process.env`, which is why the merge has to happen before Vite starts.
@@ -28,11 +27,12 @@ import { fileURLToPath } from "node:url";
 export const APP_ENV_REL_PATH = ".grok/app-env.json";
 
 const VITE_PREFIX = "VITE_";
+const PROJECT_DEFAULT_ENV = Object.freeze({ VITE_AUTH_ENABLED: "false" });
 
 /**
  * Parse an app-env document, keeping only `VITE_`-prefixed string entries.
- * Anything unparseable is an empty environment — a workspace without the file
- * must behave exactly like today (auth on, no overrides).
+ * Anything unparseable supplies no local overrides; readAppEnv applies the
+ * repository defaults separately.
  */
 export function parseAppEnv(text) {
   let parsed;
@@ -51,12 +51,15 @@ export function parseAppEnv(text) {
   return env;
 }
 
-/** The app env recorded under `root`, or `{}` when the file is absent. */
+/** Repository defaults plus optional local build flags; absent files retain defaults. */
 export function readAppEnv(root) {
   try {
-    return parseAppEnv(readFileSync(join(root, APP_ENV_REL_PATH), "utf8"));
+    return {
+      ...PROJECT_DEFAULT_ENV,
+      ...parseAppEnv(readFileSync(join(root, APP_ENV_REL_PATH), "utf8")),
+    };
   } catch {
-    return {};
+    return { ...PROJECT_DEFAULT_ENV };
   }
 }
 

@@ -11,7 +11,7 @@
   },
   "checks": {
     "nodeTests": {
-      "passed": 289,
+      "passed": 291,
       "failed": 0,
       "skipped": 4
     },
@@ -29,8 +29,13 @@
     },
     "independentSourceReview": "COMPLETE",
     "browserInThisSession": "BLOCKED",
-    "remoteCI": "PENDING",
-    "ownerMacMCP": "NOT_VERIFIED"
+    "remoteCI": "PENDING_POST_FIX_RERUN",
+    "ownerMacMCP": "NOT_VERIFIED",
+    "initialCIFindings": [
+      "npm10 optional peer missing from lockfile: repaired and verified on Node22/npm10 and Node24/npm11",
+      "Auth unit tests inherited CI auth-off flag: isolated test environment",
+      "Fresh checkout lacked ignored auth-off config: tracked default added with explicit environment precedence"
+    ]
   },
   "productionReady": false,
   "rollback": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",

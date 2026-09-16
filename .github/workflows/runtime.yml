@@ -64,6 +64,10 @@ jobs:
         run: |
           npm run preview:restart
           node scripts/browser-smoke.mjs http://127.0.0.1:8081/ "$GITHUB_WORKSPACE/screenshots/production.png" --baseline "$GITHUB_WORKSPACE/screenshots/home.json"
+      - name: Exercise operations in the production browser
+        run: node scripts/browser-ops.mjs http://127.0.0.1:8081
+      - name: Exercise spatial fallback and Forge configuration
+        run: node scripts/browser-spatial.mjs http://127.0.0.1:8081
       - name: Print startup diagnostics on failure
         if: failure()
         run: |

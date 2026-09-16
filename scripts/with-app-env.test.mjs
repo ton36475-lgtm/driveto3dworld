@@ -45,8 +45,8 @@ function makeWorkspace(appEnvJson) {
   return root;
 }
 
-function makeWrapper() {
-  const root = makeWorkspace('{"VITE_AUTH_ENABLED":"false"}');
+function makeWrapper(appEnvJson) {
+  const root = makeWorkspace(appEnvJson);
   mkdirSync(join(root, "scripts"));
   const wrapper = join(root, "scripts/with-app-env.mjs");
   copyFileSync(WRAPPER, wrapper);
@@ -68,13 +68,19 @@ test("drops non-VITE keys, non-string values and malformed documents", () => {
   assert.deepEqual(parseAppEnv("null"), {});
 });
 
-test("a missing app-env.json is a clean no-op", () => {
-  assert.deepEqual(readAppEnv(makeWorkspace()), {});
+test("a missing app-env.json retains the repository's auth-off default", () => {
+  assert.deepEqual(readAppEnv(makeWorkspace()), { VITE_AUTH_ENABLED: "false" });
 });
 
-test("reads the app env from a workspace", () => {
-  const root = makeWorkspace('{"VITE_AUTH_ENABLED":"false"}');
-  assert.deepEqual(readAppEnv(root), { VITE_AUTH_ENABLED: "false" });
+test("optional local build flags override repository defaults", () => {
+  const root = makeWorkspace('{"VITE_AUTH_ENABLED":"true","VITE_THEME":"ink"}');
+  assert.deepEqual(readAppEnv(root), { VITE_AUTH_ENABLED: "true", VITE_THEME: "ink" });
+});
+
+test("invalid local configuration cannot remove the repository default", () => {
+  for (const raw of ["not json", "null", '{"VITE_AUTH_ENABLED":true,"DATABASE_URL":"ignored"}']) {
+    assert.deepEqual(readAppEnv(makeWorkspace(raw)), { VITE_AUTH_ENABLED: "false" });
+  }
 });
 
 test("an explicit process-env override wins over the file", () => {
@@ -104,17 +110,27 @@ test("vite loadEnv resolves the wrapped value", () => {
 });
 
 test("the wrapped command runs with the app env applied", async () => {
-  const { wrapper } = makeWrapper();
+  const { wrapper } = makeWrapper('{"VITE_AUTH_ENABLED":"true"}');
   const { stdout } = await execFileAsync(
     process.execPath,
     [wrapper, process.execPath, "-e", PRINT_FLAG],
     { env: cleanEnv() },
   );
+  assert.equal(stdout, "true");
+});
+
+test("a fresh checkout starts the wrapped command with auth off without local files", async () => {
+  const { wrapper } = makeWrapper();
+  const { stdout } = await execFileAsync(
+    process.execPath,
+    [wrapper, process.execPath, "-e", PRINT_FLAG],
+    { env: cleanEnv(), cwd: makeWorkspace() },
+  );
   assert.equal(stdout, "false");
 });
 
 test("the wrapped command sees an explicit override, not the file value", async () => {
-  const { wrapper } = makeWrapper();
+  const { wrapper } = makeWrapper('{"VITE_AUTH_ENABLED":"false"}');
   const { stdout } = await execFileAsync(
     process.execPath,
     [wrapper, process.execPath, "-e", PRINT_FLAG],
