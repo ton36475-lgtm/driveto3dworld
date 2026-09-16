@@ -37,7 +37,7 @@ export function HUD() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-10 p-3 sm:p-4"
+      className="pointer-events-none absolute inset-0 z-10 p-3 pt-20 sm:p-4 sm:pt-20"
       style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}
     >
       <div className="flex items-start justify-between gap-3">

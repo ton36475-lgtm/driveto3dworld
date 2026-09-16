@@ -12,6 +12,7 @@ import { CompleteOverlay, PauseOverlay } from "./ui/Overlays";
 import { useDrive } from "./store";
 import { setMuted } from "./systems/audio";
 import { installQA } from "./systems/qa";
+import { useLang } from "@/lib/lang";
 
 export default function DriveApp() {
   const started = useDrive((s) => s.started);
@@ -22,6 +23,12 @@ export default function DriveApp() {
   const setOverlay = useDrive((s) => s.setOverlay);
   const closeModal = useDrive((s) => s.closeModal);
   const setMutedStore = useDrive((s) => s.setMuted);
+  const siteLang = useLang((s) => s.lang);
+  const setDriveLang = useDrive((s) => s.setLang);
+
+  useEffect(() => {
+    setDriveLang(siteLang);
+  }, [siteLang, setDriveLang]);
 
   useEffect(() => {
     installQA();

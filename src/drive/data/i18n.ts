@@ -2,9 +2,9 @@ export type Lang = "en" | "th";
 
 export const COPY = {
   en: {
-    kicker: "Godzfath3r · Phitsanulok",
-    title: "Atelier Drive",
-    tagline: "A 3D design grounds you can drive. Four zones, twelve hidden crystals. Collect a piece to open it — or browse the archive.",
+    kicker: "SIRAWAT × BALL · Phitsanulok",
+    title: "The grounds",
+    tagline: "Drive the atelier grounds. Four zones, twelve studies. Collect a crystal to open a work — or return to the 3D salon.",
     loading: "Loading the grounds…",
     start: "Start driving",
     browse: "Browse works",
@@ -56,9 +56,9 @@ export const COPY = {
     hidden: "Hidden",
   },
   th: {
-    kicker: "Godzfath3r · พิษณุโลก",
-    title: "Atelier Drive",
-    tagline: "ลานออกแบบสามมิติที่ขับได้จริง สี่โซน สิบสองคริสตัล เก็บชิ้นงานเพื่อเปิดรายละเอียด — หรือเปิดคลังจากรายการ",
+    kicker: "SIRAWAT × BALL · พิษณุโลก",
+    title: "ลานทำงาน",
+    tagline: "ขับในลานของห้องทำงาน สี่โซน สิบสองชิ้นงาน เก็บคริสตัลเพื่อเปิดรายละเอียด — หรือกลับไปที่แกลเลอรี 3D",
     loading: "กำลังจัดลาน…",
     start: "เริ่มขับ",
     browse: "ดูผลงาน",

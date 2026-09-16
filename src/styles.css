@@ -1,36 +1,52 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@400;500;600&display=swap");
 @import "tailwindcss";
+@import "@fontsource/syne/600.css";
+@import "@fontsource/syne/700.css";
+@import "@fontsource/figtree/400.css";
+@import "@fontsource/figtree/500.css";
+@import "@fontsource/figtree/600.css";
+@import "@fontsource/ibm-plex-sans-thai/400.css";
+@import "@fontsource/ibm-plex-sans-thai/500.css";
+@import "@fontsource/ibm-plex-sans-thai/600.css";
 
 @theme {
-  --color-bg: #0b0d10;
-  --color-surface: #14171c;
-  --color-surface-2: #1b1f26;
-  --color-fg: #f3eee6;
-  --color-muted: #8b93a1;
-  --color-faint: #5c6370;
-  --color-accent: #e8e2d6;
-  --color-accent-fg: #0b0d10;
+  --color-background: #0b0b0c;
+  --color-foreground: #f1ece4;
+  --color-surface: #141416;
+  --color-elevated: #1c1c20;
+  --color-muted: #8c8880;
+  --color-faint: #6a6762;
+  --color-accent: #c5cdd6;
+  --color-accent-fg: #0b0b0c;
+  --color-line: #2a2926;
+  --color-bg: #0b0b0c;
+  --color-fg: #f1ece4;
+  --color-surface-2: #1c1c20;
+  --color-border: color-mix(in oklab, var(--color-foreground) 12%, transparent);
+  --color-border-strong: color-mix(in oklab, var(--color-foreground) 22%, transparent);
   --color-coral: #e25b4c;
-  --color-border: color-mix(in oklab, var(--color-fg) 12%, transparent);
-  --color-border-strong: color-mix(in oklab, var(--color-fg) 22%, transparent);
-  --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-sans: "Outfit", "Segoe UI", system-ui, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-sheet: 28px;
+  --radius-sheet: 1.75rem;
+  --font-sans: "Figtree", "IBM Plex Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", "IBM Plex Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius: 0.75rem;
 }
 
 @layer base {
-  html,
-  body,
-  #app {
-    height: 100%;
-    background: var(--color-bg);
-    color: var(--color-fg);
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  body {
+    min-height: 100svh;
+    background: var(--color-background);
+    color: var(--color-foreground);
     font-family: var(--font-sans);
   }
 
@@ -39,18 +55,72 @@
     cursor: pointer;
   }
 
-  * {
-    -webkit-tap-highlight-color: transparent;
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-display);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-fg);
   }
 }
 
-.drive-root {
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+:root {
+  --shadow-border: 0 0 0 1px rgba(241, 236, 228, 0.1);
+  --shadow-border-hover: 0 0 0 1px rgba(241, 236, 228, 0.18);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-quick: 150ms;
+  --motion-fast: 250ms;
+  --motion-slow: 400ms;
+}
+
+.grain {
+  pointer-events: none;
   position: fixed;
   inset: 0;
+  z-index: 70;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.media-frame {
+  outline: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
+  outline-offset: -1px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 80;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  padding: 0.5rem 1rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.drive-root {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  background: var(--color-bg);
-  color: var(--color-fg);
-  font-family: var(--font-sans);
+  background: var(--color-background);
+  color: var(--color-foreground);
   touch-action: none;
   user-select: none;
 }
@@ -63,8 +133,8 @@
 }
 
 .overlay-panel {
-  background: color-mix(in oklab, var(--color-surface) 88%, transparent);
-  border: 1px solid var(--color-border);
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
   box-shadow: 0 16px 48px color-mix(in oklab, #000 45%, transparent);
 }
 
@@ -77,37 +147,12 @@
   padding: 0 14px;
   border-radius: 999px;
   background: color-mix(in oklab, var(--color-surface) 82%, transparent);
-  border: 1px solid var(--color-border);
-  color: var(--color-fg);
+  border: 1px solid color-mix(in oklab, var(--color-foreground) 12%, transparent);
+  color: var(--color-foreground);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
-}
-
-.hud-chip:hover {
-  border-color: var(--color-border-strong);
-}
-
-.font-display {
-  font-family: var(--font-display);
-}
-
-input[type="range"] {
-  appearance: none;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--color-border-strong);
-  outline: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  cursor: pointer;
 }
 
 .primary-btn {
@@ -119,15 +164,12 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 999px;
   background: var(--color-accent);
   color: var(--color-accent-fg);
-  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border: 0;
-  transition:
-    transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--motion-quick) var(--ease-out), opacity var(--motion-quick) var(--ease-out);
 }
 
 .primary-btn:hover {
@@ -146,8 +188,8 @@ input[type="range"]::-webkit-slider-thumb {
   padding: 0 16px;
   border-radius: 999px;
   background: transparent;
-  color: var(--color-fg);
-  border: 1px solid var(--color-border-strong);
+  color: var(--color-foreground);
+  border: 1px solid color-mix(in oklab, var(--color-foreground) 22%, transparent);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -158,5 +200,11 @@ input[type="range"]::-webkit-slider-thumb {
   .ghost-btn,
   .hud-chip {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    display: none;
   }
 }

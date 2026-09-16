@@ -1,4 +1,5 @@
 import { Volume2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { unlockAudio, startAudio } from "../systems/audio";
 import { useDrive } from "../store";
 import { COPY } from "../data/i18n";
@@ -59,6 +60,9 @@ export function StartScreen() {
           >
             {c.browse}
           </button>
+          <Link to="/gallery" className="ghost-btn">
+            {lang === "th" ? "แกลเลอรี 3D" : "3D salon"}
+          </Link>
         </div>
         <p className="text-faint mt-4 flex items-center gap-1.5 text-xs">
           <Volume2 className="size-3.5 shrink-0" strokeWidth={1.75} />

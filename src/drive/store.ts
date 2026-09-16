@@ -3,6 +3,7 @@ import { PROJECTS } from "./data/projects";
 import type { Lang } from "./data/i18n";
 import { setMuted as setAudioMuted } from "./systems/audio";
 import { dayState } from "./systems/dayNight";
+import { useLang } from "@/lib/lang";
 
 const SAVE_KEY = "atelier-drive-v2";
 const LEGACY_KEY = "atelier-drive-v1";
@@ -160,6 +161,7 @@ export const useDrive = create<DriveState>((set, get) => ({
   setLang: (lang) => {
     persist({ lang });
     set({ lang });
+    useLang.getState().setLang(lang);
   },
   setQuality: (quality) => {
     persist({ quality });
