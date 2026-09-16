@@ -3,6 +3,7 @@ import { PROJECTS, ZONES, t, type ZoneId } from "../data/projects";
 import { COPY } from "../data/i18n";
 import { useDrive } from "../store";
 import { unlockAudio, startAudio } from "../systems/audio";
+import { CONCEPT_COPY } from "../data/concepts";
 
 export function Catalog() {
   const overlay = useDrive((s) => s.overlay);
@@ -49,6 +50,7 @@ export function Catalog() {
             {c.close}
           </button>
         </div>
+        <p className="mb-4 text-xs leading-relaxed text-muted">{CONCEPT_COPY[lang].notice}</p>
         <div className="mb-4 flex flex-wrap gap-1.5">
           <button
             type="button"
@@ -87,8 +89,9 @@ export function Catalog() {
                   <button type="button" className="min-w-0 flex-1 text-left" onClick={() => openProject(p.id)}>
                     <p className="text-fg truncate text-sm">{t(p.title, lang)}</p>
                     <p className="text-faint truncate text-[11px] tracking-wide">
-                      {t(ZONES.find((z) => z.id === p.zone)!.name, lang)} · {p.year} · {found ? c.found : c.hidden}
+                      {t(ZONES.find((z) => z.id === p.zone)!.name, lang)} · {found ? c.found : c.hidden}
                     </p>
+                    <p className="mt-1 text-[10px] text-muted">{CONCEPT_COPY[lang].label}</p>
                   </button>
                   <button
                     type="button"

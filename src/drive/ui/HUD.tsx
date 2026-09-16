@@ -28,33 +28,33 @@ export function HUD() {
         setHint("");
         return;
       }
-      setHint(`${c.nearest} · ${t(n.project.title, lang)} · ${n.dist.toFixed(0)}m`);
+      setHint(`${c.nearest} · ${t(n.project.title, lang)} · ${n.dist.toFixed(0)}${c.distanceUnit}`);
     };
     tick();
     const id = window.setInterval(tick, 250);
     return () => window.clearInterval(id);
-  }, [collected, lang, c.nearest]);
+  }, [collected, lang, c.nearest, c.distanceUnit]);
 
   return (
     <div
       className="pointer-events-none absolute inset-0 z-10 p-3 pt-20 sm:p-4 sm:pt-20"
       style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-fg font-display text-xl leading-none sm:text-2xl">{c.title}</p>
-          <p className="text-muted mt-1 text-[11px] tracking-[0.18em] uppercase">
+      <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-start md:justify-between">
+        <div className="w-fit max-w-full shrink-0 rounded-2xl border border-line bg-surface/95 px-4 py-3 md:max-w-[30%]">
+          <p className="text-fg font-display text-xl leading-snug break-words sm:text-2xl">{c.title}</p>
+          <p className="text-fg/75 mt-1 text-[11px] tracking-[0.18em] uppercase">
             {zone ? t(zone.name, lang) : c.plaza}
           </p>
         </div>
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div data-testid="drive-hud-toolbar" className="flex min-w-0 max-w-full flex-wrap items-center justify-start gap-2 md:justify-end">
           <div className="hud-chip">
             <Gem className="size-3.5" strokeWidth={1.75} />
             <span>
               {collected.length}/{PROJECTS.length}
             </span>
           </div>
-          <div className="hud-chip hidden sm:inline-flex">{Math.round(speedKmh)} km/h</div>
+          <div className="hud-chip hidden sm:inline-flex">{Math.round(speedKmh)} {c.speedUnit}</div>
           <div className="hud-chip hidden sm:inline-flex">
             {fps} {c.fps}
           </div>
@@ -73,7 +73,7 @@ export function HUD() {
           </button>
           <button type="button" className="hud-chip" onClick={cycleWeather} aria-label={c.weather}>
             <CloudRain className="size-3.5" strokeWidth={1.75} />
-            <span className="hidden sm:inline">{weather}</span>
+            <span className="hidden sm:inline">{{ auto: c.weatherAuto, clear: c.weatherClear, rain: c.weatherRain, snow: c.weatherSnow }[weather]}</span>
           </button>
           <button type="button" className="hud-chip" onClick={() => toggleOverlay("settings")} aria-label={c.settings}>
             <Settings2 className="size-3.5" strokeWidth={1.75} />
@@ -83,8 +83,10 @@ export function HUD() {
           </button>
         </div>
       </div>
-      <div className="pointer-events-auto absolute right-3 top-[4.5rem] hidden sm:block">
-        <Minimap interactive />
+      <div className="mt-3 hidden justify-end sm:flex">
+        <div className="pointer-events-auto">
+          <Minimap interactive />
+        </div>
       </div>
       {hint && (
         <p className="text-muted pointer-events-none absolute bottom-16 left-1/2 hidden max-w-xs -translate-x-1/2 text-center text-[11px] tracking-wide sm:block">

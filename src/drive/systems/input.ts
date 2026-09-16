@@ -1,4 +1,4 @@
-type Axes = { steer: number; throttle: number; brake: number };
+export type Axes = { steer: number; throttle: number; brake: number };
 
 const held = new Set<string>();
 let injected: Set<string> | null = null;
@@ -11,13 +11,23 @@ let gamepadSteer = 0;
 let gamepadThrottle = 0;
 let gamepadBrake = 0;
 let attached = false;
-let locked = false;
+let locked = true;
 
 function clamp(v: number, a: number, b: number) {
-  return Math.max(a, Math.min(b, v));
+  return Number.isFinite(v) ? Math.max(a, Math.min(b, v)) : 0;
 }
 
+export function isInteractiveTarget(target: EventTarget | null) {
+  return typeof Element !== "undefined" && target instanceof Element && Boolean(
+    target.closest('input, textarea, select, button, a, [contenteditable]:not([contenteditable="false"]), [role="textbox"], [role="slider"]'),
+  );
+}
+
+const driveKeys = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space", "ShiftLeft", "ShiftRight"]);
+
 function onKey(e: KeyboardEvent, down: boolean) {
+  if (!down) { held.delete(e.code); return; }
+  if (locked || !driveKeys.has(e.code) || e.ctrlKey || e.metaKey || e.altKey || isInteractiveTarget(e.target)) return;
   if (down && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) {
     e.preventDefault();
   }
@@ -26,8 +36,20 @@ function onKey(e: KeyboardEvent, down: boolean) {
 }
 
 function onBlur() {
+  resetInput();
+}
+
+export function resetInput() {
   held.clear();
+  injected = null;
+  steerOverride = null;
+  touchOn = false;
+  touchX = 0;
+  touchY = 0;
   touchBrake = 0;
+  gamepadSteer = 0;
+  gamepadThrottle = 0;
+  gamepadBrake = 0;
 }
 
 export function attachInput() {
@@ -45,17 +67,13 @@ export function attachInput() {
     window.removeEventListener("keyup", ku);
     window.removeEventListener("blur", onBlur);
     document.removeEventListener("visibilitychange", onBlur);
-    held.clear();
+    resetInput();
   };
 }
 
 export function setInputLocked(v: boolean) {
+  if (v && !locked) resetInput();
   locked = v;
-  if (v) {
-    held.clear();
-    touchOn = false;
-    touchBrake = 0;
-  }
 }
 
 export function isInputLocked() {
@@ -63,25 +81,27 @@ export function isInputLocked() {
 }
 
 export function setTouch(x: number, y: number, active: boolean) {
+  if (locked && active) return;
   touchOn = active;
   touchX = active ? clamp(x, -1, 1) : 0;
   touchY = active ? clamp(y, -1, 1) : 0;
 }
 
 export function setTouchBrake(v: boolean) {
+  if (locked && v) return;
   touchBrake = v ? 1 : 0;
 }
 
 function radial(x: number, y: number, dz = 0.18) {
   const m = Math.hypot(x, y);
   if (m < dz) return { x: 0, y: 0 };
-  const scale = ((m - dz) / (1 - dz)) / m;
+  const scale = ((Math.min(m, 1) - dz) / (1 - dz)) / m;
   return { x: x * scale, y: y * scale };
 }
 
 export function pollGamepad() {
   const pads = typeof navigator !== "undefined" ? navigator.getGamepads?.() : null;
-  const pad = pads?.[0];
+  const pad = pads ? Array.from(pads).find((candidate) => candidate?.connected) : null;
   if (!pad) {
     gamepadSteer = 0;
     gamepadThrottle = 0;
@@ -123,7 +143,7 @@ export function readAxes(): Axes {
   const keys = fromSet(held);
   let steer = keys.steer;
   let throttle = keys.throttle;
-  let brake = Math.max(keys.brake, touchBrake, gamepadBrake);
+  const brake = Math.max(keys.brake, touchBrake, gamepadBrake);
   if (touchOn) {
     steer += -touchX;
     throttle += touchY;

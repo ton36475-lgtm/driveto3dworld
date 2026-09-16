@@ -35,7 +35,8 @@ export function parseSmokeArgs(argv, env = {}) {
   }
   return {
     url: positional[0] || "http://127.0.0.1:8080/",
-    outPng: positional[1] || "/workspace/screenshots/app-builder-preview.png",
+    outPng:
+      positional[1] || env.BROWSER_SMOKE_OUTPUT || "/workspace/screenshots/app-builder-preview.png",
     baseline,
   };
 }
@@ -124,5 +125,6 @@ export function exitCodeFor(viewports) {
   if (list.some((v) => (v.consoleErrors?.length ?? 0) > 0 || (v.pageErrors?.length ?? 0) > 0)) {
     return 2;
   }
+  if (list.some((v) => v.horizontalOverflow)) return 3;
   return 0;
 }

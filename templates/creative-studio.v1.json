@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "family": "universal-business",
+  "preset": "creative-studio",
+  "theme": "ink",
+  "locale": "th",
+  "stack": "tanstack-start",
+  "scene": "salon",
+  "density": 4,
+  "motion": "calm",
+  "sections": [
+    "profile",
+    "work",
+    "contact"
+  ],
+  "evidence": {
+    "state": "PROPOSED",
+    "clientWorkVerified": false
+  },
+  "integrations": {
+    "delivery": "manual",
+    "analytics": "not-instrumented"
+  },
+  "kpis": {
+    "primary": "N/A",
+    "driver": "N/A",
+    "guardrail": "N/A"
+  }
+}

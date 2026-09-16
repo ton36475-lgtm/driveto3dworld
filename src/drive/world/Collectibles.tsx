@@ -5,8 +5,10 @@ import { PROJECTS } from "../data/projects";
 import { sim } from "../systems/sim";
 import { isDriveBlocked, useDrive } from "../store";
 import { playCollect } from "../systems/audio";
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
 
 function Sparkle({ color, active }: { color: string; active: boolean }) {
+  const reducedMotion = useReducedMotion();
   const ref = useRef<THREE.Points>(null);
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -23,7 +25,7 @@ function Sparkle({ color, active }: { color: string; active: boolean }) {
   }, []);
 
   useFrame((state) => {
-    if (!ref.current || !active) return;
+    if (!ref.current || !active || reducedMotion || isDriveBlocked()) return;
     ref.current.rotation.y = state.clock.elapsedTime * 0.8;
     const t = state.clock.elapsedTime;
     const arr = (ref.current.geometry.getAttribute("position") as THREE.BufferAttribute).array as Float32Array;
@@ -33,7 +35,7 @@ function Sparkle({ color, active }: { color: string; active: boolean }) {
     ref.current.geometry.attributes.position.needsUpdate = true;
   });
 
-  if (!active) return null;
+  if (!active || reducedMotion) return null;
   return (
     <points ref={ref} geometry={geo}>
       <pointsMaterial color={color} size={0.12} transparent opacity={0.85} depthWrite={false} />
@@ -53,6 +55,7 @@ function Crystal({
   color: string;
 }) {
   const mesh = useRef<THREE.Mesh>(null);
+  const reducedMotion = useReducedMotion();
   const collected = useDrive((s) => s.collected.includes(id));
   const collect = useDrive((s) => s.collect);
   const started = useDrive((s) => s.started);
@@ -67,9 +70,11 @@ function Crystal({
     const m = mesh.current;
     if (!m) return;
     const t = state.clock.elapsedTime;
-    m.rotation.y = t * 1.4;
-    m.position.y = 1.35 + Math.sin(t * 2.2 + x) * 0.22;
-    const pulse = 0.85 + Math.sin(t * 4) * 0.4;
+    if (!isDriveBlocked()) {
+      m.rotation.y = reducedMotion ? 0 : t * 1.4;
+      m.position.y = reducedMotion ? 1.35 : 1.35 + Math.sin(t * 2.2 + x) * 0.22;
+    }
+    const pulse = reducedMotion ? 0.85 : 0.85 + Math.sin(t * 4) * 0.4;
     (m.material as THREE.MeshStandardMaterial).emissiveIntensity = pulse;
     if (!started || isDriveBlocked()) return;
     const dx = sim.x - x;

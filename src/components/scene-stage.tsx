@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import type { SceneLayout } from "@/components/canvas/atelier-world";
 import { CanvasFallback } from "@/components/canvas/canvas-fallback";
 import { ClientOnly } from "@/components/canvas/client-only";
@@ -6,6 +6,8 @@ import { LoadingVeil } from "@/components/canvas/loading-veil";
 import { getQuality } from "@/components/canvas/quality";
 import { WebGLBoundary } from "@/components/canvas/webgl-boundary";
 import type { Work } from "@/lib/works";
+import { useCopy } from "@/lib/copy";
+import { useReducedMotion, useSceneVisibility, useWebGLSupport } from "@/components/canvas/runtime-hooks";
 
 const HeroScene = lazy(() => import("@/components/canvas/hero-scene"));
 
@@ -20,6 +22,7 @@ type Props = {
   label?: string;
   layout?: SceneLayout;
   focus?: boolean;
+  paused?: boolean;
 };
 
 export function SceneStage({
@@ -33,30 +36,39 @@ export function SceneStage({
   label,
   layout = "ring",
   focus = false,
+  paused = false,
 }: Props) {
+  const copy = useCopy();
   const quality = useMemo(() => getQuality(), []);
   const wrap = useRef<HTMLDivElement>(null);
-  const [live, setLive] = useState(true);
-
-  useEffect(() => {
-    const el = wrap.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      ([entry]) => setLive(entry.isIntersecting),
-      { threshold: 0.08 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  const live = useSceneVisibility(wrap);
+  const reducedMotion = useReducedMotion();
+  const webgl = useWebGLSupport();
+  const [failed, setUnavailable] = useState(false);
+  const unavailable = failed || webgl === "unsupported";
+  const [rendered, setRendered] = useState(false);
+  const onUnavailable = useCallback(() => setUnavailable(true), []);
+  const onReady = useCallback(() => setRendered(true), []);
+  const fallback = <CanvasFallback label={label} works={works} />;
+  const permanentFallback = <CanvasFallback label={copy.fallback.webgl} works={works} />;
 
   return (
-    <div ref={wrap} className="absolute inset-0">
-      <ClientOnly fallback={<CanvasFallback label={label} />}>
-        <WebGLBoundary fallback={<CanvasFallback label={label} />}>
-          <Suspense fallback={<CanvasFallback label={label} />}>
+    <div
+      ref={wrap}
+      className="absolute inset-0"
+      data-scene-stage="atelier"
+      data-scene-state={unavailable ? "fallback" : rendered ? "ready" : "loading"}
+      data-scene-active={live ? "true" : "false"}
+    >
+      <ClientOnly fallback={fallback}>
+        <WebGLBoundary fallback={permanentFallback} onFailure={onUnavailable}>
+          {unavailable ? permanentFallback : webgl === "checking" ? fallback : <Suspense fallback={fallback}>
             <HeroScene
               works={works}
               quality={quality}
+              reducedMotion={reducedMotion || paused}
+              onUnavailable={onUnavailable}
+              onReady={onReady}
               selected={selected}
               onHover={onHover}
               onSelect={onSelect}
@@ -65,10 +77,10 @@ export function SceneStage({
               cameraZ={cameraZ}
               layout={layout}
               focus={focus}
-              frameloop={live ? "always" : "never"}
+              frameloop={!live ? "never" : reducedMotion || paused ? "demand" : "always"}
             />
-          </Suspense>
-          <LoadingVeil label={label} />
+          </Suspense>}
+          {!unavailable && webgl === "supported" && !rendered && <LoadingVeil label={label} />}
         </WebGLBoundary>
       </ClientOnly>
     </div>

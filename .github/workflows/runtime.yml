@@ -1,0 +1,99 @@
+name: Runtime and browser regression
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22", "24"]
+    env:
+      VITE_AUTH_ENABLED: "false"
+      APP_DEV_HOST: "127.0.0.1"
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm run bootstrap
+      - name: Verify idempotent bootstrap and readiness
+        run: |
+          npm run bootstrap
+          npm run doctor
+      - name: Unit and negative-path tests
+        run: npm test
+      - name: Build and generate route tree
+        run: npm run build
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint and validate template exports
+        run: |
+          npm run lint
+          node scripts/validate_template.mjs templates/creative-studio.v1.json
+      - name: Start and verify application routes
+        id: route-health
+        run: |
+          sh startup.sh
+          npm run verify:runtime -- http://127.0.0.1:8080 / /gallery /drive /foodtruck /studio /contact /forge /desk /marketing /automations /kit /people/ball /people/ton /people/studio
+      - name: Install test browser
+        id: test-browser
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+      - name: Browser regression at 360, 390, 768 and 1440 pixels
+        run: |
+          node scripts/browser-smoke.mjs http://127.0.0.1:8080/ "$GITHUB_WORKSPACE/screenshots/home.png"
+          node scripts/browser-smoke.mjs http://127.0.0.1:8080/gallery "$GITHUB_WORKSPACE/screenshots/gallery.png"
+          node scripts/browser-smoke.mjs http://127.0.0.1:8080/drive "$GITHUB_WORKSPACE/screenshots/drive.png"
+          node scripts/browser-smoke.mjs http://127.0.0.1:8080/forge "$GITHUB_WORKSPACE/screenshots/forge.png"
+      - name: Start production output
+        id: production-start
+        if: ${{ !cancelled() && steps.route-health.outcome == 'success' && steps.test-browser.outcome == 'success' }}
+        run: npm run preview:restart
+      - name: Verify production output
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: |
+          node scripts/browser-smoke.mjs http://127.0.0.1:8081/ "$GITHUB_WORKSPACE/screenshots/production.png" --baseline "$GITHUB_WORKSPACE/screenshots/home.json"
+      - name: Exercise operations in the production browser
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-ops.mjs http://127.0.0.1:8081
+      - name: Exercise spatial fallback and Forge configuration
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-spatial.mjs http://127.0.0.1:8081
+      - name: Exercise all three languages and food truck planning
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-locales.mjs http://127.0.0.1:8081
+      - name: Drive the real Blender truck and its asset fallback
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-truck.mjs http://127.0.0.1:8081
+      - name: Inspect the reference truck exterior and kitchen
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-showroom.mjs http://127.0.0.1:8081
+      - name: Print startup diagnostics on failure
+        if: failure()
+        run: |
+          if test -f .runtime/dev.log; then tail -n 100 .runtime/dev.log; fi
+      - name: Preserve browser screenshots and verdicts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-node-${{ matrix.node }}
+          path: screenshots/
+          if-no-files-found: warn
+          retention-days: 14

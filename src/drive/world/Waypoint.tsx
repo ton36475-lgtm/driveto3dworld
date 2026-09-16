@@ -3,8 +3,10 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { sim } from "../systems/sim";
 import { useDrive } from "../store";
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
 
 export function Waypoint() {
+  const reducedMotion = useReducedMotion();
   const ref = useRef<THREE.Group>(null);
   const beam = useRef<THREE.Mesh>(null);
   const waypoint = useDrive((s) => s.waypoint);
@@ -15,7 +17,7 @@ export function Waypoint() {
     if (!g || !waypoint) return;
     const t = state.clock.elapsedTime;
     g.position.set(waypoint.x, 0, waypoint.z);
-    if (beam.current) beam.current.position.y = 4 + Math.sin(t * 2) * 0.35;
+    if (beam.current) beam.current.position.y = reducedMotion ? 4 : 4 + Math.sin(t * 2) * 0.35;
     const dx = sim.x - waypoint.x;
     const dz = sim.z - waypoint.z;
     if (dx * dx + dz * dz < 16) clear(null);

@@ -1,4 +1,6 @@
 import { PROJECTS } from "../data/projects";
+import type { Lang } from "../data/i18n";
+import { FOOD_TRUCK, TRUCK_WHEELS, vehicleAssetState } from "../data/vehicle";
 import { useDrive } from "../store";
 import { getAudioDebug, setMuted, startAudio, unlockAudio } from "./audio";
 import { dayState, setDayPaused, setDayTime } from "./dayNight";
@@ -9,6 +11,7 @@ export function installQA() {
 
   window.__driveQA = {
     getSim: () => ({ x: sim.x, z: sim.z, yaw: sim.yaw, speed: sim.speed, steer: sim.steer }),
+    getVehicle: () => ({ kind: "photo-reference-food-truck", ...vehicleAssetState, bodyRoot: FOOD_TRUCK.rootName, wheelCount: TRUCK_WHEELS.length }),
     getStore: () => {
       const s = useDrive.getState();
       return {
@@ -48,7 +51,7 @@ export function installQA() {
       useDrive.getState().setOverlay("none");
     },
     setWeather: (w: "auto" | "clear" | "rain" | "snow") => useDrive.getState().setWeather(w),
-    setLang: (lang: "en" | "th") => useDrive.getState().setLang(lang),
+    setLang: (lang: Lang) => useDrive.getState().setLang(lang),
     setQuality: (q: "high" | "medium" | "low") => useDrive.getState().setQuality(q),
     setMuted: (v: boolean) => {
       setMuted(v);

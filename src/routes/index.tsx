@@ -19,22 +19,22 @@ function Home() {
   const hoveredWork = hovered ? getWork(hovered) : undefined;
 
   return (
-    <main>
-      <section className="relative h-[100svh] min-h-[560px] overflow-hidden bg-background">
-        <SceneStage
-          works={WORKS}
-          selected={hovered}
-          onHover={setHovered}
-          onSelect={(slug) => navigate({ to: "/gallery", search: { work: slug } })}
-          label={copy.gallery.loading}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/55" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-4 pb-8 sm:px-8 sm:pb-10">
+    <main className="portfolio-home">
+      <section className="relative min-h-[100svh] overflow-hidden bg-background md:h-[100svh] md:min-h-[560px]">
+        <div className="relative h-[55svh] min-h-[320px] md:absolute md:inset-0 md:h-auto">
+          <SceneStage
+            works={WORKS}
+            selected={hovered}
+            onHover={setHovered}
+            onSelect={(slug) => navigate({ to: "/gallery", search: { work: slug } })}
+            label={copy.gallery.loading}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/55" />
+        </div>
+        <div className="pointer-events-none relative z-10 px-4 pb-8 sm:px-8 sm:pb-10 md:absolute md:inset-x-0 md:bottom-0">
           <div className="mx-auto flex max-w-6xl flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl">
-              <p className="text-xs tracking-[0.22em] text-muted uppercase">
-                {copy.hero.eyebrow}
-              </p>
+              <p className="text-xs tracking-[0.22em] text-muted uppercase">{copy.hero.eyebrow}</p>
               <h1 className="mt-3 font-display text-4xl tracking-tight text-foreground sm:text-5xl md:text-6xl">
                 {copy.hero.title}
               </h1>
@@ -59,6 +59,18 @@ function Home() {
                 <Button asChild variant="outline">
                   <Link to="/work">{copy.hero.viewWork}</Link>
                 </Button>
+                <Button asChild variant="outline">
+                  <Link to="/foodtruck">
+                    {loc(
+                      {
+                        en: "Explore the food truck",
+                        th: "สำรวจฟู้ดทรัก",
+                        zh: "探索餐车",
+                      },
+                      lang,
+                    )}
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -70,9 +82,7 @@ function Home() {
         <h2 className="mt-5 max-w-3xl font-display text-3xl tracking-tight sm:text-4xl md:text-5xl">
           {copy.manifesto.title}
         </h2>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">
-          {copy.manifesto.body}
-        </p>
+        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{copy.manifesto.body}</p>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 sm:pb-28">
@@ -116,16 +126,12 @@ function Home() {
             <p className="mt-1 text-xs tracking-widest text-muted uppercase">
               {copy.duo.sirawatRole}
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              {copy.duo.sirawatBody}
-            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted">{copy.duo.sirawatBody}</p>
           </article>
           <article className="rounded-xl bg-background p-6 sm:p-8">
             <p className="font-display text-6xl text-accent/40">B</p>
             <h3 className="mt-4 font-display text-2xl">Ball</h3>
-            <p className="mt-1 text-xs tracking-widest text-muted uppercase">
-              {copy.duo.ballRole}
-            </p>
+            <p className="mt-1 text-xs tracking-widest text-muted uppercase">{copy.duo.ballRole}</p>
             <p className="mt-4 text-sm leading-relaxed text-muted">{copy.duo.ballBody}</p>
           </article>
           <div className="md:col-span-2">
@@ -155,9 +161,7 @@ function Home() {
       <section className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 sm:py-28 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <p className="text-xs tracking-[0.22em] text-muted uppercase">
-              {copy.cta.kicker}
-            </p>
+            <p className="text-xs tracking-[0.22em] text-muted uppercase">{copy.cta.kicker}</p>
             <h2 className="mt-4 font-display text-3xl tracking-tight sm:text-4xl">
               {copy.cta.title}
             </h2>

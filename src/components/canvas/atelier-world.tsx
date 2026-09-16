@@ -1,10 +1,18 @@
-import { ContactShadows, MeshReflectorMaterial, Sparkles, Text, useTexture } from "@react-three/drei";
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
+import {
+  ContactShadows,
+  MeshReflectorMaterial,
+  Sparkles,
+  Text,
+  useTexture,
+} from "@react-three/drei";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { Quality } from "@/components/canvas/quality";
 import { framePoses, wallRadius } from "@/lib/frame-layout";
 import type { Work } from "@/lib/works";
+import { useLocale } from "@/lib/copy";
+import { FrameAsset } from "@/components/canvas/frame-asset";
 
 const FRAME_W = 1.78;
 const FRAME_H = 1.24;
@@ -14,6 +22,7 @@ export type SceneLayout = "ring" | "solo";
 type WorldProps = {
   works: Work[];
   quality: Quality;
+  reducedMotion?: boolean;
   selected: string | null;
   onHover: (slug: string | null) => void;
   onSelect: (slug: string) => void;
@@ -23,6 +32,7 @@ type WorldProps = {
 export function AtelierWorld({
   works,
   quality,
+  reducedMotion = false,
   selected,
   onHover,
   onSelect,
@@ -63,7 +73,7 @@ export function AtelierWorld({
 
       <SalonShell radius={solo ? 4.55 : wallR} quality={quality} />
 
-      {!solo ? <Monogram animated={!low} /> : null}
+      {!solo ? <Monogram animated={!low && !reducedMotion} /> : null}
 
       {works.map((work, index) => {
         const pose = poses[solo ? 0 : index] ?? poses[0];
@@ -76,13 +86,14 @@ export function AtelierWorld({
             active={selected === work.slug}
             dimmed={Boolean(selected && selected !== work.slug)}
             lit={!low}
+            reducedMotion={reducedMotion}
             onHover={onHover}
             onSelect={onSelect}
           />
         );
       })}
 
-      {!low && !solo ? (
+      {!low && !solo && !reducedMotion ? (
         <Sparkles
           count={28}
           scale={[10, 3.2, 10]}
@@ -202,7 +213,12 @@ function SalonShell({ radius, quality }: { radius: number; quality: Quality }) {
         const z = Math.cos(a) * radius;
         return (
           <group key={i}>
-            <mesh position={[x, height / 2, z]} rotation={[0, a, 0]} material={plaster} receiveShadow>
+            <mesh
+              position={[x, height / 2, z]}
+              rotation={[0, a, 0]}
+              material={plaster}
+              receiveShadow
+            >
               <boxGeometry args={[width, height, 0.16]} />
             </mesh>
             <mesh
@@ -213,7 +229,11 @@ function SalonShell({ radius, quality }: { radius: number; quality: Quality }) {
               <boxGeometry args={[width, 0.2, 0.22]} />
             </mesh>
             <mesh
-              position={[Math.sin(a) * (radius - 0.03), height - 0.1, Math.cos(a) * (radius - 0.03)]}
+              position={[
+                Math.sin(a) * (radius - 0.03),
+                height - 0.1,
+                Math.cos(a) * (radius - 0.03),
+              ]}
               rotation={[0, a, 0]}
               material={trim}
             >
@@ -276,6 +296,7 @@ function Monogram({ animated }: { animated: boolean }) {
         />
       </mesh>
       <Text
+        font="/fonts/figtree-latin-400-normal.woff"
         fontSize={0.32}
         letterSpacing={0.08}
         anchorX="center"
@@ -301,6 +322,7 @@ function WorkFrame({
   active,
   dimmed,
   lit,
+  reducedMotion,
   onHover,
   onSelect,
 }: {
@@ -310,6 +332,7 @@ function WorkFrame({
   active: boolean;
   dimmed: boolean;
   lit: boolean;
+  reducedMotion: boolean;
   onHover: (slug: string | null) => void;
   onSelect: (slug: string) => void;
 }) {
@@ -338,7 +361,7 @@ function WorkFrame({
     const d = Math.min(delta, 0.1);
     const goal = hovered || active ? 1 : 0;
     lift.current += (goal - lift.current) * (1 - Math.exp(-10 * d));
-    const s = 1 + lift.current * 0.03;
+    const s = reducedMotion ? 1 : 1 + lift.current * 0.03;
     group.current.scale.setScalar(s);
     metal.color.set(active ? "#c5cdd6" : hovered ? "#5a564e" : "#2a2826");
     metal.emissive.set(active ? "#c5cdd6" : "#000000");
@@ -360,11 +383,6 @@ function WorkFrame({
     onSelect(work.slug);
   }
 
-  const t = 0.055;
-  const depth = 0.09;
-  const outerW = FRAME_W + 0.16;
-  const outerH = FRAME_H + 0.16;
-
   return (
     <group
       ref={group}
@@ -384,22 +402,7 @@ function WorkFrame({
       onPointerDown={down}
       onClick={click}
     >
-      <mesh position={[0, 0, -0.06]} castShadow>
-        <boxGeometry args={[outerW + 0.04, outerH + 0.04, 0.05]} />
-        <meshStandardMaterial color="#101012" metalness={0.35} roughness={0.6} />
-      </mesh>
-      <mesh position={[0, outerH / 2 - t / 2, 0]} material={metal}>
-        <boxGeometry args={[outerW, t, depth]} />
-      </mesh>
-      <mesh position={[0, -outerH / 2 + t / 2, 0]} material={metal}>
-        <boxGeometry args={[outerW, t, depth]} />
-      </mesh>
-      <mesh position={[-outerW / 2 + t / 2, 0, 0]} material={metal}>
-        <boxGeometry args={[t, outerH, depth]} />
-      </mesh>
-      <mesh position={[outerW / 2 - t / 2, 0, 0]} material={metal}>
-        <boxGeometry args={[t, outerH, depth]} />
-      </mesh>
+      <FrameAsset metal={metal} fallback={<ProceduralFrame metal={metal} />} />
       <mesh position={[0, 0, 0.012]}>
         <planeGeometry args={[FRAME_W, FRAME_H]} />
         <meshStandardMaterial
@@ -425,16 +428,82 @@ function WorkFrame({
         <boxGeometry args={[0.62, 0.09, 0.03]} />
         <meshStandardMaterial color="#1a1a1c" metalness={0.4} roughness={0.45} />
       </mesh>
-      <Text
-        fontSize={0.07}
-        position={[0, -FRAME_H / 2 - 0.2, 0.04]}
-        color={active ? "#f1ece4" : "#8c8880"}
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.1}
-      >
-        {work.year}
-      </Text>
+      <ConceptPlaque active={active} />
+    </group>
+  );
+}
+
+/** Canvas text uses our self-hosted CSS fonts, including Thai and Chinese glyphs. */
+function ConceptPlaque({ active }: { active: boolean }) {
+  const lang = useLocale();
+  const invalidate = useThree((state) => state.invalidate);
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 96;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    const label = { en: "CONCEPT", th: "แนวคิด", zh: "概念" }[lang];
+    const family = { en: "Figtree", th: "IBM Plex Sans Thai", zh: "Noto Sans SC Variable" }[lang];
+    const font = `500 64px "${family}"`;
+    const next = new THREE.CanvasTexture(canvas);
+    next.colorSpace = THREE.SRGBColorSpace;
+    let disposed = false;
+    const draw = () => {
+      if (disposed) return;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.font = `${font}, sans-serif`;
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = active ? "#f1ece4" : "#8c8880";
+      context.fillText(label, canvas.width / 2, canvas.height / 2, canvas.width - 24);
+      next.needsUpdate = true;
+      invalidate();
+    };
+    draw();
+    setTexture(next);
+    // Request the exact glyph subset; fonts.ready alone may precede the Chinese label.
+    void document.fonts
+      .load(font, label)
+      .then(draw)
+      .catch(() => undefined);
+    return () => {
+      disposed = true;
+      next.dispose();
+    };
+  }, [lang, active, invalidate]);
+  return texture ? (
+    <mesh position={[0, -FRAME_H / 2 - 0.2, 0.04]}>
+      <planeGeometry args={[0.6, 0.1125]} />
+      <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
+    </mesh>
+  ) : null;
+}
+
+function ProceduralFrame({ metal }: { metal: THREE.MeshStandardMaterial }) {
+  const t = 0.055;
+  const depth = 0.09;
+  const outerW = FRAME_W + 0.16;
+  const outerH = FRAME_H + 0.16;
+  return (
+    <group name="Frame_GeometryFallback">
+      <mesh position={[0, 0, -0.06]} castShadow>
+        <boxGeometry args={[outerW + 0.04, outerH + 0.04, 0.05]} />
+        <meshStandardMaterial color="#101012" metalness={0.35} roughness={0.6} />
+      </mesh>
+      <mesh position={[0, outerH / 2 - t / 2, 0]} material={metal}>
+        <boxGeometry args={[outerW, t, depth]} />
+      </mesh>
+      <mesh position={[0, -outerH / 2 + t / 2, 0]} material={metal}>
+        <boxGeometry args={[outerW, t, depth]} />
+      </mesh>
+      <mesh position={[-outerW / 2 + t / 2, 0, 0]} material={metal}>
+        <boxGeometry args={[t, outerH, depth]} />
+      </mesh>
+      <mesh position={[outerW / 2 - t / 2, 0, 0]} material={metal}>
+        <boxGeometry args={[t, outerH, depth]} />
+      </mesh>
     </group>
   );
 }

@@ -1,7 +1,7 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { sim, BOUNDS, onPavement, resolveColliders } from "../systems/sim";
+import { sim, advanceSimulation } from "../systems/sim";
 import {
   attachInput,
   installControlsTest,
@@ -12,23 +12,26 @@ import { setEngine } from "../systems/audio";
 import { isDriveBlocked, useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
 import { installQA } from "../systems/qa";
-
-const MAX_SPEED = 16;
-const ACCEL = 22;
-const REVERSE = 12;
-const DRAG = 2.4;
-const TURN = 2.55;
-const GRIP = 7.5;
+import { useReducedMotion } from "@/components/canvas/runtime-hooks";
+import { FoodTruckBody, TruckLampFace, TruckWheel } from "./FoodTruckBody";
+import { FOOD_TRUCK, TRUCK_LAMPS, TRUCK_WHEELS } from "../data/vehicle";
 
 export function Car() {
+  const reducedMotion = useReducedMotion();
   const group = useRef<THREE.Group>(null);
   const wheels = useRef<THREE.Group[]>([]);
   const lightL = useRef<THREE.SpotLight>(null);
   const lightR = useRef<THREE.SpotLight>(null);
+  const bodyFill = useRef<THREE.PointLight>(null);
   const targetL = useRef<THREE.Object3D>(null);
   const targetR = useRef<THREE.Object3D>(null);
   const started = useDrive((s) => s.started);
   const setSpeedKmh = useDrive((s) => s.setSpeedKmh);
+  const lamps = useMemo(() => ({
+    front: new THREE.MeshStandardMaterial({ color: "#f4efe6", emissive: "#f4efe6", emissiveIntensity: 0.4 }),
+    rear: new THREE.MeshStandardMaterial({ color: "#a9403b", emissive: "#a9403b", emissiveIntensity: 0.3 }),
+  }), []);
+  useEffect(() => () => { lamps.front.dispose(); lamps.rear.dispose(); }, [lamps]);
   const tmp = useRef({
     cam: new THREE.Vector3(),
     look: new THREE.Vector3(),
@@ -55,51 +58,25 @@ export function Car() {
     const g = group.current;
     if (!g) return;
     const blocked = isDriveBlocked();
+    lamps.front.emissiveIntensity = 0.4 + dayState.night * 2.2;
+    lamps.rear.emissiveIntensity = 0.3 + dayState.night * 1.6;
+    if (bodyFill.current) bodyFill.current.intensity = 4 + (1 - dayState.night) * 18;
 
     if (!started) {
       g.position.set(sim.x, sim.y, sim.z);
       g.rotation.y = sim.yaw;
-      const t = state.clock.elapsedTime * 0.12;
-      state.camera.position.lerp(tmp.current.desired.set(Math.sin(t) * 16, 7.5, Math.cos(t) * 16), 1 - Math.exp(-2.2 * dt));
-      state.camera.lookAt(0, 0.6, 0);
+      if (reducedMotion) state.camera.position.set(sim.x + 8.8, sim.y + 5.5, sim.z + 10.5);
+      else {
+        const t = state.clock.elapsedTime * 0.08 + 0.7;
+        state.camera.position.lerp(tmp.current.desired.set(sim.x + Math.sin(t) * 12.5, sim.y + 5.5, sim.z + Math.cos(t) * 12.5), 1 - Math.exp(-2.2 * dt));
+      }
+      state.camera.lookAt(sim.x, sim.y + 1.4, sim.z);
       return;
     }
 
     if (!blocked) {
       pollGamepad();
-      const { steer, throttle, brake } = readAxes();
-      sim.steer = THREE.MathUtils.damp(sim.steer, steer, 10, dt);
-
-      if (brake) sim.speed *= Math.pow(0.18, dt);
-      else if (throttle > 0) sim.speed += ACCEL * throttle * dt;
-      else if (throttle < 0) sim.speed += REVERSE * throttle * dt;
-      else sim.speed *= Math.pow(0.22, dt);
-
-      const road = onPavement(sim.x, sim.z);
-      const dragMul = road ? 1 : 2.6;
-      const drag = DRAG * dragMul * dt * Math.sign(sim.speed) * Math.min(1, Math.abs(sim.speed));
-      sim.speed -= drag;
-      sim.speed = THREE.MathUtils.clamp(sim.speed, -MAX_SPEED * 0.55, MAX_SPEED * (road ? 1 : 0.62));
-
-      const speedFactor = THREE.MathUtils.clamp(Math.abs(sim.speed) / 5, 0.28, 1);
-      const reverse = sim.speed >= 0 ? 1 : -1;
-      sim.yaw += sim.steer * TURN * speedFactor * reverse * dt;
-
-      sim.lateral += sim.steer * sim.speed * 0.35 * dt;
-      sim.lateral *= Math.exp(-GRIP * (road ? 1 : 0.55) * dt);
-
-      const fx = -Math.sin(sim.yaw);
-      const fz = -Math.cos(sim.yaw);
-      const rx = Math.cos(sim.yaw);
-      const rz = -Math.sin(sim.yaw);
-      sim.x += (fx * sim.speed + rx * sim.lateral) * dt;
-      sim.z += (fz * sim.speed + rz * sim.lateral) * dt;
-      sim.x = THREE.MathUtils.clamp(sim.x, -BOUNDS, BOUNDS);
-      sim.z = THREE.MathUtils.clamp(sim.z, -BOUNDS, BOUNDS);
-      resolveColliders();
-
-      sim.roll = THREE.MathUtils.damp(sim.roll, sim.steer * 0.14 * speedFactor, 8, dt);
-      sim.wheel += sim.speed * dt * 2.4;
+      advanceSimulation(readAxes(), dt);
       setEngine(sim.speed);
       setSpeedKmh(Math.abs(sim.speed) * 7.2);
     } else {
@@ -110,7 +87,7 @@ export function Car() {
     g.position.set(sim.x, sim.y, sim.z);
     g.rotation.order = "YZX";
     g.rotation.y = sim.yaw;
-    g.rotation.z = sim.roll;
+    g.rotation.z = reducedMotion ? 0 : sim.roll * 0.35;
 
     for (let i = 0; i < wheels.current.length; i++) {
       const w = wheels.current[i];
@@ -121,18 +98,18 @@ export function Car() {
 
     const fx = -Math.sin(sim.yaw);
     const fz = -Math.cos(sim.yaw);
-    const follow = 8.6;
-    const height = 4.4;
+    const follow = 12.2;
+    const height = 6.8;
     const { desired, look, cam } = tmp.current;
     desired.set(sim.x - fx * follow, sim.y + height, sim.z - fz * follow);
-    look.set(sim.x + fx * 5.5, sim.y + 0.85, sim.z + fz * 5.5);
+    look.set(sim.x + fx * 5.5, sim.y + 1.45, sim.z + fz * 5.5);
     cam.copy(state.camera.position);
-    cam.lerp(desired, 1 - Math.exp(-3.4 * dt));
+    cam.lerp(desired, reducedMotion ? 1 : 1 - Math.exp(-3.4 * dt));
     state.camera.position.copy(cam);
     state.camera.lookAt(look);
 
     const cam3 = state.camera as THREE.PerspectiveCamera;
-    const targetFov = 50 + Math.min(9, Math.abs(sim.speed) * 0.5);
+    const targetFov = reducedMotion ? 50 : 50 + Math.min(9, Math.abs(sim.speed) * 0.5);
     cam3.fov = THREE.MathUtils.damp(cam3.fov, targetFov, 4, dt);
     cam3.updateProjectionMatrix();
 
@@ -142,76 +119,35 @@ export function Car() {
     if (lightR.current) lightR.current.intensity = hi;
   });
 
-  const night = dayState.night;
-
   return (
     <group ref={group} position={[sim.x, sim.y, sim.z]}>
-      <mesh castShadow position={[0, 0.28, -0.12]}>
-        <boxGeometry args={[1.28, 0.36, 2.28]} />
-        <meshStandardMaterial color="#e25b4c" metalness={0.35} roughness={0.38} />
-      </mesh>
-      <mesh castShadow position={[0, 0.52, 0.18]}>
-        <boxGeometry args={[1.08, 0.34, 1.12]} />
-        <meshStandardMaterial color="#1a1c20" metalness={0.2} roughness={0.25} />
-      </mesh>
-      <mesh position={[0, 0.58, 0.16]}>
-        <boxGeometry args={[0.98, 0.22, 0.92]} />
-        <meshStandardMaterial color="#8fb4c8" metalness={0.7} roughness={0.12} transparent opacity={0.45} />
-      </mesh>
-      <mesh position={[0, 0.22, -1.22]}>
-        <boxGeometry args={[1.18, 0.12, 0.12]} />
-        <meshStandardMaterial color="#cfc8be" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[-0.42, 0.28, -1.18]}>
-        <boxGeometry args={[0.18, 0.1, 0.08]} />
-        <meshStandardMaterial color="#f4efe6" emissive="#f4efe6" emissiveIntensity={0.4 + night * 2.2} />
-      </mesh>
-      <mesh position={[0.42, 0.28, -1.18]}>
-        <boxGeometry args={[0.18, 0.1, 0.08]} />
-        <meshStandardMaterial color="#f4efe6" emissive="#f4efe6" emissiveIntensity={0.4 + night * 2.2} />
-      </mesh>
-      <mesh position={[-0.4, 0.3, 1.08]}>
-        <boxGeometry args={[0.22, 0.08, 0.06]} />
-        <meshStandardMaterial color="#e25b4c" emissive="#e25b4c" emissiveIntensity={0.3 + night * 1.6} />
-      </mesh>
-      <mesh position={[0.4, 0.3, 1.08]}>
-        <boxGeometry args={[0.22, 0.08, 0.06]} />
-        <meshStandardMaterial color="#e25b4c" emissive="#e25b4c" emissiveIntensity={0.3 + night * 1.6} />
-      </mesh>
-      {(
-        [
-          [-0.58, 0.18, -0.72],
-          [0.58, 0.18, -0.72],
-          [-0.58, 0.18, 0.78],
-          [0.58, 0.18, 0.78],
-        ] as const
-      ).map((p, i) => (
+      <FoodTruckBody />
+      {/* Bounded, shadow-free rear fill keeps charcoal body details legible in the driving view. */}
+      <pointLight ref={bodyFill} position={[-2.4, 4.2, 4.5]} color="#d6e0eb" intensity={16} distance={9} decay={2} castShadow={false} />
+      {[-1, 1].map((side) => <group key={side}>
+        <TruckLampFace side={side} kind="front" material={lamps.front} />
+        <TruckLampFace side={side} kind="rear" material={lamps.rear} />
+      </group>)}
+      {TRUCK_WHEELS.map((p, i) => (
         <group key={i} position={[p[0], p[1], p[2]]}>
           <group
             ref={(el) => {
               if (el) wheels.current[i] = el;
             }}
           >
-            <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-              <cylinderGeometry args={[0.22, 0.22, 0.16, 10]} />
-              <meshStandardMaterial color="#141416" roughness={0.7} />
-            </mesh>
-            <mesh rotation={[0, 0, Math.PI / 2]}>
-              <cylinderGeometry args={[0.1, 0.1, 0.17, 8]} />
-              <meshStandardMaterial color="#cfc8be" metalness={0.7} roughness={0.25} />
-            </mesh>
+            <TruckWheel />
           </group>
         </group>
       ))}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-        <circleGeometry args={[1.3, 12]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015 - FOOD_TRUCK.rideHeight, 0]} scale={[1, 2.4, 1]} receiveShadow>
+        <circleGeometry args={[1.28, 24]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.28} />
       </mesh>
-      <object3D ref={targetL} position={[-0.42, 0.1, -10]} />
-      <object3D ref={targetR} position={[0.42, 0.1, -10]} />
+      <object3D ref={targetL} position={[-0.67, 0.05, -12]} />
+      <object3D ref={targetR} position={[0.67, 0.05, -12]} />
       <spotLight
         ref={lightL}
-        position={[-0.42, 0.42, -1.15]}
+        position={[-TRUCK_LAMPS.front.x, TRUCK_LAMPS.front.y, TRUCK_LAMPS.front.z - 0.05]}
         angle={0.42}
         penumbra={0.55}
         distance={26}
@@ -221,7 +157,7 @@ export function Car() {
       />
       <spotLight
         ref={lightR}
-        position={[0.42, 0.42, -1.15]}
+        position={[TRUCK_LAMPS.front.x, TRUCK_LAMPS.front.y, TRUCK_LAMPS.front.z - 0.05]}
         angle={0.42}
         penumbra={0.55}
         distance={26}

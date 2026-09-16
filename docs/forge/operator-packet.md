@@ -1,0 +1,13 @@
+# OWNER-HOST-BLENDER-VERIFY-001
+
+Continue SIRAWAT × BALL from the reviewed codex/agm-forge-production branch of ton36475-lgtm/driveto3dworld. Read AGENTS.md and docs/forge/product-contract.md first. Do not substitute another repository or overwrite unrelated dirty work.
+
+1. Record current branch/commit, dirty paths and runtime architecture. Confirm the workspace is the authorized Mac mini path before host execution; this web session's Linux output is not Mac verification.
+2. Run npm run bootstrap, npm run doctor, npm test, npm run build, npm run typecheck, npm run lint. Bootstrap must keep package-lock fixed and skip installation when its runtime/dependency receipt matches. Never pipe downloaded installers into a shell or paste provider keys into prompts.
+3. Read blender-mcp-pipeline/README.md and WORKERS.md. Use the verified official Blender version and the documented pipeline doctor. Existing generated assets are concept props, not a reconstruction of a real venue; request a dimensioned plan before asserting venue accuracy.
+4. Route structural authoring to an available economical model only after querying the actual active registry. Give a concrete file/collection lease and time/usage budget. Work in independent directories. Freeze object names, geometry, transforms, units, hierarchy and dimensions with the structural manifest before polish.
+5. Route polish to an available stronger model only when needed. Preserve the approved structure. Material/light/camera changes must pass the structural guard and Khronos validation before publishing local GLBs. No retry loop or parallel worker may overwrite the same .blend.
+6. Run browser regression at 360, 390, 768 and 1440 widths; test gallery selection/keyboard, drive A/D/touch, pause/resume, reduced motion, WebGL failure, form-save/export and restored backup. Compare dev to production output and inspect screenshots. Record failures rather than marking a blocked test passed.
+7. Independent checker verifies changed files, evidence bytes and private-data exclusion. Produce a receipt bound to source commit and outputs. Public deployment, external posting and live delivery require their actual destinations and bindings; do not manufacture successful receipts.
+
+Expected result: an owner-host verification receipt, actual Blender/MCP connectivity status, browser evidence and one reviewed merge/deployment proposal. Stop if bindings are absent, data is corrupt, structural checks fail, a license is unknown, quota is exhausted or cancellation is requested. This packet creates no schedule, sends no Telegram message, and performs no remote action on its own.

@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "date": "2026-09-16",
+  "canonicalRepository": "ton36475-lgtm/driveto3dworld",
+  "branch": "codex/agm-forge-production",
+  "baseCommit": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",
+  "sourceCoverage": {
+    "fileOccurrences": 480,
+    "uniqueByteStreams": 209,
+    "manualLineByLineAllFiles": false
+  },
+  "checks": {
+    "nodeTests": {
+      "passed": 294,
+      "failed": 0,
+      "skipped": 4
+    },
+    "pythonTests": {
+      "passed": 16
+    },
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "httpRoutes": 13,
+    "gltfValidator": {
+      "assets": 3,
+      "errors": 0,
+      "warnings": 0
+    },
+    "independentSourceReview": "COMPLETE",
+    "browserInThisSession": "BLOCKED",
+    "remoteCI": "PASS_PREVIOUS_CHECKPOINT_NEW_PHASE_PENDING",
+    "ownerMacMCP": "NOT_VERIFIED",
+    "initialCIFindings": [
+      "npm10 optional peer missing from lockfile: repaired and verified on Node22/npm10 and Node24/npm11",
+      "Auth unit tests inherited CI auth-off flag: isolated test environment",
+      "Fresh checkout lacked ignored auth-off config: tracked default added with explicit environment precedence"
+    ],
+    "lastCompletedRemoteRun": {
+      "id": 35070021809,
+      "commit": "60a73e5ffe4e094c0d325e5d8084beeb3dcefdc4",
+      "passed": [
+        "Node22/24 installs, 294tests+4explicit skips, build, types, lint,13routes",
+        "dev16browserviews/Node,production4widths/Node",
+        "operationsdesktop/mobilekeyboardflow,backup/freshrestore",
+        "Forgeexport,reducedmotionactualidle,noWebGLfallback,realcontextloss"
+      ],
+      "failed": []
+    }
+  },
+  "productionReady": false,
+  "rollback": "734cbb8e7fc3e89e251adbd7fd3b7f9eaf7ca46d",
+  "nextSafePacket": "OWNER-HOST-BLENDER-VERIFY-001",
+  "trilingualFoodtruckFoundation": {
+    "status": "IMPLEMENTED_LOCAL_BROWSER_PENDING",
+    "languages": ["en", "th", "zh"],
+    "htmlChinese": "zh-CN",
+    "scope": "localplanner,motion,originalconcepttruck; new owner references received after generation",
+    "localNodeTests": {
+      "passed": 321,
+      "failed": 0,
+      "skipped": 4
+    },
+    "localBuild": "PASS",
+    "localTypecheck": "PASS",
+    "localLint": "PASS",
+    "foodtruckTriangles": 6886,
+    "foodtruckGltfErrors": 0,
+    "foodtruckGltfWarnings": 0,
+    "remoteRun": {
+      "id": 35073030132,
+      "commit": "33093b55f5c7d2ba83729f5d67da3b3bc8c45030",
+      "status": "FAILED_WITH_REPAIRS_IN_NEXT_PHASE",
+      "passed": [
+        "Node22/24 install,321tests+4explicit skips,build,typecheck,lint,14HTTP routes",
+        "dev/prod browser smoke and localoperations",
+        "all4 trilingual responsive scenarios",
+        "actual truckGLBfirstframe,W+A/W+Dsteeringandreset,proceduralfallbackdriving",
+        "reducedmotion,noWebGLandactualcontextloss",
+        "foodtruck form/edit/validation/download/import interactions before final network assertion"
+      ],
+      "findings": [
+        "Forge UI now uses localized display Slate; old test expected lowercase machine key slate",
+        "Locales test wrongly classified preserved Grok platform bootstrap script as map/contact traffic",
+        "Minimap intercepted desktop Settings pointer click; toolbar/map layout must be repaired"
+      ]
+    }
+  },
+  "photoReferenceTruck": {
+    "status": "IMPLEMENTED_LOCAL_PASS_REMOTE_CI_PENDING",
+    "referenceImages": 6,
+    "estimatedProportions": true,
+    "localNodeTests": {
+      "passed": 322,
+      "failed": 0,
+      "skipped": 4
+    },
+    "localBuild": "PASS",
+    "localTypecheck": "PASS",
+    "localLint": "PASS",
+    "asset": {
+      "sha256": "02c263c45ac75b6555dbbe78164375d938384154d1be3f83733128b5e88fcc01",
+      "bytes": 1209436,
+      "triangles": 20026,
+      "drawPrimitives": 30,
+      "gltfErrors": 0,
+      "gltfWarnings": 0
+    },
+    "independentSourceReopen": {
+      "objectsCompared": 38,
+      "negativeMutationsRejected": 3
+    },
+    "matchingCyclesRendersReviewed": 3,
+    "showroom": "exterior orbit/zoom, kitchen/alcove, kitchen/rear, independent hatches, 3-image WebGL fallback",
+    "driveTestsPassed": 17,
+    "browserGates": [
+      "browser-smoke.mjs",
+      "browser-ops.mjs",
+      "browser-spatial.mjs",
+      "browser-locales.mjs",
+      "browser-truck.mjs",
+      "browser-showroom.mjs"
+    ],
+    "physicalVehicleConnected": false,
+    "deploymentPerformed": false
+  }
+}

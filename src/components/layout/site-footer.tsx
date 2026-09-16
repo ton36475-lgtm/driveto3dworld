@@ -21,6 +21,9 @@ export function SiteFooter() {
           <Link to="/drive" className="hover:text-foreground">
             {copy.footer.drive}
           </Link>
+          <Link to="/foodtruck" className="hover:text-foreground">
+            {copy.footer.foodtruck}
+          </Link>
           <Link to="/studio" className="hover:text-foreground">
             {copy.footer.studio}
           </Link>

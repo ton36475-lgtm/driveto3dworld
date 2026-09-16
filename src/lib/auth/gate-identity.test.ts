@@ -1,4 +1,4 @@
-import { describe, it } from "node:test";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { generateKeyPairSync, type KeyObject } from "node:crypto";
 import { SignJWT, exportJWK, type JWK } from "jose";
@@ -15,6 +15,23 @@ import {
 
 const ISSUER = "https://gate.app-builder-testing.com";
 const AUDIENCE = "app:proj-123";
+
+const GATE_ENV_KEYS = ["VITE_AUTH_ENABLED", "GROK_PROJECT_ID", "GROK_GATE_ORIGIN"] as const;
+let previousGateEnv: ReadonlyArray<readonly [string, string | undefined]> = [];
+
+// Each test owns its auth/gate configuration, regardless of CI or host defaults.
+// Keep these environment-mutating tests serial and restore absent keys as absent.
+beforeEach(() => {
+  previousGateEnv = GATE_ENV_KEYS.map((key) => [key, process.env[key]] as const);
+  for (const key of GATE_ENV_KEYS) delete process.env[key];
+});
+afterEach(() => {
+  for (const [key, value] of previousGateEnv) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
+  previousGateEnv = [];
+});
 
 type TestKey = { privateKey: KeyObject; jwk: JWK; kid: string };
 

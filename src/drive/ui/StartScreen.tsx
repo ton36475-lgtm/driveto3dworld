@@ -2,7 +2,8 @@ import { Volume2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { unlockAudio, startAudio } from "../systems/audio";
 import { useDrive } from "../store";
-import { COPY } from "../data/i18n";
+import { COPY, LANGUAGE_LABELS } from "../data/i18n";
+import { CONCEPT_COPY } from "../data/concepts";
 
 export function StartScreen() {
   const start = useDrive((s) => s.start);
@@ -21,22 +22,23 @@ export function StartScreen() {
   return (
     <div className="pointer-events-none absolute inset-0 z-20 flex items-end justify-center p-5 sm:items-center sm:p-8">
       <div
-        className="overlay-panel pointer-events-auto w-full max-w-lg px-6 py-7 sm:px-9 sm:py-9"
+        className="overlay-panel pointer-events-auto max-h-[calc(100svh-7rem)] w-full max-w-lg overflow-y-auto px-6 py-7 sm:px-9 sm:py-9"
         style={{ borderRadius: "var(--radius-sheet)" }}
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-muted text-[11px] font-medium tracking-[0.28em] uppercase">{c.kicker}</p>
-          <button
-            type="button"
-            className="ghost-btn !min-h-8 !px-3 text-[11px] tracking-[0.14em] uppercase"
-            onClick={() => setLang(lang === "en" ? "th" : "en")}
-            aria-label={c.language}
-          >
-            {lang === "en" ? "TH" : "EN"}
-          </button>
+          <div className="flex shrink-0 gap-1" role="group" aria-label={c.language}>
+            {(["th", "zh", "en"] as const).map((language) => (
+              <button key={language} type="button" className="ghost-btn !min-h-9 !px-2 text-[11px]" aria-pressed={lang === language} onClick={() => setLang(language)}>
+                {LANGUAGE_LABELS[language]}
+              </button>
+            ))}
+          </div>
         </div>
         <h1 className="text-fg font-display mb-2 text-5xl leading-[0.95] tracking-tight sm:text-6xl">{c.title}</h1>
-        <p className="text-muted mb-6 max-w-sm text-sm leading-relaxed">{c.tagline}</p>
+        <p className="mb-3 text-[11px] tracking-wide text-faint">{c.truckNote}</p>
+        <p className="text-muted mb-3 max-w-sm text-sm leading-relaxed">{c.tagline}</p>
+        <p className="text-faint mb-6 text-xs leading-relaxed">{CONCEPT_COPY[lang].notice}</p>
         <ul className="text-muted mb-7 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
           <li>{c.w}</li>
           <li>{c.s}</li>
@@ -61,8 +63,9 @@ export function StartScreen() {
             {c.browse}
           </button>
           <Link to="/gallery" className="ghost-btn">
-            {lang === "th" ? "แกลเลอรี 3D" : "3D salon"}
+            {c.salon}
           </Link>
+          <a href="/foodtruck" className="ghost-btn">{c.foodtruck}</a>
         </div>
         <p className="text-faint mt-4 flex items-center gap-1.5 text-xs">
           <Volume2 className="size-3.5 shrink-0" strokeWidth={1.75} />

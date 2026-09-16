@@ -1,0 +1,20 @@
+export type ForgeConfig = {
+  version: 1;
+  family: "universal-business";
+  preset: "creative-studio" | "professional-service" | "music-event";
+  theme: "ink" | "slate";
+  locale: "en" | "th" | "zh";
+  stack: "tanstack-start";
+  scene: "salon" | "static";
+  density: 2 | 4 | 8;
+  motion: "calm" | "paused";
+  sections: ("profile" | "work" | "contact")[];
+  evidence: { state: "PROPOSED"; clientWorkVerified: false };
+  integrations: { delivery: "manual"; analytics: "not-instrumented" };
+  kpis: { primary: "N/A"; driver: "N/A"; guardrail: "N/A" };
+};
+export const PRESETS: ForgeConfig["preset"][];
+export const THEMES: ForgeConfig["theme"][];
+export const SECTIONS: ForgeConfig["sections"];
+export function defaultConfig(): ForgeConfig;
+export function validateConfig(value: unknown): string[];

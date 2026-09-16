@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-09-16",
+  "platform": "Linux x86_64 (this runtime, not the user Mac mini)",
+  "blenderVersion": "4.5.14 LTS",
+  "blenderBuildHash": "62c1db4208e8",
+  "archiveUrl": "https://download.blender.org/release/Blender4.5/blender-4.5.14-linux-x64.tar.xz",
+  "checksumUrl": "https://download.blender.org/release/Blender4.5/blender-4.5.14.sha256",
+  "archiveSha256": "9ba871ff2ecd36526b77432745980b7e6664ecd0c7ca11c48849073dcfe06da3",
+  "officialChecksumVerified": true,
+  "executableVersionVerified": true,
+  "gltfValidatorVersion": "2.0.0-dev.3.10",
+  "gameDevCli": "UNAVAILABLE; no game-dev package certification claimed",
+  "sourceDigests": {
+    "verify_scene.py": "bc0aaf962c27e2a09a31c005c598962b77df477b73c2ec17390f034904f883c6",
+    "export_glb.py": "36a9ebf815d68c32f865b8f2ef5dc4678344778dbdd75e6dc19b0bf252e03c57",
+    "render_preview.py": "1534eac2abb6fbad459dd5a63f8a52e7c98419aec93cc23eb51c147cb2db4331",
+    "run_pipeline.py": "fb042e95dede2f086ba19ce8aff6ff2a5997c591b8b1532e2f4a7c43f3ce1b5b",
+    "build_assets.py": "116c282f55fc4716c9a96a7150aa0897811cd8133ae5fcebcbcee327c6e8fc5a",
+    "contract.py": "bedf3c4a3525e477acb22e4c8df31e5a16d51440d6c5d731c418dd9446833f58",
+    "test_contract.py": "b41ef3d8b2cfb1444a385083b1f0ac6421fc6d985893fb5832de189b887ac427"
+  }
+}

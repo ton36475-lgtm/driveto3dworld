@@ -1,4 +1,5 @@
 node_modules
+.runtime
 .DS_Store
 .grok
 artifacts
@@ -15,6 +16,8 @@ dist
 src/routeTree.gen.ts
 *.blend1
 *.blend2
-public/__grok
+public/__grok/*
+!public/__grok/icon-180.png
+!public/__grok/install/
 .node_modules.lock
 .project_id

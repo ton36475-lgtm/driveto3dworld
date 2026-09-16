@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "missing-required-objects",
+      "exitCode": 1,
+      "noOutput": true,
+      "pass": true,
+      "diagnostic": "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\n\nBlender quit\nTraceback (most recent call last):\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/export_glb.py\", line 52, in <module>\n    export_assets(args.output_dir)\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/export_glb.py\", line 16, in export_assets\n    require_objects(bpy.context.scene.objects.keys())\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/contract.py\", line 33, in require_objects\n    raise ValueError(\"Missing required objects: \" + \", \".join(missing))\nValueError: Missing required objects: Artwork, Frame_Work, Monogram_SxB, Plinth\n\nError: script failed, file: '/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/export_glb.py', exiting.\n"
+    },
+    {
+      "name": "moved-plinth-rejected",
+      "exitCode": 1,
+      "pass": true,
+      "diagnostic": "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\nRead blend: \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/assets/atelier-final.blend\"\n\nBlender quit\nTraceback (most recent call last):\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_scene.py\", line 18, in <module>\n    result = verify_structure(baseline, snapshot())\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/contract.py\", line 53, in verify_structure\n    raise ValueError(\"Locked structure changed: \" + \", \".join(changed))\nValueError: Locked structure changed: Plinth, Plinth_Base, Plinth_Crown\n\nError: script failed, file: '/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_scene.py', exiting.\n"
+    }
+  ]
+}

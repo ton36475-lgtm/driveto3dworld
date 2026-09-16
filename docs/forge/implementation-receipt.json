@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "kind": "sha256-integrity-manifest",
+  "status": "CHECK_PENDING_INDEPENDENT_REVIEW",
+  "productionReady": false,
+  "files": [
+    {
+      "path": ".github/workflows/runtime.yml",
+      "sha256": "dfe67685f32fcc446cf1e464f2f577925b66861a174cefbe875bef729d70afe6"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "c270a9dc14aca335fa13f32ad0b4a8d6d4a89cf497efb5363444966ba3b259e0"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2bed093177b08b1b0b39da5a53cb731815e0cbbad0147f9904db5b29a6910ae5"
+    },
+    {
+      "path": "AGENTS.project.md",
+      "sha256": "e8907f7cb8dd4ba7b4d8f90e994929c2cfe923bfad43dbc2fca5c48dcc118256"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7c18fc841b63cd7474b494aed8128071064cb8313bc6b9de9d0ebb2fa79ee379"
+    },
+    {
+      "path": "blender-mcp-pipeline/.gitignore",
+      "sha256": "fd5e4618509dd3dc78a5aa88472f6fed57f11f062ca2dee4664403e67d0921a8"
+    },
+    {
+      "path": "blender-mcp-pipeline/FOODTRUCK.md",
+      "sha256": "6a5ba413b9cf4ebd7c3793d6938740fef1f06d2e696658833b8d59b9b0221f36"
+    },
+    {
+      "path": "blender-mcp-pipeline/PROMPTS.md",
+      "sha256": "79307fbb732733c5fe708f378a8b0ca026c737af4e00540d0f3fffcbc01336d4"
+    },
+    {
+      "path": "blender-mcp-pipeline/README.md",
+      "sha256": "58a0c92b3eceb985bbdb9b13180aa1b3aeee9d9d3ef4b319ebb79649c160f641"
+    },
+    {
+      "path": "blender-mcp-pipeline/WORKERS.md",
+      "sha256": "11175b442148674f45e0359205c304b729876a8396653f8dfc344b0ebea6d25b"
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/atelier-final.blend",
+      "sha256": "8fa638d6a25fccb891a77d8d92c426cc3b7af543124bfa98c12be30da89631e2"
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/atelier-structural.blend",
+      "sha256": "60615529e66cffaeb6ebd904dea242528d57554bab46ae75e0bc4118e88db6d0"
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/foodtruck-final.blend",
+      "sha256": "f98b0ae50576397d72d38849966c77fedc157af9894587e69c9818ebc37ff9f9"
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/foodtruck-structural.blend",
+      "sha256": "e8b1bcb634e0ddb5d3bb54f3763e96ee952b921bed596b44b80f1b3d7f448f3f"
+    },
+    {
+      "path": "blender-mcp-pipeline/build_assets.py",
+      "sha256": "116c282f55fc4716c9a96a7150aa0897811cd8133ae5fcebcbcee327c6e8fc5a"
+    },
+    {
+      "path": "blender-mcp-pipeline/build_foodtruck.py",
+      "sha256": "20fe0a67802b7a2fa3fe776ccad2815b4340ce08b691479596fc79f8c8ef6ad2"
+    },
+    {
+      "path": "blender-mcp-pipeline/check_foodtruck_source.py",
+      "sha256": "cef9bbf479d3d88f2988b12db378a06361b3b01f65d7040ba10d1d6faa46a258"
+    },
+    {
+      "path": "blender-mcp-pipeline/contract.py",
+      "sha256": "03521e3156d06fdc56d592f8fdf34d2bb80d8792343183c2959dd701b5ebfd9f"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/asset-preview.png",
+      "sha256": "facc1c9508cc856fa76b65412ef7dcb32e0e576e443354962dc04d946d1e8c33"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/build-receipt.json",
+      "sha256": "fe5959e5e85b55ce59538c00401f0a4146d142a3536c56c8197b2cd72b97a267"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-baseline.json",
+      "sha256": "75a1d162bf4926b29ea8254a48c135f5a0df3fca0e38432aa8d070b86dd8d35a"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-receipt.json",
+      "sha256": "583bd7bcc8e16e0dba542291bb45fe62216bdf3bc16d2c1de5f42b1e879aa6eb"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/khronos-validation.json",
+      "sha256": "dd9aabb3f9d56ac43fce79bb962b69e2ee179babcc6d6577e3cb5dcc6a59ab26"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/publication-verification.json",
+      "sha256": "a789bcf60d8a00528919fb210f4965fc3e041f26eae3476e53661b315ea76e03"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/source-verification.json",
+      "sha256": "d1bbf6e42c992d04c06a038c41f91f0be7b3789bb736bb418f59af7b845b5b7c"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/gltf-validation.json",
+      "sha256": "191b7b879cda10a84ea428298d04612aa6eb7a5f24c827985d9cc63fd2623cfa"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/negative-integration.json",
+      "sha256": "11d238d53cb922ec7fbc88339fdf4d113533fa7039e88ae479379a05b585a237"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/structural-baseline.json",
+      "sha256": "ef4420f4c958ea807b9ce2fa7584bec73c3ffe7409b785bb6f2d1ca754555380"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/toolchain.json",
+      "sha256": "931f4f234b7d745558691077956e31476ac2b499202a577405f02cb630c3dd34"
+    },
+    {
+      "path": "blender-mcp-pipeline/export_glb.py",
+      "sha256": "36a9ebf815d68c32f865b8f2ef5dc4678344778dbdd75e6dc19b0bf252e03c57"
+    },
+    {
+      "path": "blender-mcp-pipeline/reference_interior.py",
+      "sha256": "faa21641ec3f666ec9e7ea006d677e7e777681f56f329c012a777fc7ece75412"
+    },
+    {
+      "path": "blender-mcp-pipeline/render_preview.py",
+      "sha256": "1534eac2abb6fbad459dd5a63f8a52e7c98419aec93cc23eb51c147cb2db4331"
+    },
+    {
+      "path": "blender-mcp-pipeline/run_pipeline.py",
+      "sha256": "fb042e95dede2f086ba19ce8aff6ff2a5997c591b8b1532e2f4a7c43f3ce1b5b"
+    },
+    {
+      "path": "blender-mcp-pipeline/test_contract.py",
+      "sha256": "b41ef3d8b2cfb1444a385083b1f0ac6421fc6d985893fb5832de189b887ac427"
+    },
+    {
+      "path": "blender-mcp-pipeline/validate_foodtruck.mjs",
+      "sha256": "fe48815afb2aaab7a92d591e7cdd5c2eeb70cbd59ba5d0e62b969584fba5bc53"
+    },
+    {
+      "path": "blender-mcp-pipeline/validate_gltf.mjs",
+      "sha256": "671ad99d092b74a1c329a8e1347748316de48d5ebe735d1ed26426a4c36e024e"
+    },
+    {
+      "path": "blender-mcp-pipeline/verify_foodtruck.py",
+      "sha256": "81e72b1a31a8ba2cb8ba0054944e840f64b4196475ea269ac29c2f952578ce39"
+    },
+    {
+      "path": "blender-mcp-pipeline/verify_scene.py",
+      "sha256": "bc0aaf962c27e2a09a31c005c598962b77df477b73c2ec17390f034904f883c6"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-build.log",
+      "sha256": "363b2719956f584782b3aca4679beafbe798d3132690cd0adf67db50d4281b37"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-lint.log",
+      "sha256": "1c5da7755d6102106816b01f84b643b60122d1dc2d14a682e9be884803c40be8"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-tests.log",
+      "sha256": "2e7ceaac456540bed991b9ece1f546844a835a8e5a5d87447551484d6c89cd16"
+    },
+    {
+      "path": "docs/forge/evidence/ci-fix-typecheck.log",
+      "sha256": "b19be1a127b43f4b12ff880203cd55855c61667abffe84f9f625a6078c3acec4"
+    },
+    {
+      "path": "docs/forge/evidence/final-build.log",
+      "sha256": "8a2205d44d6a37d830669fe8a36c1e5b13341db87b0d4cac7ace7b07a07a4019"
+    },
+    {
+      "path": "docs/forge/evidence/final-lint.log",
+      "sha256": "1c5da7755d6102106816b01f84b643b60122d1dc2d14a682e9be884803c40be8"
+    },
+    {
+      "path": "docs/forge/evidence/final-tests.log",
+      "sha256": "d150a8b7cc70e709603b55abfc1d2f265af50690471300ccefd63bc71f61043e"
+    },
+    {
+      "path": "docs/forge/evidence/final-typecheck.log",
+      "sha256": "b19be1a127b43f4b12ff880203cd55855c61667abffe84f9f625a6078c3acec4"
+    },
+    {
+      "path": "docs/forge/evidence/independent-review.md",
+      "sha256": "ceab7019be84bf64f0b62496d2e24001a7767b50e6b42eb9be039c1e115964ab"
+    },
+    {
+      "path": "docs/forge/evidence/npm-audit.json",
+      "sha256": "d85b592dc4756073c0c217993711d71409a8db2859a168265357682dc5b56230"
+    },
+    {
+      "path": "docs/forge/evidence/webgl-fix-tests.log",
+      "sha256": "cdbc1cc8b174c265a5c4ff88d8b7352cc48f256e0e83429415d0bc85060c2a55"
+    },
+    {
+      "path": "docs/forge/operator-packet.md",
+      "sha256": "385ad2c87eaee732c19214a16f73ba4ef49620994e46a67753cd3aaf47816d28"
+    },
+    {
+      "path": "docs/forge/product-contract.md",
+      "sha256": "5a91d7bf880e69836bfbcf986e7f4a06ee9d4e66c5b65a1cbf3d89007fe1167a"
+    },
+    {
+      "path": "docs/forge/request-coverage.md",
+      "sha256": "0f1b92fdec050f1d87cf37a29487674d0fdad63d7304a483e5cb22a9c6d20e51"
+    },
+    {
+      "path": "docs/forge/result-manifest.json",
+      "sha256": "1f3e6596399af6fe6616ee113127811b996e71fc3ba9d70f1d4b4ca93559bff1"
+    },
+    {
+      "path": "docs/forge/source-reconciliation.md",
+      "sha256": "4a147232d83736c5d88ae97cc1a4ab473420357cae114e4a50358a870e6d983b"
+    },
+    {
+      "path": "docs/forge/trilingual-foodtruck.md",
+      "sha256": "5301e73a645e667e70fd7acaefe55a0845deefab469ba5de2affc9e54f1d88a6"
+    },
+    {
+      "path": "docs/forge/truck-reference-map.md",
+      "sha256": "9332a5cf0896ab4a229ce985de9b96fb71073b7234f0393537927ee9e8934d27"
+    },
+    {
+      "path": "docs/forge/validation.md",
+      "sha256": "d9c7b11cd79da676d3fa49be35b3eb36b369012cb13c6d9d46bfce878fb1e266"
+    },
+    {
+      "path": "docs/runtime-environment.example.json",
+      "sha256": "4ecd4c43f97c92389a1fd774ca2cf94296c9e49208a3f43162988936685dadae"
+    },
+    {
+      "path": "docs/runtime.md",
+      "sha256": "e6efbae9e6f563bc62e2461f078fb1a10ebba7f5be36173fcd4c062293040e0c"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "3404a9dc65c024baae55a768d552e0f2e129583787971eb42db1049bd16b571f"
+    },
+    {
+      "path": "package.json",
+      "sha256": "02be69fa47b8ae87cc65a3cff2cc7670f9f9db3df828a8db6b1b88bd1680af1a"
+    },
+    {
+      "path": "public/__grok/icon-180.png",
+      "sha256": "863ea5ad551f112e9090d17848b9bc6f7eb002ce9a13483ed97d6e95fb453a9b"
+    },
+    {
+      "path": "public/__grok/install/assets/homescreen/glass-puzzle.svg",
+      "sha256": "98b87d4403ca6f48d89196d65bbfe70b354925508923659bb1d01916feef2ae1"
+    },
+    {
+      "path": "public/__grok/install/assets/homescreen/glass-share.svg",
+      "sha256": "60e714f32261e16490918003b9272bcd77081ce0fd9b8dbc61d9e038794dc1cf"
+    },
+    {
+      "path": "public/__grok/install/assets/homescreen/plus.svg",
+      "sha256": "d2ae4d4dee3d72f65d8b8ff3fec9c03298dbdddae8fc62206af31f7b3824d49d"
+    },
+    {
+      "path": "public/__grok/install/styles.css",
+      "sha256": "75ca907203ab0d2ef3de0e92b2aa534a8621e9fe0b9a0928cd483efaa13f0653"
+    },
+    {
+      "path": "public/fonts/FIGTREE-LICENSE.txt",
+      "sha256": "ee23e6c84000126692e112ff067b456470493349f993ceaa8b4d3766dd6fad5d"
+    },
+    {
+      "path": "public/fonts/Noto-Sans-SC-OFL.txt",
+      "sha256": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3"
+    },
+    {
+      "path": "public/fonts/figtree-latin-400-normal.woff",
+      "sha256": "e75c125ab5ed44c6e11792d60d8e414ab905b3b46712919d977cf54aaf3e64a2"
+    },
+    {
+      "path": "public/images/foodtruck-interior.webp",
+      "sha256": "712ec0b5efd9fc5b9205a0bd109a34ac1f6c92002f4508b58fb7782156193bf3"
+    },
+    {
+      "path": "public/images/foodtruck-preview.webp",
+      "sha256": "13c30cd0359a43896d9a075bb254b7cab6191ef9e8c46b21e4d0d50790c934d2"
+    },
+    {
+      "path": "public/images/foodtruck-rear-interior.webp",
+      "sha256": "0f3e9481a152bd4cbf5e49ebacde86bdac37332fb4dea92e64f47fff707cd06d"
+    },
+    {
+      "path": "public/media/garden-night.jpg",
+      "sha256": "b5b9693a135a479c834e9a997c7b8830c38ded6ac6c840bced78113ba5086f52"
+    },
+    {
+      "path": "public/media/h168-cafe.jpg",
+      "sha256": "1f6a20695956101470aa02db34b3d7035e4be8b109ab391f39b8e5a87d3e5280"
+    },
+    {
+      "path": "public/media/palace-court.jpg",
+      "sha256": "ee5a8571cf77b41f4073249540e4400109fe521b3b602da6fea2f7b22327b8d6"
+    },
+    {
+      "path": "public/media/resort-pool.jpg",
+      "sha256": "133c386d959b39aecad199f45cd6c1934999e26cd1e9476e99ae2112879deb73"
+    },
+    {
+      "path": "public/media/river-facade.jpg",
+      "sha256": "9eac025f6d6edc71825f33124f45001b748b5cadd196f98a3478771267ed9f4e"
+    },
+    {
+      "path": "public/media/service-roof.jpg",
+      "sha256": "e8c7e84b06eb77f6f6136fa224768ee8224d64b03cd29c3908adb54f1f763b32"
+    },
+    {
+      "path": "public/media/still-linen.jpg",
+      "sha256": "46b72186a59b282eec3aed2b1684f9f0a6e000c8669ad68d6acb1e8f00fa304d"
+    },
+    {
+      "path": "public/media/villa-pool.jpg",
+      "sha256": "b9e57e20c9a6335adc29869a20305f8b7c3f6cd87eddec503c04c89ce7388560"
+    },
+    {
+      "path": "public/models/README.md",
+      "sha256": "230b5c99205846d68888f6eb03a32a6b2467f99cb0df35173b445e3050492cbd"
+    },
+    {
+      "path": "public/models/foodtruck-body.glb",
+      "sha256": "02c263c45ac75b6555dbbe78164375d938384154d1be3f83733128b5e88fcc01"
+    },
+    {
+      "path": "public/models/manifest.json",
+      "sha256": "4231a2f3809569eb50d4be0619dcfef8feca53d4d3a8c73d44a2e9c721035dfb"
+    },
+    {
+      "path": "public/models/monogram.glb",
+      "sha256": "8b71f8930d0dfdfcbb21b556d8e8a813510aacea3b19d0e8fbc427c63d5aa5ca"
+    },
+    {
+      "path": "public/models/plinth.glb",
+      "sha256": "b90640fad25b70d84ec9a61f57e02e5f2e5ff8932d41d8eddb4f00c152bef3c7"
+    },
+    {
+      "path": "public/models/work-frame.glb",
+      "sha256": "40dcda10d49491f74221d09f57fd830265cfa7107ba454496664d1377fa0eb14"
+    },
+    {
+      "path": "scripts/brand-check.test.mjs",
+      "sha256": "90ee59aedc586832e63b7a0b40376abbb8175d82af3b3603440b73dd5fc46dbc"
+    },
+    {
+      "path": "scripts/browser-locales.mjs",
+      "sha256": "248e681cdd595bbaa64d59889fbb3780553d683c057691ef603886212f80552c"
+    },
+    {
+      "path": "scripts/browser-ops.mjs",
+      "sha256": "607fdfa27679b44b71b1bf497e05c95fca84a5f10e208525045729db62e2fa32"
+    },
+    {
+      "path": "scripts/browser-showroom.mjs",
+      "sha256": "f9e21926726b9cbe30a0a9486c65694d0fa927cd50fecdf9fd94f526111c1c42"
+    },
+    {
+      "path": "scripts/browser-smoke-verdict.mjs",
+      "sha256": "a3c330b4334d9f6e55fc4d7ad98449208e36545ded566f4a8e91f209337eedb2"
+    },
+    {
+      "path": "scripts/browser-smoke-verdict.test.mjs",
+      "sha256": "3e419270b064613d8e175a4b2d3fee1812ed02aecbfd1c5c4b2cfee2bc937d8e"
+    },
+    {
+      "path": "scripts/browser-smoke.mjs",
+      "sha256": "a20f05b070af29b122298053ccec223582e7f4bc7fdaf65ba20ef70af4c575fe"
+    },
+    {
+      "path": "scripts/browser-spatial.mjs",
+      "sha256": "082c873e2e5cf1e0be9af94f420e90869d62f212cc6f671d3954fe5a16bae0be"
+    },
+    {
+      "path": "scripts/browser-truck.mjs",
+      "sha256": "b116deef01989c70f812905329a0ccc51bd7f8351a5724e2d3ef0414fda34c16"
+    },
+    {
+      "path": "scripts/check-auth-invariant.test.mjs",
+      "sha256": "bfe2b44543a1981bd4a4127f2ec1f4ddacdff6d951e3b1914aa3028cc43f955b"
+    },
+    {
+      "path": "scripts/doctor.mjs",
+      "sha256": "f78825b9c3dc4ca45fdf1bc522de3dc1da6cbbc311d3119d8bb6f805ec55060c"
+    },
+    {
+      "path": "scripts/forge-config.test.mjs",
+      "sha256": "2c58d99bdd79e45946586af4c280025dede2ca7c071b322911c274e32ed5f6d7"
+    },
+    {
+      "path": "scripts/grok-pwa-plugin.test.mjs",
+      "sha256": "a5879b9fbb7e57f3f1816e2843b48dbfc65d3fda6a82bf30fb782c813e177b16"
+    },
+    {
+      "path": "scripts/install-page.html",
+      "sha256": "0edde3eb47d24c0a21d95fa372531833222bf8cb143d79cd4e96e2a7f37c7edc"
+    },
+    {
+      "path": "scripts/locale.test.mjs",
+      "sha256": "423aecb754bad657fdb11046bbaaaaaaf3ea37afcbdf0e6e32e70004deacd995"
+    },
+    {
+      "path": "scripts/preflight.mjs",
+      "sha256": "32144125e039bb3794abce3b0be81b4b2c4b13beab4a90927da7e733be5af7d6"
+    },
+    {
+      "path": "scripts/preflight.test.mjs",
+      "sha256": "b2e4e5bb16be3233e86aac07c4d9168d4b2b84b1266c6885981cc00a10e758af"
+    },
+    {
+      "path": "scripts/receipt.mjs",
+      "sha256": "8f0a5ec3370d44f65a0c083b957c4c1cd195f299b9447aca16b97618ca319204"
+    },
+    {
+      "path": "scripts/receipt.test.mjs",
+      "sha256": "7463592d4a9a0dca007e9da8dd34920198bec0230b11eb62ebb43b07653f8954"
+    },
+    {
+      "path": "scripts/start-runtime.mjs",
+      "sha256": "19144e9ad1f8a2518f1b812f3bba55358ae62720d21878677a0afcef06651cbd"
+    },
+    {
+      "path": "scripts/validate_template.mjs",
+      "sha256": "1f2098e9d13b5577f21dd9afbcb37900b01a997824dc220a798a3a1a8a9eef30"
+    },
+    {
+      "path": "scripts/verify-runtime.mjs",
+      "sha256": "e07bc60d8ffe3cc3d0f11319518b8af830983477831eb4e59c2f19dc6a95a0be"
+    },
+    {
+      "path": "scripts/with-app-env.mjs",
+      "sha256": "08638df33eb0a8b2e80b9805648395a972e474e4171752ea9c8c58220dce8e70"
+    },
+    {
+      "path": "scripts/with-app-env.test.mjs",
+      "sha256": "163359a8958af85e294f596bebf0d5e8ea630b936533917e24bd9fac4423eed1"
+    },
+    {
+      "path": "scripts/write-atomic.test.mjs",
+      "sha256": "0d93b3c1ea8f125b128eebc015dd415535bac531b43fcb2f74465539d5923858"
+    },
+    {
+      "path": "src/components/canvas/atelier-world.tsx",
+      "sha256": "1ac76cbf29f3bd941a1a09187f478866715affb1feb5906271ca9d52028bc6e1"
+    },
+    {
+      "path": "src/components/canvas/canvas-fallback.tsx",
+      "sha256": "9070f1402e9e4b35077177b1df94beca090c5a350a5afc4fcd571b0f0ff3be48"
+    },
+    {
+      "path": "src/components/canvas/frame-asset.tsx",
+      "sha256": "bd06f73aa4ea0468de3b9e87ae69cf25db50ae351f9e30bb0f7c621277b5a86f"
+    },
+    {
+      "path": "src/components/canvas/hero-scene.tsx",
+      "sha256": "e6de69a9d2d65082bf74115dcaffb66435ba39541bd17a9a0267454a6d91e7a2"
+    },
+    {
+      "path": "src/components/canvas/loading-veil.tsx",
+      "sha256": "6fa322264f9cf46b550fa2ba03704e410dccd9028791c9029af719d39001d480"
+    },
+    {
+      "path": "src/components/canvas/quality.ts",
+      "sha256": "e0e708be6000f19329ca5321ac400a5268c6235ff8ef6c0822c999eabc59e1ab"
+    },
+    {
+      "path": "src/components/canvas/runtime-hooks.ts",
+      "sha256": "d4fd89e8e311b258f7f99bdd11eb04543f2ec9c66a0e0ab02bf07106e78fa5cc"
+    },
+    {
+      "path": "src/components/canvas/runtime.tsx",
+      "sha256": "029a8d2ca4ce210a8d8ed27041874c3d37e8a3592bae90ee21350efe12d70575"
+    },
+    {
+      "path": "src/components/canvas/webgl-boundary.tsx",
+      "sha256": "2ac63a0f397b8bb4f988cf8dbef6ee16bc14b36dd32d70090f5be20e39757ce2"
+    },
+    {
+      "path": "src/components/canvas/webgl-support.test.ts",
+      "sha256": "0d08adc9ce58353e9b518742ab4ed96a37cf2d180ad719a9507ccccdd4b64993"
+    },
+    {
+      "path": "src/components/canvas/webgl-support.ts",
+      "sha256": "17b982c08e3126a7a552af681260072ed70ca913ddcfc57393bf5a02ea7af23e"
+    },
+    {
+      "path": "src/components/foodtruck/truck-showroom.tsx",
+      "sha256": "58991856c892aa8d047f8875062c00b20ea6d615918f0797b4181ca2c6550995"
+    },
+    {
+      "path": "src/components/layout/site-chrome.tsx",
+      "sha256": "a40c9b3f2609ae5912191b0a13f315f73a0d33ac7296b29238338ae96b27c16b"
+    },
+    {
+      "path": "src/components/layout/site-footer.tsx",
+      "sha256": "b72870aca591d5860512d3242ee9ae4778d2295b24d0747d1e6a6e72c2ea530c"
+    },
+    {
+      "path": "src/components/layout/site-nav.tsx",
+      "sha256": "47266ce1fef48c6b630be99f4eef529831d93d9c98aaf0ede84b13b677cd50ef"
+    },
+    {
+      "path": "src/components/ops/local-data.tsx",
+      "sha256": "a96019ea96203773a5a7ec68579d0310249a756707eb1220dbfa4d494fba12cb"
+    },
+    {
+      "path": "src/components/ops/ops-nav.tsx",
+      "sha256": "dad37291df8d0b7fcbd0edf1abdc962fd4d2de0baffc5aff2054841858899fa8"
+    },
+    {
+      "path": "src/components/portfolio-evidence.tsx",
+      "sha256": "b6c042c9cce436059ba8c507ed7490d084ad72cba51a78cc181e54572726abf0"
+    },
+    {
+      "path": "src/components/scene-stage.tsx",
+      "sha256": "6d686108f229fa53c4390bdb0efc82098d234850a76d2834adfd7eec265a9593"
+    },
+    {
+      "path": "src/components/work-card.tsx",
+      "sha256": "f41edd77b9b0262d1302e163db8929a3e0bf815f9bc400bd2d7368672f48eeab"
+    },
+    {
+      "path": "src/drive/DriveApp.tsx",
+      "sha256": "429a768328a1b64003fa07540dab5bc405c90a6533c7ffa795b94a3a57019131"
+    },
+    {
+      "path": "src/drive/data/concepts.ts",
+      "sha256": "c87f1a776319ea3ccb010f42e19315a3a6cb44222ad2436bb0802f3b86933e4c"
+    },
+    {
+      "path": "src/drive/data/i18n.ts",
+      "sha256": "87a8d5ac353d4cb4da5d2ea3147613376d957c91c9e7b52e9e9f6fa28dd0b11e"
+    },
+    {
+      "path": "src/drive/data/projects.ts",
+      "sha256": "272f5a2cdad02e8940ff455102c91aa128718aa640e6bf014d2ea5406dd08e45"
+    },
+    {
+      "path": "src/drive/data/vehicle.ts",
+      "sha256": "9bac5b070a1425f2300a54ea62ff042c347eebe64d672f539e371645ea6ba79f"
+    },
+    {
+      "path": "src/drive/store.ts",
+      "sha256": "c36c16f223c26a5b7d8e649a17562e7ce8444661242793ca6e8f4caa0777f0ed"
+    },
+    {
+      "path": "src/drive/systems/audio.ts",
+      "sha256": "8d69f5784e1da0bfe1d640fe671691dc1a69aa4f2f13baeaa385e3e2f7a1ec45"
+    },
+    {
+      "path": "src/drive/systems/dayNight.ts",
+      "sha256": "0829cc73d17e7cc36e3d1f7b521ddf38efe848c6227ad7423a6f9ceaf6e0d792"
+    },
+    {
+      "path": "src/drive/systems/input.test.ts",
+      "sha256": "f287625db869d9dd1f96e60324794ec015458eab50352ec7108cb06efa9ca116"
+    },
+    {
+      "path": "src/drive/systems/input.ts",
+      "sha256": "4e262091d8e0142998eb052840a64c79ac675e7f9922586c2b57052b3dda2685"
+    },
+    {
+      "path": "src/drive/systems/localization.test.ts",
+      "sha256": "98e18211496b9b66b46ad680e57ec4424a4a4db6179f8ca8066f9525b2044e16"
+    },
+    {
+      "path": "src/drive/systems/qa.ts",
+      "sha256": "0b20705406365454b8560c7dd2e1eca3c0f1d43131ba97a8223e068c6105add5"
+    },
+    {
+      "path": "src/drive/systems/save.test.ts",
+      "sha256": "52bfc63ed5a46fb044c5304127e853399b107d08b96237208d8792d0f3d0c521"
+    },
+    {
+      "path": "src/drive/systems/save.ts",
+      "sha256": "404f0ccd1df98ecc7b77657c7f191d4a2aa8323b6d204b2f208c628e950e5ac2"
+    },
+    {
+      "path": "src/drive/systems/sim.test.ts",
+      "sha256": "d06ca1c19ceebc1914b1bcdc62e66caf744e904d467f8f387b0666e6b07c6611"
+    },
+    {
+      "path": "src/drive/systems/sim.ts",
+      "sha256": "d2d6304bca38e569c46abf52538bb9488bec69fb234d007c16f395e795a873eb"
+    },
+    {
+      "path": "src/drive/systems/truck-asset.test.ts",
+      "sha256": "d981613f0296509d543981cfd0bffa31fb70b9153dfa6fd4cd5a719c049f0655"
+    },
+    {
+      "path": "src/drive/systems/truck-asset.ts",
+      "sha256": "e8d5bb95f0f14d1d6dc55c48eac61e3f5b6d561f499851f595b3a185e6358174"
+    },
+    {
+      "path": "src/drive/systems/vehicle.test.ts",
+      "sha256": "3ad7261e0585f9cc62d65dc5c27bf4d7fa6c1a74b4f8f802bec0cfe997775703"
+    },
+    {
+      "path": "src/drive/ui/Catalog.tsx",
+      "sha256": "087c83dd9b924a183d8182eeb738c09a125fc9687e5bdc7db28b90d2673b771d"
+    },
+    {
+      "path": "src/drive/ui/HUD.tsx",
+      "sha256": "a46f58ee09e132d80df1a5c8192965ffbf030c38786063f088c3c804e1d95450"
+    },
+    {
+      "path": "src/drive/ui/Minimap.tsx",
+      "sha256": "f7f8d983cd27b402515d58dae8834dbd5af3483743ae253e77c22ef06d899c5a"
+    },
+    {
+      "path": "src/drive/ui/ProjectModal.tsx",
+      "sha256": "8d81e0453628a6b94c84ee17e55dcfeb4a49ab4777be3a9529d341bbc3f4bf9d"
+    },
+    {
+      "path": "src/drive/ui/Settings.tsx",
+      "sha256": "4a33c968d28ca45ff182569e577d01b06fb1246df8b413587167e72c46e75eb4"
+    },
+    {
+      "path": "src/drive/ui/StartScreen.tsx",
+      "sha256": "40e5da10bc54a6d54b6199b53aa65064128e6cd270ab8c79bdd108ac8e7228e4"
+    },
+    {
+      "path": "src/drive/ui/StudyFallback.tsx",
+      "sha256": "60b8f283b7fe7d10f0b77b2682755bd142ee35cea066088a7a1ddb0eb5705a4d"
+    },
+    {
+      "path": "src/drive/ui/TouchControls.tsx",
+      "sha256": "f3ff4a6558128dba073837017b048078487bb86036ec211f0c9bed2fdde8870c"
+    },
+    {
+      "path": "src/drive/world/Car.tsx",
+      "sha256": "3011917ef42482cb5a1a9d85c4cc7efdcb51dad3a371d6396aa20da9407e7ff6"
+    },
+    {
+      "path": "src/drive/world/Collectibles.tsx",
+      "sha256": "bbed61e8f6263b683f41ac60258c5707ce3165503836339cf7018d758ded0de3"
+    },
+    {
+      "path": "src/drive/world/Environment.tsx",
+      "sha256": "6a539a7035fbb7e4391f384d1b722164851305c6c4d01bd9b71af2476b6e4690"
+    },
+    {
+      "path": "src/drive/world/Experience.tsx",
+      "sha256": "9f9f79d1463a48026ac8c98cb75552d827c8c071f41a02339afe0f07c73296bd"
+    },
+    {
+      "path": "src/drive/world/FoodTruckBody.tsx",
+      "sha256": "086c11f5383c8e6ed7517018521135e9b99523ffaf4c6268f9f9b3443df7fa9c"
+    },
+    {
+      "path": "src/drive/world/Landmarks.tsx",
+      "sha256": "b74c73b3618af46a48b03e21f4b5fcea3bf8c30d40a0226766c11303e14ee442"
+    },
+    {
+      "path": "src/drive/world/Waypoint.tsx",
+      "sha256": "91cd037e411834c3a6699b992a7063207c33ee1622533ec1bcabab770ca5a9f5"
+    },
+    {
+      "path": "src/drive/world/Weather.tsx",
+      "sha256": "d9e559fb34f7c24f216abe049f23ab105e8e54c198899c6518354aa057d20989"
+    },
+    {
+      "path": "src/lib/app-data/client.server.ts",
+      "sha256": "f9990503f08ece0f2782c8c61a4da127084b8c7404951b891b0e94e74da9deec"
+    },
+    {
+      "path": "src/lib/auth/gate-identity.test.ts",
+      "sha256": "bdab2610d80a911a7c3ac208c98f4e196c80193dcbda0a7030950338e9c0700d"
+    },
+    {
+      "path": "src/lib/auth/use-current-user.ts",
+      "sha256": "5b05e49493c1dc52f5eff471ac52918399bda8d472ba791ec5cd813236d04d6d"
+    },
+    {
+      "path": "src/lib/copy-zh.ts",
+      "sha256": "630f62c9455dcbf523430d61f169a42c1da6052e29c1bf2629ea023e750f2361"
+    },
+    {
+      "path": "src/lib/copy.ts",
+      "sha256": "ef3494eb1e02702f4ea89d91dd8ada3a26b380ad6b0985ba98bd964590591d76"
+    },
+    {
+      "path": "src/lib/error-component.tsx",
+      "sha256": "20fe79830481efdefcd92b497c3d3c3307607a18de1d4e89a3c1908bdbd55c3d"
+    },
+    {
+      "path": "src/lib/foodtruck/copy.ts",
+      "sha256": "b288f51799f958968926e4cc103adfd75df4703b223350ef99b251aacdf1cc89"
+    },
+    {
+      "path": "src/lib/foodtruck/model.test.ts",
+      "sha256": "8bfc74dbaeb5fba1482f03da63dfe139284f336e7036812976fd82117b1b296f"
+    },
+    {
+      "path": "src/lib/foodtruck/model.ts",
+      "sha256": "4d79fc1bdf2f13d673fd28bb322fe35513954869366858242e9c844637ec4007"
+    },
+    {
+      "path": "src/lib/foodtruck/use-foodtruck.ts",
+      "sha256": "f9a2c89edb91c755288da3389f7b8a96d7a7441653c8de83324b0512ccc73f87"
+    },
+    {
+      "path": "src/lib/forge/config.d.mts",
+      "sha256": "362bac25811d9cd1713ad818c58c006a8029496ffca9f715037b2e5ac13383d6"
+    },
+    {
+      "path": "src/lib/forge/config.mjs",
+      "sha256": "cc201e5753ef58b3a5a28057f533431c7b316ef0584fc9517346eb66061a424e"
+    },
+    {
+      "path": "src/lib/forge/copy.ts",
+      "sha256": "5835326f479caf564d8473422cac2f8b485f49977238cf16d723c8b1b5f9cea4"
+    },
+    {
+      "path": "src/lib/lang.ts",
+      "sha256": "84cb7127c21094930df16c1b266987bb8bd6652a44d121e12ef7f3d120cf357b"
+    },
+    {
+      "path": "src/lib/locale.d.mts",
+      "sha256": "0fba311ba138a4dea509a7b2deaecd6a4a50d4f2ef29e8953341c761001f7724"
+    },
+    {
+      "path": "src/lib/locale.mjs",
+      "sha256": "8eab5b9c7f0dd0ab67881981c4af735dc5840c10e07de5ebe2b67946386bd5f7"
+    },
+    {
+      "path": "src/lib/ops/copy-zh.ts",
+      "sha256": "3a0e3e3ae74a19f3ee314230c2e11ae916fe54bb8b51bab689576910c2046d8f"
+    },
+    {
+      "path": "src/lib/ops/engine.ts",
+      "sha256": "b42c9b447dc77240064722f91dd96fb408ad91b0f8c4c063b2a5e321c45a22cc"
+    },
+    {
+      "path": "src/lib/ops/index.ts",
+      "sha256": "6bc8b5eb34e06e023020169a8073520606896e39294cf327c08cc6c140a5cc5b"
+    },
+    {
+      "path": "src/lib/ops/localize.ts",
+      "sha256": "c0053e60a14925994cbe45111d0b3394721d0a05915706512bcf71440b118472"
+    },
+    {
+      "path": "src/lib/ops/ops.test.ts",
+      "sha256": "6265aaaf1e42fc168269491deab3be586d3c46091297e98fd92065c874da1350"
+    },
+    {
+      "path": "src/lib/ops/storage.ts",
+      "sha256": "d4e1bfb524edf6b66795d695068a5509552c2f52d2d7c3c989883b547bd9db63"
+    },
+    {
+      "path": "src/lib/ops/store.ts",
+      "sha256": "126f31dcca6fd320ee335ad732a7bfa86f030d05ff3111c0d84967f181542d1b"
+    },
+    {
+      "path": "src/lib/ops/types.ts",
+      "sha256": "4df103cc897858e34c4e7fec9e232b32f458f3be371d67beecd6c76a7d16c9b6"
+    },
+    {
+      "path": "src/lib/portfolio-profiles.ts",
+      "sha256": "b500a405048636dda5142c2dcd6d1ceeb2fdc88729f6ff6ccb29175e51b8a369"
+    },
+    {
+      "path": "src/lib/works.ts",
+      "sha256": "02369c137644add633dcc4294f0c809589913697783fa49fce73fc760a52dfe9"
+    },
+    {
+      "path": "src/routes/__root.tsx",
+      "sha256": "5fa5216ca390e318576175fad33485bb97e4eb36b9ad7397c1a78e3224bf242b"
+    },
+    {
+      "path": "src/routes/automations.tsx",
+      "sha256": "4e893bb69c0d04125c55e18e3c3781cd40a550ac17507161e49330daa611a25e"
+    },
+    {
+      "path": "src/routes/contact.tsx",
+      "sha256": "896e4aa58df3b15f3fbd632cb514ae606e29d3c119c44a540bdda7e533c97553"
+    },
+    {
+      "path": "src/routes/desk.tsx",
+      "sha256": "fd5b9431ad41c32ec12250e0c3c614c334517091f69db1af5286fdae045fadce"
+    },
+    {
+      "path": "src/routes/foodtruck.tsx",
+      "sha256": "b2e678ca492982cd8571b735991a1aeab2cb4b6407311a528c92404342db0595"
+    },
+    {
+      "path": "src/routes/forge.tsx",
+      "sha256": "90fa54c1790368f69da2642e89fadfc2f8a53bf48b99dd10d856f66e6b692da1"
+    },
+    {
+      "path": "src/routes/gallery.tsx",
+      "sha256": "ef44c2a0938b666ea127457cd808b4f059b01835142ffda0a8b40d0e00a88a8e"
+    },
+    {
+      "path": "src/routes/index.tsx",
+      "sha256": "f683f9daae41a0c9f1b043acb25c2fb7329c7a2e75bb4fd9653bddefff9dc99e"
+    },
+    {
+      "path": "src/routes/kit.tsx",
+      "sha256": "239c8cb561e8b2908480751a9953cb055ffde8a49013bcb2ecf9c43a19be9ca9"
+    },
+    {
+      "path": "src/routes/marketing.tsx",
+      "sha256": "c34548e8d0820ad161fce16e6847e7eadf0a8e367661b3250b16c8fcf38e56fb"
+    },
+    {
+      "path": "src/routes/people.$person.tsx",
+      "sha256": "7c846f92832d6a9cc6598737c992a3820a50e4098e0de95ddafc096920a44e2c"
+    },
+    {
+      "path": "src/routes/studio.tsx",
+      "sha256": "97531c50ab95beb8def506039eaff760cac0c9de8609c5f7218b64f0f35cce83"
+    },
+    {
+      "path": "src/routes/work.$slug.tsx",
+      "sha256": "070b5036f93dd03bed3b33557f0f43eae8f913c82bbee8a8fb5ddc4e82dacb14"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "b8f4f84b4657d32e5933f1bc150e96266b07a5c6eb7f627233ffef0008d51534"
+    },
+    {
+      "path": "startup.sh",
+      "sha256": "3151bb543b8664f9fed0916153d26f14c42f83392d48183ade02a7b694cdbca8"
+    },
+    {
+      "path": "templates/creative-studio.v1.json",
+      "sha256": "eff03ab8d43d31505e8680a560e5822ab4750312ac5c351b332076587fb5c476"
+    }
+  ]
+}

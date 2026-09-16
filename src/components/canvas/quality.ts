@@ -8,5 +8,6 @@ export function getQuality(): Quality {
   if (memory !== undefined && memory <= 2) return "low";
   const cores = navigator.hardwareConcurrency ?? 8;
   if (cores <= 2) return "low";
+  if (window.matchMedia("(pointer: coarse)").matches) return "low";
   return "high";
 }

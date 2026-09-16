@@ -1,15 +1,12 @@
-import {
-  createRootRoute,
-  HeadContent,
-  Outlet,
-  Scripts,
-} from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { AuthProvider } from "@/lib/auth/provider";
-import { useLang } from "@/lib/lang";
+import { Button } from "@/components/ui/button";
+import { useCopy, useLocale } from "@/lib/copy";
+import { htmlLang, useLang } from "@/lib/lang";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "SIRAWAT × BALL";
@@ -35,6 +32,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootDocument,
+  notFoundComponent: PageMissing,
 });
 
 function RootDocument() {
@@ -71,8 +69,36 @@ function RootDocument() {
 
 function HtmlLang() {
   const lang = useLang((s) => s.lang);
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+    void Promise.resolve(useLang.persist.rehydrate()).finally(() => setHydrated(true));
+  }, []);
+  useEffect(() => {
+    document.documentElement.lang = htmlLang(lang);
+    if (!hydrated) return;
+    document.documentElement.dataset.appReady = "true";
+    return () => {
+      delete document.documentElement.dataset.appReady;
+    };
+  }, [lang, hydrated]);
   return null;
+}
+
+function PageMissing() {
+  const copy = useCopy();
+  const lang = useLocale();
+  const description = {
+    en: "This page could not be found. Browse the work index to continue.",
+    th: "ไม่พบหน้านี้ ดูสารบัญผลงานเพื่อไปต่อ",
+    zh: "未找到此页面。请返回作品目录继续浏览。",
+  }[lang];
+  return (
+    <main className="mx-auto flex min-h-[70svh] max-w-xl flex-col items-center justify-center px-4 pt-20 text-center">
+      <h1 className="font-display text-3xl">{copy.notFound.title}</h1>
+      <p className="mt-3 text-muted">{description}</p>
+      <Button asChild className="mt-8">
+        <Link to="/work">{copy.notFound.back}</Link>
+      </Button>
+    </main>
+  );
 }
