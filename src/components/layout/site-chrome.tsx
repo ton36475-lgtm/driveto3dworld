@@ -14,7 +14,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <a href="#content" className="skip-link">
         {{ en: "Skip to content", th: "ข้ามไปที่เนื้อหา", zh: "跳转到内容" }[lang]}
       </a>
-      <SiteNav transparent={immersive} />
+      <SiteNav transparent={immersive && pathname !== "/drive"} />
       <div id="content" className="route-content" key={pathname}>
         {children}
       </div>

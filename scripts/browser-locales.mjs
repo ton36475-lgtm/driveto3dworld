@@ -200,6 +200,7 @@ async function scenario(name, viewport, check) {
     consoleErrors: [],
     mutationRequests: [],
     externalRequests: [],
+    expectedPlatformRequests: [],
     screenshots: [],
   };
   report.scenarios.push(result);
@@ -225,8 +226,20 @@ async function scenario(name, viewport, check) {
     page.on("request", (request) => {
       if (!["GET", "HEAD", "OPTIONS"].includes(request.method()))
         result.mutationRequests.push({ method: request.method(), url: request.url() });
-      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin)
-        result.externalRequests.push(request.url());
+      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin) {
+        const entry = {
+          url: request.url(),
+          method: request.method(),
+          resourceType: request.resourceType(),
+        };
+        // Existing platform chrome: scripts/grok-pwa-shared.mjs injects this exact
+        // script through the Vite plugin and production head middleware.
+        const platformBootstrap =
+          entry.url === "https://grok.com/grok-app-builder/extensions.js" &&
+          entry.method === "GET" &&
+          entry.resourceType === "script";
+        (platformBootstrap ? result.expectedPlatformRequests : result.externalRequests).push(entry);
+      }
     });
     return page;
   }
@@ -249,6 +262,7 @@ async function scenario(name, viewport, check) {
       [],
       "Local workflows must not send network mutations",
     );
+    assert.deepEqual(result.externalRequests, [], "Unexpected external requests are not allowed");
     result.status = "PASS";
   } catch (error) {
     result.error = String(error?.stack ?? error).slice(0, 8000);

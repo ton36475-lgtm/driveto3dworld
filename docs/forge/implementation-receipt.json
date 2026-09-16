@@ -6,7 +6,7 @@
   "files": [
     {
       "path": ".github/workflows/runtime.yml",
-      "sha256": "a2c04cb9961eab621aa620559c361e1eb75a8534baa346ef0f0d053d54a07827"
+      "sha256": "dfe67685f32fcc446cf1e464f2f577925b66861a174cefbe875bef729d70afe6"
     },
     {
       "path": ".gitignore",
@@ -30,7 +30,7 @@
     },
     {
       "path": "blender-mcp-pipeline/FOODTRUCK.md",
-      "sha256": "1b23701116d02e1f579d10974968f225dcccef2b83ab60a2cd5cd74b9ab2cd53"
+      "sha256": "6a5ba413b9cf4ebd7c3793d6938740fef1f06d2e696658833b8d59b9b0221f36"
     },
     {
       "path": "blender-mcp-pipeline/PROMPTS.md",
@@ -38,7 +38,7 @@
     },
     {
       "path": "blender-mcp-pipeline/README.md",
-      "sha256": "4c97565c2d7e4f779cb087035b52f84efe107a3deb23d7d0301e5689ada66403"
+      "sha256": "58a0c92b3eceb985bbdb9b13180aa1b3aeee9d9d3ef4b319ebb79649c160f641"
     },
     {
       "path": "blender-mcp-pipeline/WORKERS.md",
@@ -54,11 +54,11 @@
     },
     {
       "path": "blender-mcp-pipeline/assets/foodtruck-final.blend",
-      "sha256": "f693f0d81f9c9483e508fac1d5dc4eec6ec2719a2a995b9b1e80256d68c31f49"
+      "sha256": "f98b0ae50576397d72d38849966c77fedc157af9894587e69c9818ebc37ff9f9"
     },
     {
       "path": "blender-mcp-pipeline/assets/foodtruck-structural.blend",
-      "sha256": "84ebbf4ae7d6fbbcf43e710bd468fdcbd87e2e8dc84c81bebf43cd461a714ccd"
+      "sha256": "e8b1bcb634e0ddb5d3bb54f3763e96ee952b921bed596b44b80f1b3d7f448f3f"
     },
     {
       "path": "blender-mcp-pipeline/build_assets.py",
@@ -66,11 +66,15 @@
     },
     {
       "path": "blender-mcp-pipeline/build_foodtruck.py",
-      "sha256": "2efcb6d074d78701df2af1bd8036bbf00fcc267f95e4cc155658789f5b50f08d"
+      "sha256": "20fe0a67802b7a2fa3fe776ccad2815b4340ce08b691479596fc79f8c8ef6ad2"
+    },
+    {
+      "path": "blender-mcp-pipeline/check_foodtruck_source.py",
+      "sha256": "cef9bbf479d3d88f2988b12db378a06361b3b01f65d7040ba10d1d6faa46a258"
     },
     {
       "path": "blender-mcp-pipeline/contract.py",
-      "sha256": "bedf3c4a3525e477acb22e4c8df31e5a16d51440d6c5d731c418dd9446833f58"
+      "sha256": "03521e3156d06fdc56d592f8fdf34d2bb80d8792343183c2959dd701b5ebfd9f"
     },
     {
       "path": "blender-mcp-pipeline/evidence/asset-preview.png",
@@ -82,19 +86,23 @@
     },
     {
       "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-baseline.json",
-      "sha256": "3dac62402e4a3d40d180a174b15f096cedfaea973a96d4d1e6d4108d6e435ca7"
+      "sha256": "75a1d162bf4926b29ea8254a48c135f5a0df3fca0e38432aa8d070b86dd8d35a"
     },
     {
       "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-receipt.json",
-      "sha256": "30242686f68924ea878f76d908c08c2e1c7fa2708572e954028467a8d016b701"
+      "sha256": "583bd7bcc8e16e0dba542291bb45fe62216bdf3bc16d2c1de5f42b1e879aa6eb"
     },
     {
       "path": "blender-mcp-pipeline/evidence/foodtruck/khronos-validation.json",
-      "sha256": "4e62dddf53aaf4a3b82fa248d405ee15d7df16ad202f8eb6a09a79c1552181e1"
+      "sha256": "dd9aabb3f9d56ac43fce79bb962b69e2ee179babcc6d6577e3cb5dcc6a59ab26"
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/publication-verification.json",
+      "sha256": "a789bcf60d8a00528919fb210f4965fc3e041f26eae3476e53661b315ea76e03"
     },
     {
       "path": "blender-mcp-pipeline/evidence/foodtruck/source-verification.json",
-      "sha256": "938ce56e61013b9e889d7188b39a517ed4f5436d4feda6e15465e655359d9701"
+      "sha256": "d1bbf6e42c992d04c06a038c41f91f0be7b3789bb736bb418f59af7b845b5b7c"
     },
     {
       "path": "blender-mcp-pipeline/evidence/gltf-validation.json",
@@ -115,6 +123,10 @@
     {
       "path": "blender-mcp-pipeline/export_glb.py",
       "sha256": "36a9ebf815d68c32f865b8f2ef5dc4678344778dbdd75e6dc19b0bf252e03c57"
+    },
+    {
+      "path": "blender-mcp-pipeline/reference_interior.py",
+      "sha256": "faa21641ec3f666ec9e7ea006d677e7e777681f56f329c012a777fc7ece75412"
     },
     {
       "path": "blender-mcp-pipeline/render_preview.py",
@@ -197,8 +209,12 @@
       "sha256": "5a91d7bf880e69836bfbcf986e7f4a06ee9d4e66c5b65a1cbf3d89007fe1167a"
     },
     {
+      "path": "docs/forge/request-coverage.md",
+      "sha256": "0f1b92fdec050f1d87cf37a29487674d0fdad63d7304a483e5cb22a9c6d20e51"
+    },
+    {
       "path": "docs/forge/result-manifest.json",
-      "sha256": "8fd9f401d022de16cf067a69c201d65861210c2ea63ce6e688f461ea52559a26"
+      "sha256": "1f3e6596399af6fe6616ee113127811b996e71fc3ba9d70f1d4b4ca93559bff1"
     },
     {
       "path": "docs/forge/source-reconciliation.md",
@@ -206,7 +222,11 @@
     },
     {
       "path": "docs/forge/trilingual-foodtruck.md",
-      "sha256": "527bfea82bfd782e52b1b3ba69b9df4dfad1c8ae1de890c429fb03252afe5905"
+      "sha256": "5301e73a645e667e70fd7acaefe55a0845deefab469ba5de2affc9e54f1d88a6"
+    },
+    {
+      "path": "docs/forge/truck-reference-map.md",
+      "sha256": "9332a5cf0896ab4a229ce985de9b96fb71073b7234f0393537927ee9e8934d27"
     },
     {
       "path": "docs/forge/validation.md",
@@ -261,8 +281,16 @@
       "sha256": "e75c125ab5ed44c6e11792d60d8e414ab905b3b46712919d977cf54aaf3e64a2"
     },
     {
+      "path": "public/images/foodtruck-interior.webp",
+      "sha256": "712ec0b5efd9fc5b9205a0bd109a34ac1f6c92002f4508b58fb7782156193bf3"
+    },
+    {
       "path": "public/images/foodtruck-preview.webp",
-      "sha256": "0595a4d9e9dae19909751571f4f78dfe694af126ea6cead71de6699935493cd6"
+      "sha256": "13c30cd0359a43896d9a075bb254b7cab6191ef9e8c46b21e4d0d50790c934d2"
+    },
+    {
+      "path": "public/images/foodtruck-rear-interior.webp",
+      "sha256": "0f3e9481a152bd4cbf5e49ebacde86bdac37332fb4dea92e64f47fff707cd06d"
     },
     {
       "path": "public/media/garden-night.jpg",
@@ -302,7 +330,7 @@
     },
     {
       "path": "public/models/foodtruck-body.glb",
-      "sha256": "c850a398b6abddff1f98417649c0e290c652592d4e82ec69288ee1498f326fbe"
+      "sha256": "02c263c45ac75b6555dbbe78164375d938384154d1be3f83733128b5e88fcc01"
     },
     {
       "path": "public/models/manifest.json",
@@ -326,11 +354,15 @@
     },
     {
       "path": "scripts/browser-locales.mjs",
-      "sha256": "6f237144a585e04db37fa653fec308e005589c1a645404744aa32a7f5e9df15a"
+      "sha256": "248e681cdd595bbaa64d59889fbb3780553d683c057691ef603886212f80552c"
     },
     {
       "path": "scripts/browser-ops.mjs",
       "sha256": "607fdfa27679b44b71b1bf497e05c95fca84a5f10e208525045729db62e2fa32"
+    },
+    {
+      "path": "scripts/browser-showroom.mjs",
+      "sha256": "f9e21926726b9cbe30a0a9486c65694d0fa927cd50fecdf9fd94f526111c1c42"
     },
     {
       "path": "scripts/browser-smoke-verdict.mjs",
@@ -346,11 +378,11 @@
     },
     {
       "path": "scripts/browser-spatial.mjs",
-      "sha256": "35ba3b7f3e40410911b285678a6f58fcc7292cf39c52614db4348bf80544b38d"
+      "sha256": "082c873e2e5cf1e0be9af94f420e90869d62f212cc6f671d3954fe5a16bae0be"
     },
     {
       "path": "scripts/browser-truck.mjs",
-      "sha256": "04daf0a01c702565f2dc5b05615457028b189146e409a8551a26e9fac75c6b63"
+      "sha256": "b116deef01989c70f812905329a0ccc51bd7f8351a5724e2d3ef0414fda34c16"
     },
     {
       "path": "scripts/check-auth-invariant.test.mjs",
@@ -461,8 +493,12 @@
       "sha256": "17b982c08e3126a7a552af681260072ed70ca913ddcfc57393bf5a02ea7af23e"
     },
     {
+      "path": "src/components/foodtruck/truck-showroom.tsx",
+      "sha256": "58991856c892aa8d047f8875062c00b20ea6d615918f0797b4181ca2c6550995"
+    },
+    {
       "path": "src/components/layout/site-chrome.tsx",
-      "sha256": "033a6f8a82d600b1f3a2399c53f7490b0b162fa578240fcb566e7609a58ccf8e"
+      "sha256": "a40c9b3f2609ae5912191b0a13f315f73a0d33ac7296b29238338ae96b27c16b"
     },
     {
       "path": "src/components/layout/site-footer.tsx",
@@ -502,7 +538,7 @@
     },
     {
       "path": "src/drive/data/i18n.ts",
-      "sha256": "42fe97c5c86d8a622a441ef1a8010f239cb0c9f2453531d1fed88a49c0992fcb"
+      "sha256": "87a8d5ac353d4cb4da5d2ea3147613376d957c91c9e7b52e9e9f6fa28dd0b11e"
     },
     {
       "path": "src/drive/data/projects.ts",
@@ -510,7 +546,7 @@
     },
     {
       "path": "src/drive/data/vehicle.ts",
-      "sha256": "dd5a03ac0e286879a303db9bcdae61cba86e23348bf55232e88f7bdca75a98fa"
+      "sha256": "9bac5b070a1425f2300a54ea62ff042c347eebe64d672f539e371645ea6ba79f"
     },
     {
       "path": "src/drive/store.ts",
@@ -538,7 +574,7 @@
     },
     {
       "path": "src/drive/systems/qa.ts",
-      "sha256": "4790ace20b6609b6d6843816711eecfcffda4c0b3537032c95e3cf99b2ea830f"
+      "sha256": "0b20705406365454b8560c7dd2e1eca3c0f1d43131ba97a8223e068c6105add5"
     },
     {
       "path": "src/drive/systems/save.test.ts",
@@ -554,19 +590,19 @@
     },
     {
       "path": "src/drive/systems/sim.ts",
-      "sha256": "76b69cf1778325368662a3bf32223a5c1270d0073d8f4dc309f83209eb9d4a5c"
+      "sha256": "d2d6304bca38e569c46abf52538bb9488bec69fb234d007c16f395e795a873eb"
     },
     {
       "path": "src/drive/systems/truck-asset.test.ts",
-      "sha256": "eaa99f2d5d167ed108d03f1ef7da3c1bacaa1ccdefafdc2dce6b798dcd64f153"
+      "sha256": "d981613f0296509d543981cfd0bffa31fb70b9153dfa6fd4cd5a719c049f0655"
     },
     {
       "path": "src/drive/systems/truck-asset.ts",
-      "sha256": "9e8e7681a4322facb7a69377d4b2aac0fafeb2910a978e6789baba3c868fd81e"
+      "sha256": "e8d5bb95f0f14d1d6dc55c48eac61e3f5b6d561f499851f595b3a185e6358174"
     },
     {
       "path": "src/drive/systems/vehicle.test.ts",
-      "sha256": "18390ae999354595d62736c76f1c5e7651bbf965d339f38d530dd70581c8dd87"
+      "sha256": "3ad7261e0585f9cc62d65dc5c27bf4d7fa6c1a74b4f8f802bec0cfe997775703"
     },
     {
       "path": "src/drive/ui/Catalog.tsx",
@@ -574,7 +610,7 @@
     },
     {
       "path": "src/drive/ui/HUD.tsx",
-      "sha256": "353c523022ef6294a79035f02c6632fa46c43b1017facb8abbcabe37af436918"
+      "sha256": "a46f58ee09e132d80df1a5c8192965ffbf030c38786063f088c3c804e1d95450"
     },
     {
       "path": "src/drive/ui/Minimap.tsx",
@@ -602,7 +638,7 @@
     },
     {
       "path": "src/drive/world/Car.tsx",
-      "sha256": "68d06e9958ddc45f635d937400a9ad17b207a5b136d452293725c19ffe1d0f05"
+      "sha256": "3011917ef42482cb5a1a9d85c4cc7efdcb51dad3a371d6396aa20da9407e7ff6"
     },
     {
       "path": "src/drive/world/Collectibles.tsx",
@@ -618,7 +654,7 @@
     },
     {
       "path": "src/drive/world/FoodTruckBody.tsx",
-      "sha256": "66ac3b15912faa7333152386bfc6b42b734f1471fc04053eee4cf255c6b5ad28"
+      "sha256": "086c11f5383c8e6ed7517018521135e9b99523ffaf4c6268f9f9b3443df7fa9c"
     },
     {
       "path": "src/drive/world/Landmarks.tsx",
@@ -658,7 +694,7 @@
     },
     {
       "path": "src/lib/foodtruck/copy.ts",
-      "sha256": "f59fb84469d70e43dffc6030781b23f46633599ae334e9c0b1e65fd38123c6b2"
+      "sha256": "b288f51799f958968926e4cc103adfd75df4703b223350ef99b251aacdf1cc89"
     },
     {
       "path": "src/lib/foodtruck/model.test.ts",
@@ -754,7 +790,7 @@
     },
     {
       "path": "src/routes/foodtruck.tsx",
-      "sha256": "4086a14ddf924ce3bcd0e02be74a61dcac6a24b0beb2c546c1a932c451f31925"
+      "sha256": "b2e678ca492982cd8571b735991a1aeab2cb4b6407311a528c92404342db0595"
     },
     {
       "path": "src/routes/forge.tsx",
@@ -790,7 +826,7 @@
     },
     {
       "path": "src/styles.css",
-      "sha256": "ecfc4a4622ec98c9ed44fac13fd01fba7a384bdb41c6e7a05bee0b5cc1ac7bcc"
+      "sha256": "b8f4f84b4657d32e5933f1bc150e96266b07a5c6eb7f627233ffef0008d51534"
     },
     {
       "path": "startup.sh",

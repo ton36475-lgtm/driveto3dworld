@@ -2,7 +2,7 @@
 
 ## User-directed extension
 
-Extend the canonical `driveto3dworld` portfolio, which already reconciles the three supplied repositories, with Thai, Simplified Chinese and English; purposeful motion; an original Blender food truck; and useful real-world handoffs. Preserve existing local operations, auth/database-off defaults, project provenance, accessible fallback, and A-left/D-right controls.
+Extend the canonical `driveto3dworld` portfolio, which already reconciles the three supplied repositories, with Thai, Simplified Chinese and English; purposeful motion; a Blender reconstruction based on all six supplied truck images; and useful real-world handoffs. Preserve existing local operations, auth/database-off defaults, project provenance, accessible fallback, and A-left/D-right controls.
 
 This phase follows verified checkpoint `60a73e5ffe4e094c0d325e5d8084beeb3dcefdc4`. Both Node 22 and 24 passed [CI run 35070021809](https://github.com/ton36475-lgtm/driveto3dworld/actions/runs/35070021809), including actual reduced-motion frame idling and context-loss recovery. That checkpoint does not certify the new changes in this document.
 
@@ -13,7 +13,7 @@ This phase follows verified checkpoint `60a73e5ffe4e094c0d325e5d8084beeb3dcefdc4
 - Visual direction: ink, bone, cool silver, readable multilingual typography; a serving-side Blender render forms the new `/foodtruck` hero. Real business data starts empty.
 - Motion: one route entrance (420 ms opacity/8 px travel), one truck-image entrance (850 ms), card hover/focus cues; transform/opacity only. No continuous decorative loop. Reduced-motion removes these animations and hover transforms; existing 3D pause/visibility rules remain.
 - Layout: keyboard controls and language buttons remain reachable at 360/390/768/1440 pixels. No clipped form controls or horizontal page overflow.
-- Model: editable structural/final `.blend` sources, static GLB body with separate runtime wheels, conservative body clearance, camera framing and geometry fallback. Actual viewport rendering is a separate gate from offline glTF validity.
+- Model: photo-based dark pickup/cab-over body with wood-lined interior, sink, counters, freezer, alcove, cabinets, roof rails and ladder; proportions are inferred from images. Editable structural/final `.blend` sources, static GLB body with separate runtime wheels, conservative body clearance, camera framing and geometry fallback. Actual viewport rendering is a separate gate from offline glTF validity.
 
 ## Working boundaries
 
@@ -25,6 +25,12 @@ Admission is strict, bounded to 128 KiB UTF-8, at most 40 menu entries and 40 st
 
 Legacy operations backups retain EN/TH bytes and accept missing Chinese. Untranslated legacy ready drafts become drafts with an explicit translation notice. No automated translation is silently presented as approved marketing.
 
+## Reference truck and inspection
+
+All six images are inventoried in [truck-reference-map.md](truck-reference-map.md). The original pre-reference concept remains in Git history. The shipped replacement is 1,209,436 bytes and 20,026 triangles with 30 draw primitives. Structural/final Blender sources are editable; an independent reopen compared all 38 locked objects and rejected three deliberate structural mutations. The exact GLB has zero Khronos errors and warnings. Root and independent reviewer inspected all three matching Cycles renders.
+
+`src/components/foodtruck/truck-showroom.tsx` provides exterior orbit/zoom, kitchen/alcove and kitchen/rear presets, two operable service hatches and camera reset. Rendering is on demand and pauses out of view. Unsupported WebGL has three distinct local Blender images; a failed GLB has a procedural truck. The same source model is driveable at `/drive`, with revised wheel anchors, conservative clearance, lighting and camera framing. No measured dimensions or physical vehicle connection are claimed.
+
 ## Third-party sources
 
 - Google Maps' [documented universal URLs](https://developers.google.com/maps/documentation/urls/get-started) support the manual directions handoff (`api=1`, destination, driving). No Maps API credential is needed or stored for this link.
@@ -34,17 +40,23 @@ Legacy operations backups retain EN/TH bytes and accept missing Chinese. Untrans
 
 ## Acceptance and evidence
 
-| Requirement | Verification |
-|---|---|
-| Locale storage, copy parity, Forge schema and profile/work content | `scripts/locale.test.mjs` |
-| All Drive locales and old save compatibility | `src/drive/systems/localization.test.ts`, `save.test.ts` |
-| Operations legacy migration and complete Chinese drafts | `src/lib/ops/ops.test.ts` |
-| Price, URL, calendar, coordinate, backup and truth-state negatives | `src/lib/foodtruck/model.test.ts` |
-| Actual shipped GLB loading, isolated clones, anchor bounds, malformed fallback | `src/drive/systems/truck-asset.test.ts`, `vehicle.test.ts` |
-| Language switching/persistence, mobile layout, real menu/stop editing, import races and actual downloads/restoration | `scripts/browser-locales.mjs` in production CI |
-| Existing operations and spatial regressions | `browser-ops.mjs`, `browser-spatial.mjs`, `browser-smoke.mjs` |
-| Build, types, lint, clean installs and HTTP routes | `.github/workflows/runtime.yml`, Node 22/24 |
+| Requirement                                                                                                          | Verification                                                  |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Locale storage, copy parity, Forge schema and profile/work content                                                   | `scripts/locale.test.mjs`                                     |
+| All Drive locales and old save compatibility                                                                         | `src/drive/systems/localization.test.ts`, `save.test.ts`      |
+| Operations legacy migration and complete Chinese drafts                                                              | `src/lib/ops/ops.test.ts`                                     |
+| Price, URL, calendar, coordinate, backup and truth-state negatives                                                   | `src/lib/foodtruck/model.test.ts`                             |
+| Actual shipped GLB loading, isolated clones, anchor bounds, malformed fallback                                       | `src/drive/systems/truck-asset.test.ts`, `vehicle.test.ts`    |
+| Language switching/persistence, mobile layout, real menu/stop editing, import races and actual downloads/restoration | `scripts/browser-locales.mjs` in production CI                |
+| Actual showroom orbit/zoom, camera/hatch pixels, redraw/idle and three no-WebGL views                                | `scripts/browser-showroom.mjs` in production CI               |
+| Actual truck steering, malformed-asset driving and six responsive localized HUD hit tests                            | `scripts/browser-truck.mjs` in production CI                  |
+| Existing operations and spatial regressions                                                                          | `browser-ops.mjs`, `browser-spatial.mjs`, `browser-smoke.mjs` |
+| Build, types, lint, clean installs and HTTP routes                                                                   | `.github/workflows/runtime.yml`, Node 22/24                   |
 
 Independent review found and repaired stale sold-out status during price editing, an asynchronous import-selection race, and missing React list keys. Remaining browser results must be tied to the exact subsequent commit and run, not inferred from this document or the previous passing checkpoint.
+
+Local replacement-tree checks: 322 Node tests passed, 4 explicit optional host-document skips, build/typecheck/lint passed. These local results do not replace the pending exact-commit Node 22/24 browser run.
+
+The intermediate foundation CI run [35073030132](https://github.com/ton36475-lgtm/driveto3dworld/actions/runs/35073030132), commit `33093b55f5c7d2ba83729f5d67da3b3bc8c45030`, exposed three findings: a lowercase machine-key expectation against the now-localized “Slate” display; a preserved Grok host script mistakenly classified as map/contact traffic; and a minimap intercepting Settings clicks. The first assertion now expects the display label, the second only exempts the exact existing platform script GET, and the HUD now flows below its toolbar with ordinary pointer hit tests in all three languages.
 
 Rollback: review/revert the additive phase commit(s) to the prior passing checkpoint; preserve newer owner changes and exported local plans. No production deployment or main-branch merge is performed by this phase.

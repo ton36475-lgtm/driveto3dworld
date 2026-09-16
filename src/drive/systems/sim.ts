@@ -113,7 +113,7 @@ export function advanceSimulation(axes: Axes, delta: number) {
   sim.z = clamp(sim.z + sim.vz * dt, -BOUNDS, BOUNDS);
   resolveColliders();
   sim.roll = damp(sim.roll, sim.steer * 0.14 * speedFactor, 8);
-  sim.wheel += sim.speed * dt * 2.4;
+  sim.wheel -= sim.speed * dt / FOOD_TRUCK.wheelRadius;
 }
 
 if (typeof window !== "undefined") {

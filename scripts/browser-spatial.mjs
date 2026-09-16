@@ -157,7 +157,7 @@ try {
     await configuration.getByLabel("Business preset", { exact: true }).selectOption("music-event");
     await preview.getByRole("heading", { name: "Make room for the next performance.", exact: true }).waitFor();
     await configuration.getByLabel("Theme", { exact: true }).selectOption("slate");
-    await preview.getByText("Live preview · concept imagery / slate", { exact: true }).waitFor();
+    await preview.getByText("Live preview · concept imagery / Slate", { exact: true }).waitFor();
     await configuration.getByLabel("Work count", { exact: true }).selectOption("2");
     assert.equal(await preview.getByRole("img").count(), 2);
     result.checks.push("All presets change rendered headings; theme, static scene and density update preview");

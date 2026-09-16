@@ -11,7 +11,7 @@ export function installQA() {
 
   window.__driveQA = {
     getSim: () => ({ x: sim.x, z: sim.z, yaw: sim.yaw, speed: sim.speed, steer: sim.steer }),
-    getVehicle: () => ({ kind: "original-food-truck", ...vehicleAssetState, bodyRoot: FOOD_TRUCK.rootName, wheelCount: TRUCK_WHEELS.length }),
+    getVehicle: () => ({ kind: "photo-reference-food-truck", ...vehicleAssetState, bodyRoot: FOOD_TRUCK.rootName, wheelCount: TRUCK_WHEELS.length }),
     getStore: () => {
       const s = useDrive.getState();
       return {

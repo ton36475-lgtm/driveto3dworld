@@ -1,17 +1,29 @@
 {
   "status": "PASS",
-  "checks": [
+  "source": "foodtruck-final.blend",
+  "sourceSha256": "f98b0ae50576397d72d38849966c77fedc157af9894587e69c9818ebc37ff9f9",
+  "baselineSha256": "75a1d162bf4926b29ea8254a48c135f5a0df3fca0e38432aa8d070b86dd8d35a",
+  "positive": {
+    "status": "PASS",
+    "objectsCompared": 38,
+    "structureHash": "0cf0d3f8e3ea6d785d9c3224ee2465b3323d24d7c0e6a1944daa6331766a42b1"
+  },
+  "negativeChecks": [
     {
-      "name": "persisted-final-structure",
+      "case": "opening runtime joint in stored source",
       "status": "PASS",
-      "exitCode": 0,
-      "diagnostic": "{\"objectsCompared\": 22, \"status\": \"PASS\", \"structureHash\": \"d1865b1c23049ad9e29aa46cc1bdd9bfdcc0aa7c6bbb541091016d62b04d5a75\"}\nBlender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\nRead blend: \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build/foodtruck-004/foodtruck-final.blend\"\n\nBlender quit\n"
+      "rejected": "Truck structure changed: ServingHatch_Pivot,ServingHatch_Pivot_Black,ServingHatch_Pivot_Body,ServingHatch_Pivot_Glass,ServingHatch_Pivot_Trim"
     },
     {
-      "name": "moved-serving-counter-rejected",
+      "case": "one-centimetre windshield vertex change",
       "status": "PASS",
-      "exitCode": 1,
-      "diagnostic": "Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:31:19)\nRead blend: \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build/foodtruck-004/foodtruck-final.blend\"\n\nBlender quit\nTraceback (most recent call last):\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_foodtruck.py\", line 18, in <module>\n    print(json.dumps(verify(baseline,snapshot()),sort_keys=True))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/build_foodtruck.py\", line 264, in verify\n    if changed: raise ValueError('Truck structure changed: '+','.join(changed))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Truck structure changed: Serving_Counter\n\nError: script failed, file: '/workspace/scratch/65529ea62875/repos/driveto3dworld/blender-mcp-pipeline/verify_foodtruck.py', exiting.\n"
+      "rejected": "Truck structure changed: Windshield"
+    },
+    {
+      "case": "missing runtime wheel anchor",
+      "status": "PASS",
+      "rejected": "Truck structure changed: WheelAnchor_FL"
     }
-  ]
+  ],
+  "sceneSavedAfterMutation": false
 }

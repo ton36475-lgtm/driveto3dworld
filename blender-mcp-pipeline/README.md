@@ -79,6 +79,6 @@ This background workflow requires command access, not an interactive Blender add
 
 Using a cheaper capable model for structural work is a routing choice. Cost savings depend on actual model usage, rework and subscription limits; no unlimited/free-usage claim is made.
 
-## Foodtruck concept
+## Reference-informed foodtruck
 
-The separate [S×B FOOD STUDIO pipeline](FOODTRUCK.md) creates the Drive vehicle body, preserves independent structural/final sources, and renders its actual WebP preview. Wheels and day/night lamps remain runtime responsibilities. This original concept is not a measured reconstruction of the user's real truck.
+The separate [foodtruck pipeline](FOODTRUCK.md) reconstructs the visible exterior and interior from six supplied truck images, preserves independent structural/final sources, and renders three actual Blender previews. Wheels, day/night lamps and clone-local opening hatches remain runtime responsibilities. Dimensions are inferred from appearance, not surveyed measurements. Its expanded 45,000-triangle / 1.5 MB budget is explicit; atelier asset defaults remain unchanged.

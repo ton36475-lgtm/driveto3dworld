@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** CI-only functional checks for the original food truck and its asset fallback. */
+/** CI-only functional checks for the photo-reference food truck and its asset fallback. */
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -70,7 +70,7 @@ async function scenario(name, forceFallback, check) {
     await page.locator('[data-scene-stage="grounds"][data-scene-state="ready"]').waitFor({ timeout: 25_000 });
     await page.waitForFunction((status) => window.__driveQA?.getVehicle?.().status === status, forceFallback ? "fallback" : "glb", { timeout: 25_000 });
     result.vehicle = await page.evaluate(() => window.__driveQA.getVehicle());
-    assert.equal(result.vehicle.kind, "original-food-truck");
+    assert.equal(result.vehicle.kind, "photo-reference-food-truck");
     assert.equal(result.vehicle.wheelCount, 4);
     assert.equal(result.vehicle.bodyRoot, "FoodTruck_Body");
     if (!forceFallback) assert.ok(result.assetResponses.includes(200), "Actual body GLB must be served successfully");
@@ -139,6 +139,38 @@ try {
     assert.equal(await page.evaluate(() => window.__driveQA.getStore().muted), true);
     await settings.getByRole("button", { name: "Close", exact: true }).click();
     result.checks.push("Weather and mute settings change the live truck scene state");
+    // Regression for the real minimap-over-Settings failure: use normal hit testing
+    // and normal clicks after responsive/translated toolbar wrapping.
+    result.toolbarLayouts = [];
+    for (const viewport of [{ width: 1440, height: 1000 }, { width: 360, height: 800 }]) {
+      await page.setViewportSize(viewport);
+      for (const { lang, settings: settingsLabel, close } of [
+        { lang: "en", settings: "Settings", close: "Close" },
+        { lang: "th", settings: "ตั้งค่า", close: "ปิด" },
+        { lang: "zh", settings: "设置", close: "关闭" },
+      ]) {
+        await page.evaluate((value) => window.__driveQA.setLang(value), lang);
+        const openSettings = page.getByRole("button", { name: settingsLabel, exact: true });
+        await openSettings.waitFor();
+        await page.evaluate(() => document.fonts.ready);
+        const buttons = await page.getByTestId("drive-hud-toolbar").evaluate((toolbar) =>
+          [...toolbar.querySelectorAll("button")].map((button) => {
+            const r = button.getBoundingClientRect();
+            const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+            return { label: button.getAttribute("aria-label"), hit: button === top || button.contains(top), inside: r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight };
+          }),
+        );
+        assert.ok(buttons.length >= 5 && buttons.every((button) => button.hit && button.inside), `Every ${lang} HUD control is visible and unobstructed at ${viewport.width}px: ${JSON.stringify(buttons)}`);
+        await openSettings.click();
+        const dialog = page.getByRole("dialog", { name: settingsLabel, exact: true });
+        await dialog.waitFor();
+        await dialog.getByRole("button", { name: close, exact: true }).click();
+        result.toolbarLayouts.push({ width: viewport.width, lang, buttons });
+      }
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.evaluate(() => window.__driveQA.setLang("en"));
+    result.checks.push("All English, Thai and Chinese HUD controls are unobstructed at desktop and 360px mobile widths; Settings opens with real clicks");
   });
   await scenario("asset-fallback", true, async (page, result) => {
     await page.evaluate(() => window.__driveQA.teleport(0, 70, 0));

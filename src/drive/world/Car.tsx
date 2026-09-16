@@ -13,8 +13,8 @@ import { isDriveBlocked, useDrive } from "../store";
 import { dayState } from "../systems/dayNight";
 import { installQA } from "../systems/qa";
 import { useReducedMotion } from "@/components/canvas/runtime-hooks";
-import { FoodTruckBody } from "./FoodTruckBody";
-import { FOOD_TRUCK, TRUCK_WHEELS } from "../data/vehicle";
+import { FoodTruckBody, TruckLampFace, TruckWheel } from "./FoodTruckBody";
+import { FOOD_TRUCK, TRUCK_LAMPS, TRUCK_WHEELS } from "../data/vehicle";
 
 export function Car() {
   const reducedMotion = useReducedMotion();
@@ -22,6 +22,7 @@ export function Car() {
   const wheels = useRef<THREE.Group[]>([]);
   const lightL = useRef<THREE.SpotLight>(null);
   const lightR = useRef<THREE.SpotLight>(null);
+  const bodyFill = useRef<THREE.PointLight>(null);
   const targetL = useRef<THREE.Object3D>(null);
   const targetR = useRef<THREE.Object3D>(null);
   const started = useDrive((s) => s.started);
@@ -59,16 +60,17 @@ export function Car() {
     const blocked = isDriveBlocked();
     lamps.front.emissiveIntensity = 0.4 + dayState.night * 2.2;
     lamps.rear.emissiveIntensity = 0.3 + dayState.night * 1.6;
+    if (bodyFill.current) bodyFill.current.intensity = 4 + (1 - dayState.night) * 18;
 
     if (!started) {
       g.position.set(sim.x, sim.y, sim.z);
       g.rotation.y = sim.yaw;
-      if (reducedMotion) state.camera.position.set(sim.x + 7.2, sim.y + 4.8, sim.z + 8.5);
+      if (reducedMotion) state.camera.position.set(sim.x + 8.8, sim.y + 5.5, sim.z + 10.5);
       else {
         const t = state.clock.elapsedTime * 0.08 + 0.7;
-        state.camera.position.lerp(tmp.current.desired.set(sim.x + Math.sin(t) * 10, sim.y + 4.8, sim.z + Math.cos(t) * 10), 1 - Math.exp(-2.2 * dt));
+        state.camera.position.lerp(tmp.current.desired.set(sim.x + Math.sin(t) * 12.5, sim.y + 5.5, sim.z + Math.cos(t) * 12.5), 1 - Math.exp(-2.2 * dt));
       }
-      state.camera.lookAt(sim.x, sim.y + 1, sim.z);
+      state.camera.lookAt(sim.x, sim.y + 1.4, sim.z);
       return;
     }
 
@@ -96,11 +98,11 @@ export function Car() {
 
     const fx = -Math.sin(sim.yaw);
     const fz = -Math.cos(sim.yaw);
-    const follow = 10.6;
-    const height = 6;
+    const follow = 12.2;
+    const height = 6.8;
     const { desired, look, cam } = tmp.current;
     desired.set(sim.x - fx * follow, sim.y + height, sim.z - fz * follow);
-    look.set(sim.x + fx * 5.5, sim.y + 1.15, sim.z + fz * 5.5);
+    look.set(sim.x + fx * 5.5, sim.y + 1.45, sim.z + fz * 5.5);
     cam.copy(state.camera.position);
     cam.lerp(desired, reducedMotion ? 1 : 1 - Math.exp(-3.4 * dt));
     state.camera.position.copy(cam);
@@ -120,18 +122,12 @@ export function Car() {
   return (
     <group ref={group} position={[sim.x, sim.y, sim.z]}>
       <FoodTruckBody />
-      <mesh position={[-0.655, 0.645, -1.711]} material={lamps.front}>
-        <boxGeometry args={[0.18, 0.1, 0.08]} />
-      </mesh>
-      <mesh position={[0.655, 0.645, -1.711]} material={lamps.front}>
-        <boxGeometry args={[0.18, 0.1, 0.08]} />
-      </mesh>
-      <mesh position={[-0.72, 0.58, 1.71]} material={lamps.rear}>
-        <boxGeometry args={[0.22, 0.08, 0.06]} />
-      </mesh>
-      <mesh position={[0.72, 0.58, 1.71]} material={lamps.rear}>
-        <boxGeometry args={[0.22, 0.08, 0.06]} />
-      </mesh>
+      {/* Bounded, shadow-free rear fill keeps charcoal body details legible in the driving view. */}
+      <pointLight ref={bodyFill} position={[-2.4, 4.2, 4.5]} color="#d6e0eb" intensity={16} distance={9} decay={2} castShadow={false} />
+      {[-1, 1].map((side) => <group key={side}>
+        <TruckLampFace side={side} kind="front" material={lamps.front} />
+        <TruckLampFace side={side} kind="rear" material={lamps.rear} />
+      </group>)}
       {TRUCK_WHEELS.map((p, i) => (
         <group key={i} position={[p[0], p[1], p[2]]}>
           <group
@@ -139,18 +135,11 @@ export function Car() {
               if (el) wheels.current[i] = el;
             }}
           >
-            <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-              <cylinderGeometry args={[FOOD_TRUCK.wheelRadius, FOOD_TRUCK.wheelRadius, 0.22, 16]} />
-              <meshStandardMaterial color="#141416" roughness={0.7} />
-            </mesh>
-            <mesh rotation={[0, 0, Math.PI / 2]}>
-              <cylinderGeometry args={[0.17, 0.17, 0.23, 12]} />
-              <meshStandardMaterial color="#cfc8be" metalness={0.7} roughness={0.25} />
-            </mesh>
+            <TruckWheel />
           </group>
         </group>
       ))}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.31, 0]} scale={[1, 1.75, 1]} receiveShadow>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015 - FOOD_TRUCK.rideHeight, 0]} scale={[1, 2.4, 1]} receiveShadow>
         <circleGeometry args={[1.28, 24]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.28} />
       </mesh>
@@ -158,7 +147,7 @@ export function Car() {
       <object3D ref={targetR} position={[0.67, 0.05, -12]} />
       <spotLight
         ref={lightL}
-        position={[-0.67, 0.72, -1.75]}
+        position={[-TRUCK_LAMPS.front.x, TRUCK_LAMPS.front.y, TRUCK_LAMPS.front.z - 0.05]}
         angle={0.42}
         penumbra={0.55}
         distance={26}
@@ -168,7 +157,7 @@ export function Car() {
       />
       <spotLight
         ref={lightR}
-        position={[0.67, 0.72, -1.75]}
+        position={[TRUCK_LAMPS.front.x, TRUCK_LAMPS.front.y, TRUCK_LAMPS.front.z - 0.05]}
         angle={0.42}
         penumbra={0.55}
         distance={26}

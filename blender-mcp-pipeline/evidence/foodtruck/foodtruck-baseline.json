@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "asset": "foodtruck-body",
+  "schemaVersion": 2,
+  "asset": "foodtruck-reference-v2",
   "objects": {
     "FoodTruck_Body": {
       "type": "EMPTY",
@@ -37,7 +37,7 @@
         0.0
       ]
     },
-    "Body_Under": {
+    "Body_Trim": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -67,33 +67,33 @@
         ]
       ],
       "dimensions": [
-        1.649999976,
-        3.348999977,
-        2.069000006
+        2.305500031,
+        5.178999901,
+        2.594137907
       ],
-      "geometryHash": "99cdc88fbc139beca4444d3ebbe3a2a7a599408b02990fc3ad8b0663a7f8caa5"
+      "geometryHash": "0ea218c6f035a10e26d41f06b47d2ec8ad8f1005d96b53cdbf7251dc9e26fd8d"
     },
-    "Body_Silver": {
-      "type": "MESH",
+    "RearDoor_Pivot": {
+      "type": "EMPTY",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
         [
           1.0,
           0.0,
           0.0,
-          0.0
+          -0.469999999
         ],
         [
           0.0,
           1.0,
           0.0,
-          0.0
+          -2.49000001
         ],
         [
           0.0,
           0.0,
           1.0,
-          0.0
+          0.629999995
         ],
         [
           0.0,
@@ -103,33 +103,32 @@
         ]
       ],
       "dimensions": [
-        2.219500065,
-        3.481999874,
-        2.213999987
-      ],
-      "geometryHash": "a5e9f9ae1a16d56a917f768c84214ace0132a3b8009e0783a20cc5401b68b0c2"
+        0.0,
+        0.0,
+        0.0
+      ]
     },
-    "Body_Ink": {
+    "RearDoor_Pivot_Body": {
       "type": "MESH",
-      "parent": "FoodTruck_Body",
+      "parent": "RearDoor_Pivot",
       "matrixWorld": [
         [
           1.0,
           0.0,
           0.0,
-          0.0
+          -0.469999999
         ],
         [
           0.0,
           1.0,
           0.0,
-          0.0
+          -2.49000001
         ],
         [
           0.0,
           0.0,
           1.0,
-          0.0
+          0.629999995
         ],
         [
           0.0,
@@ -139,33 +138,33 @@
         ]
       ],
       "dimensions": [
-        2.290014982,
-        3.386499882,
-        1.749999881
+        0.939999998,
+        0.032000065,
+        1.695000052
       ],
-      "geometryHash": "569e0f2e2fd8a9957ca8be23e9275cccd9882919fba5397c45f81468058f4290"
+      "geometryHash": "dc583adafe78259aef875c155ccb30ff9f97920e5467c03fd232680d973f56f3"
     },
-    "Body_Bone": {
+    "RearDoor_Glass": {
       "type": "MESH",
-      "parent": "FoodTruck_Body",
+      "parent": "RearDoor_Pivot",
       "matrixWorld": [
         [
           1.0,
           0.0,
           0.0,
-          0.0
+          -0.469999999
         ],
         [
           0.0,
           1.0,
           0.0,
-          0.0
+          -2.49000001
         ],
         [
           0.0,
           0.0,
           1.0,
-          0.0
+          0.629999995
         ],
         [
           0.0,
@@ -175,33 +174,33 @@
         ]
       ],
       "dimensions": [
-        2.119999886,
-        3.419000149,
-        1.775000095
+        0.796000004,
+        0.0,
+        0.674999952
       ],
-      "geometryHash": "2afdf9a07c7030503d3f5f51bfd6f4abc9620b2f0db1e200590123550d669e58"
+      "geometryHash": "0d9e9b45069396450ffd79e934fe384c6f97285dfb62c635352b1ca86cd30864"
     },
-    "Serving_Counter": {
+    "RearDoor_Handle": {
       "type": "MESH",
-      "parent": "FoodTruck_Body",
+      "parent": "RearDoor_Pivot",
       "matrixWorld": [
         [
           1.0,
           0.0,
           0.0,
-          0.0
+          -0.469999999
         ],
         [
           0.0,
           1.0,
           0.0,
-          0.0
+          -2.49000001
         ],
         [
           0.0,
           0.0,
           1.0,
-          0.0
+          0.629999995
         ],
         [
           0.0,
@@ -211,33 +210,33 @@
         ]
       ],
       "dimensions": [
-        0.299999952,
-        1.769999981,
-        0.045000017
+        0.230000019,
+        0.0400002,
+        0.036000013
       ],
-      "geometryHash": "c5152eba840244cdc927287b281dfa301d3eccbe1ac8e809c896a82fdd96efc2"
+      "geometryHash": "627f8fa227c0de3957a3e6811eea50860d4dd43597eff87de621a16a23e915e4"
     },
-    "Interior_Light": {
+    "RearDoor_Pivot_Black": {
       "type": "MESH",
-      "parent": "FoodTruck_Body",
+      "parent": "RearDoor_Pivot",
       "matrixWorld": [
         [
           1.0,
           0.0,
           0.0,
-          0.0
+          -0.469999999
         ],
         [
           0.0,
           1.0,
           0.0,
-          0.0
+          -2.49000001
         ],
         [
           0.0,
           0.0,
           1.0,
-          0.0
+          0.629999995
         ],
         [
           0.0,
@@ -247,119 +246,47 @@
         ]
       ],
       "dimensions": [
-        0.050000001,
-        1.420000076,
-        0.024999976
-      ],
-      "geometryHash": "590f482e3fd44525e2123c6b1f37b23446bf0129e5b393e47883ded245a39ef4"
-    },
-    "Windshield": {
-      "type": "MESH",
-      "parent": "FoodTruck_Body",
-      "matrixWorld": [
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          1.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "dimensions": [
-        1.690000057,
-        0.379000068,
-        0.808000028
-      ],
-      "geometryHash": "847234b206f8d3f0782a6cd28476cc83a991918fea9d5db944cd2e371f1779e5"
-    },
-    "Body_Glass": {
-      "type": "MESH",
-      "parent": "FoodTruck_Body",
-      "matrixWorld": [
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          1.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "dimensions": [
-        1.863129973,
-        0.879999936,
-        0.75999999
-      ],
-      "geometryHash": "a5924904a1f2aeaa903b559efafcb5836b2fad3caa6e8594159a9d3be51d79f5"
-    },
-    "Lamp_Front_0": {
-      "type": "MESH",
-      "parent": "FoodTruck_Body",
-      "matrixWorld": [
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          1.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "dimensions": [
-        0.310000002,
+        0.75999999,
         0.055000067,
-        0.160000026
+        0.352999985
       ],
-      "geometryHash": "9ee9b1364a3bde1e88cca6391f2f7801125f3f4c091cc6ca09ff25c4482ba9c3"
+      "geometryHash": "c26155bb04a588c98d11fd8742d3192b53a8e3ac282deb087da31ac32fd11915"
+    },
+    "Body_Steelchecker": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.99000001,
+        3.049999952,
+        0.404999971
+      ],
+      "geometryHash": "dedce037d47b24cbf9f637da5cf15fccd0f63655465775ef93a2f5c154707f3b"
     },
     "Lamp_Rear_0": {
       "type": "MESH",
@@ -391,47 +318,11 @@
         ]
       ],
       "dimensions": [
-        0.089999974,
-        0.024999976,
-        0.270000011
+        0.270000041,
+        0.026000023,
+        0.125
       ],
-      "geometryHash": "57e0ae45c359696ab13eddff569ecedc219c74537fb91b8e524d339ee7a89b05"
-    },
-    "Lamp_Front_1": {
-      "type": "MESH",
-      "parent": "FoodTruck_Body",
-      "matrixWorld": [
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          1.0,
-          0.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "dimensions": [
-        0.310000002,
-        0.055000067,
-        0.160000026
-      ],
-      "geometryHash": "d32e5ea4bddc33c8de98cc1dafd7c65b006b12f93068e6ccf129376d51984eea"
+      "geometryHash": "237b8410bd4002ae70b34edee0e6ecc6d2dfab050c5a3d34c484b4c1048d56ce"
     },
     "Lamp_Rear_1": {
       "type": "MESH",
@@ -463,13 +354,13 @@
         ]
       ],
       "dimensions": [
-        0.089999974,
-        0.024999976,
-        0.270000011
+        0.270000041,
+        0.026000023,
+        0.125
       ],
-      "geometryHash": "86dfcd4d2b6efb7ccbf93d9b5924afccb853b6db74fd62bb384d1067b77ca046"
+      "geometryHash": "486f3d99257bb42693367afef78b1b093887639dc4917ef24e503cd7bead62c4"
     },
-    "Brand_SxB": {
+    "Body_Body": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -499,13 +390,13 @@
         ]
       ],
       "dimensions": [
-        0.007000029,
-        0.532085717,
-        0.217799902
+        2.388000011,
+        5.119999886,
+        2.798500061
       ],
-      "geometryHash": "c8b29821a9fd513746c8ae061eb3d2289cc89a8edb4f626663f7594061e83340"
+      "geometryHash": "29ac576c69a8fb5a4e3f46a2ca290b15bed0fc30c914dffc41e4e2ac5b927ac7"
     },
-    "Brand_FoodStudio": {
+    "Windshield": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -535,13 +426,13 @@
         ]
       ],
       "dimensions": [
-        0.007000029,
-        0.927571416,
-        0.098999977
+        1.539999962,
+        0.614000022,
+        0.555999994
       ],
-      "geometryHash": "08b62024a7f86c2210d20096cd3cb282714f39a740041eb7e7705b2e3b7b3522"
+      "geometryHash": "1a9337a4b398b5fe2b5377b5175318406867d8cbb9760fd698891d1771023666"
     },
-    "Menu_Panel": {
+    "Body_Cab_glass": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -571,13 +462,13 @@
         ]
       ],
       "dimensions": [
-        0.023999989,
-        0.254999995,
-        0.610000014
+        1.773749948,
+        1.049999952,
+        0.75
       ],
-      "geometryHash": "9d185be563bbbf2b392f2300b275077c2675cecf30950692a124b72aa3566e40"
+      "geometryHash": "04cc5fbdb9d508213261723b9181298e55ec097c8513196422fd3607e9810f4b"
     },
-    "Menu_Title": {
+    "Body_Black": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -607,13 +498,13 @@
         ]
       ],
       "dimensions": [
-        0.006999969,
-        0.196542859,
-        0.059399962
+        2.226000071,
+        5.460499763,
+        2.828029871
       ],
-      "geometryHash": "acc2b01d273af7b2deefea89eb6e163767ab088caa60604dff3cceb09bd71256"
+      "geometryHash": "7e6ad2c20b3fa7c504be3beb2216da89abebce0026c691a2fc8731694e62efb3"
     },
-    "Rear_Brand": {
+    "Lamp_Front_0": {
       "type": "MESH",
       "parent": "FoodTruck_Body",
       "matrixWorld": [
@@ -643,11 +534,441 @@
         ]
       ],
       "dimensions": [
-        0.5079,
-        0.006999969,
-        0.207900047
+        0.235000014,
+        0.031999826,
+        0.219999969
       ],
-      "geometryHash": "a415337f52312e31c25f3f137c87e8b9f3a9c731ee447b437d876a0dd679f38b"
+      "geometryHash": "cbff45bc93c60072362421dbc15947ddaf0f522beabdc9c5ac534dcf5330c5e0"
+    },
+    "Body_Amber": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.799999952,
+        1.258499861,
+        0.545999944
+      ],
+      "geometryHash": "16d78c69feebfe3df1c3b9c9e79d73914abcad666e46354ca1606a012c4d9ddc"
+    },
+    "Lamp_Front_1": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.235000014,
+        0.031999826,
+        0.219999969
+      ],
+      "geometryHash": "f74a4907ec3996f3d59095f4c6b356252461a06a78240fc3a8fe93679f955b05"
+    },
+    "ServingHatch_Pivot": {
+      "type": "EMPTY",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "ServingHatch_Pivot_Body": {
+      "type": "MESH",
+      "parent": "ServingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.044999957,
+        2.240000248,
+        1.190000057
+      ],
+      "geometryHash": "0caea827a6deec8507955f167fd7468219a8a8c7ab4de2ca169550f333a8aee6"
+    },
+    "ServingHatch_Pivot_Glass": {
+      "type": "MESH",
+      "parent": "ServingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.0,
+        2.104000092,
+        0.559999943
+      ],
+      "geometryHash": "04b4d90f5e6221a3ee0c3801d6462138aee4df961bd2f5fab4820339de079378"
+    },
+    "ServingHatch_Pivot_Black": {
+      "type": "MESH",
+      "parent": "ServingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.04550004,
+        1.184000015,
+        0.981999993
+      ],
+      "geometryHash": "f8388d5f399e32f4e2f0800a1183a3655d09b1f9f8ef89d2f57e879e3a1d4d5b"
+    },
+    "ServingHatch_Pivot_Trim": {
+      "type": "MESH",
+      "parent": "ServingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.042999983,
+        2.183000088,
+        1.128000021
+      ],
+      "geometryHash": "a882be7fb600c8bea93f39767fb0278ebad473252c6c7fea23f2e2b12fe6f01c"
+    },
+    "OpposingHatch_Pivot": {
+      "type": "EMPTY",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "OpposingHatch_Pivot_Body": {
+      "type": "MESH",
+      "parent": "OpposingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.044999957,
+        2.240000248,
+        1.190000057
+      ],
+      "geometryHash": "84a0ef9f617328b4a25fdef4a169b81073e9fa10dfe6bccec4f9c89c8eeb10da"
+    },
+    "OpposingHatch_Pivot_Glass": {
+      "type": "MESH",
+      "parent": "OpposingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.0,
+        2.104000092,
+        0.559999943
+      ],
+      "geometryHash": "c55e5e24a2c5a2b40c8226c559ea3b1764af7bacaa10f22b9a2c1c596ab89b36"
+    },
+    "OpposingHatch_Pivot_Black": {
+      "type": "MESH",
+      "parent": "OpposingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.04550004,
+        1.184000015,
+        0.981999993
+      ],
+      "geometryHash": "3054fcf3efbfb5a08bb12c5718b4778e867a1309bc307d92f26dfc8f8e22aa5b"
+    },
+    "OpposingHatch_Pivot_Trim": {
+      "type": "MESH",
+      "parent": "OpposingHatch_Pivot",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -1.044999957
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -1.039999962
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          2.390000105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.042999983,
+        2.183000088,
+        1.128000021
+      ],
+      "geometryHash": "2b5f6589e4ec7c5384dbf7c23bcc6b3d3e343886e4e126d46fd578fb15cb42ae"
     },
     "WheelAnchor_FL": {
       "type": "EMPTY",
@@ -657,13 +978,13 @@
           1.0,
           0.0,
           0.0,
-          -0.949999988
+          -0.910000026
         ],
         [
           0.0,
           1.0,
           0.0,
-          1.120000005
+          1.940000057
         ],
         [
           0.0,
@@ -692,13 +1013,13 @@
           1.0,
           0.0,
           0.0,
-          0.949999988
+          0.910000026
         ],
         [
           0.0,
           1.0,
           0.0,
-          1.120000005
+          1.940000057
         ],
         [
           0.0,
@@ -727,13 +1048,13 @@
           1.0,
           0.0,
           0.0,
-          -0.949999988
+          -0.959999979
         ],
         [
           0.0,
           1.0,
           0.0,
-          -1.0
+          -1.519999981
         ],
         [
           0.0,
@@ -762,13 +1083,13 @@
           1.0,
           0.0,
           0.0,
-          0.949999988
+          0.959999979
         ],
         [
           0.0,
           1.0,
           0.0,
-          -1.0
+          -1.519999981
         ],
         [
           0.0,
@@ -788,7 +1109,279 @@
         0.0,
         0.0
       ]
+    },
+    "Body_Wood": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.973999977,
+        4.171000004,
+        1.985999823
+      ],
+      "geometryHash": "d13b22baf20f07912674e532e1bfcfa5e0389fcb80861473c6db88af9050f4d7"
+    },
+    "Body_Gloss": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.24000001,
+        2.262500048,
+        2.003999949
+      ],
+      "geometryHash": "57cde228146b1203c35f244727cd95d2e35845d097519f9f3eedc90afe03a0bb"
+    },
+    "Interior_Sink_Basin": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        0.440000027,
+        0.609999955,
+        0.210999966
+      ],
+      "geometryHash": "f6830b2a27a750a8fb76a6cc618b24d10dca133964da2b703ba89126ecd572aa"
+    },
+    "Body_White": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.646499991,
+        2.72149992,
+        2.169499874
+      ],
+      "geometryHash": "2d854e6d4ca29f45e89cc454d5c6a3619509a56bd561d7f4744f9a0cc4c725d0"
+    },
+    "Body_Warm_light": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.820000052,
+        3.342000008,
+        1.903999805
+      ],
+      "geometryHash": "36be2b2f33971f6ffd4ccce0b8ce7980d235cb59eaba6e5d78ff8337e57fbee0"
+    },
+    "Body_Curtain": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.690500021,
+        0.217999995,
+        0.588999987
+      ],
+      "geometryHash": "e937280668f623f1c2499931039c5922204a00d160213a67e1c7956a428861f7"
+    },
+    "Body_Steel": {
+      "type": "MESH",
+      "parent": "FoodTruck_Body",
+      "matrixWorld": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dimensions": [
+        1.976500034,
+        3.39199996,
+        1.996999979
+      ],
+      "geometryHash": "0c2b8865b50eaf60877887e699ce9db535f075dd0852701ab6f6caa638ffcc68"
     }
   },
-  "structureHash": "d1865b1c23049ad9e29aa46cc1bdd9bfdcc0aa7c6bbb541091016d62b04d5a75"
+  "structureHash": "0cf0d3f8e3ea6d785d9c3224ee2465b3323d24d7c0e6a1944daa6331766a42b1",
+  "approvedJoints": {
+    "ServingHatch_Pivot": {
+      "position": [
+        1.045,
+        2.39,
+        1.04
+      ],
+      "axis": "Z",
+      "openRadians": 1.35
+    },
+    "OpposingHatch_Pivot": {
+      "position": [
+        -1.045,
+        2.39,
+        1.04
+      ],
+      "axis": "Z",
+      "openRadians": -1.35
+    }
+  }
 }

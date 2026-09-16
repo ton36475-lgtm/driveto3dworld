@@ -64,11 +64,11 @@ def safe_output_directory(path):
     return out
 
 
-def inspect_glb(path, root_name):
+def inspect_glb(path, root_name, *, max_asset_bytes=MAX_ASSET_BYTES, max_asset_triangles=MAX_ASSET_TRIANGLES):
     """Check header, embedded buffers, required names, budgets and accessor bounds."""
     path = Path(path)
     data = path.read_bytes()
-    if len(data) < 20 or len(data) > MAX_ASSET_BYTES:
+    if len(data) < 20 or len(data) > max_asset_bytes:
         raise ValueError("GLB missing/truncated or exceeds size budget")
     magic, version, length = struct.unpack_from("<4sII", data)
     if magic != b"glTF" or version != 2 or length != len(data):
@@ -127,7 +127,7 @@ def inspect_glb(path, root_name):
                 raise ValueError("Invalid triangle index count")
             triangles += indices["count"] // 3
             bounds.append({"min": low, "max": high})
-    if not 0 < triangles <= MAX_ASSET_TRIANGLES:
+    if not 0 < triangles <= max_asset_triangles:
         raise ValueError("Triangle budget failed")
     return {"status": "PASS", "scope": "atelier-contract-v1", "filename": path.name,
             "sha256": file_digest(path), "bytes": len(data), "triangles": triangles,

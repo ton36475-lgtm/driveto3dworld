@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "scope": "Published files agree with reference-truck-005 build receipt",
+  "files": [
+    {
+      "path": "blender-mcp-pipeline/build_foodtruck.py",
+      "sha256": "20fe0a67802b7a2fa3fe776ccad2815b4340ce08b691479596fc79f8c8ef6ad2",
+      "bytes": 28825
+    },
+    {
+      "path": "blender-mcp-pipeline/reference_interior.py",
+      "sha256": "faa21641ec3f666ec9e7ea006d677e7e777681f56f329c012a777fc7ece75412",
+      "bytes": 18209
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/foodtruck-structural.blend",
+      "sha256": "e8b1bcb634e0ddb5d3bb54f3763e96ee952b921bed596b44b80f1b3d7f448f3f",
+      "bytes": 1339243
+    },
+    {
+      "path": "blender-mcp-pipeline/assets/foodtruck-final.blend",
+      "sha256": "f98b0ae50576397d72d38849966c77fedc157af9894587e69c9818ebc37ff9f9",
+      "bytes": 1844423
+    },
+    {
+      "path": "blender-mcp-pipeline/evidence/foodtruck/foodtruck-baseline.json",
+      "sha256": "75a1d162bf4926b29ea8254a48c135f5a0df3fca0e38432aa8d070b86dd8d35a",
+      "bytes": 23634
+    },
+    {
+      "path": "public/models/foodtruck-body.glb",
+      "sha256": "02c263c45ac75b6555dbbe78164375d938384154d1be3f83733128b5e88fcc01",
+      "bytes": 1209436
+    },
+    {
+      "path": "public/images/foodtruck-preview.webp",
+      "sha256": "13c30cd0359a43896d9a075bb254b7cab6191ef9e8c46b21e4d0d50790c934d2",
+      "bytes": 141864
+    },
+    {
+      "path": "public/images/foodtruck-interior.webp",
+      "sha256": "712ec0b5efd9fc5b9205a0bd109a34ac1f6c92002f4508b58fb7782156193bf3",
+      "bytes": 80818
+    },
+    {
+      "path": "public/images/foodtruck-rear-interior.webp",
+      "sha256": "0f3e9481a152bd4cbf5e49ebacde86bdac37332fb4dea92e64f47fff707cd06d",
+      "bytes": 60340
+    }
+  ],
+  "khronosErrors": 0,
+  "khronosWarnings": 0,
+  "structuralObjects": 38,
+  "negativeCases": 3,
+  "renderInspection": {
+    "status": "PASS",
+    "reviewer": "AI agent visual inspection, not human approval",
+    "views": [
+      "exterior serving-side/front",
+      "interior toward kitchen/bunk",
+      "interior toward rear AC/entry"
+    ],
+    "observedLimits": [
+      "Stylized geometry with estimated dimensions",
+      "Original wood grain and floor tread differ from photographs",
+      "Mattress top mostly occluded at chosen aisle eye height"
+    ],
+    "correctedIssues": [
+      "Bunk lining protruded through sloped pod; clipped to inner shell",
+      "Thin timber seam behind cab; sealed with camper front bulkhead"
+    ]
+  },
+  "exporterNotes": [
+    "Optional tangent calculation on un-normal-mapped wood n-gons emitted a non-fatal Blender warning. Steel checker normal-map mesh has explicit tangent attributes; complete Khronos validation has zero warnings."
+  ],
+  "browserValidation": "SEPARATE_APP_EVIDENCE"
+}

@@ -66,6 +66,62 @@
     "localLint": "PASS",
     "foodtruckTriangles": 6886,
     "foodtruckGltfErrors": 0,
-    "foodtruckGltfWarnings": 0
+    "foodtruckGltfWarnings": 0,
+    "remoteRun": {
+      "id": 35073030132,
+      "commit": "33093b55f5c7d2ba83729f5d67da3b3bc8c45030",
+      "status": "FAILED_WITH_REPAIRS_IN_NEXT_PHASE",
+      "passed": [
+        "Node22/24 install,321tests+4explicit skips,build,typecheck,lint,14HTTP routes",
+        "dev/prod browser smoke and localoperations",
+        "all4 trilingual responsive scenarios",
+        "actual truckGLBfirstframe,W+A/W+Dsteeringandreset,proceduralfallbackdriving",
+        "reducedmotion,noWebGLandactualcontextloss",
+        "foodtruck form/edit/validation/download/import interactions before final network assertion"
+      ],
+      "findings": [
+        "Forge UI now uses localized display Slate; old test expected lowercase machine key slate",
+        "Locales test wrongly classified preserved Grok platform bootstrap script as map/contact traffic",
+        "Minimap intercepted desktop Settings pointer click; toolbar/map layout must be repaired"
+      ]
+    }
+  },
+  "photoReferenceTruck": {
+    "status": "IMPLEMENTED_LOCAL_PASS_REMOTE_CI_PENDING",
+    "referenceImages": 6,
+    "estimatedProportions": true,
+    "localNodeTests": {
+      "passed": 322,
+      "failed": 0,
+      "skipped": 4
+    },
+    "localBuild": "PASS",
+    "localTypecheck": "PASS",
+    "localLint": "PASS",
+    "asset": {
+      "sha256": "02c263c45ac75b6555dbbe78164375d938384154d1be3f83733128b5e88fcc01",
+      "bytes": 1209436,
+      "triangles": 20026,
+      "drawPrimitives": 30,
+      "gltfErrors": 0,
+      "gltfWarnings": 0
+    },
+    "independentSourceReopen": {
+      "objectsCompared": 38,
+      "negativeMutationsRejected": 3
+    },
+    "matchingCyclesRendersReviewed": 3,
+    "showroom": "exterior orbit/zoom, kitchen/alcove, kitchen/rear, independent hatches, 3-image WebGL fallback",
+    "driveTestsPassed": 17,
+    "browserGates": [
+      "browser-smoke.mjs",
+      "browser-ops.mjs",
+      "browser-spatial.mjs",
+      "browser-locales.mjs",
+      "browser-truck.mjs",
+      "browser-showroom.mjs"
+    ],
+    "physicalVehicleConnected": false,
+    "deploymentPerformed": false
   }
 }

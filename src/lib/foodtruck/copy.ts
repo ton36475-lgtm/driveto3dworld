@@ -2,8 +2,8 @@ const en = {
   eyebrow: "S×B / MOBILE KITCHEN",
   title: "From the grounds.\nTo your next stop.",
   intro:
-    "Drive the original 3D food truck, then prepare a real menu and a service route using your own details.",
-  concept: "Original vehicle concept",
+    "Drive the truck reconstructed from your reference images, then prepare a menu and service route using your own details.",
+  concept: "Reconstructed from your truck references",
   drive: "Drive the food truck",
   plan: "Prepare your route",
   local: "Your workspace on this device",
@@ -66,7 +66,7 @@ const en = {
   exportError: "The download could not start. Please try again.",
   body: "A moving studio for food, music and conversation.",
   detail:
-    "An original Blender body, articulated wheels, and a procedural fallback keep the journey usable across devices. The drive scene is a virtual portfolio; service stops below use details you supply.",
+    "A charcoal pickup cab, tall over-cab body, warm wood interior and stainless kitchen bring your six reference views into one vehicle. Explore it in the virtual grounds and use your own details to plan service stops.",
   detail1: "01 / CREATE",
   detail2: "02 / PLAN",
   detail3: "03 / CONNECT",
@@ -78,8 +78,8 @@ type Copy = { [K in keyof typeof en]: string };
 const th: Copy = {
   eyebrow: "S×B / ครัวเคลื่อนที่",
   title: "จากโลกสามมิติ\nสู่จุดหมายถัดไป",
-  intro: "ขับฟู้ดทรักสามมิติที่ออกแบบขึ้นใหม่ แล้วเตรียมเมนูและแผนจุดจอดด้วยข้อมูลจริงของคุณ",
-  concept: "โมเดลรถแนวคิดที่ออกแบบขึ้นใหม่",
+  intro: "ขับรถสามมิติที่จำลองจากภาพรถของคุณ แล้วเตรียมเมนูและแผนจุดจอดด้วยข้อมูลของคุณ",
+  concept: "โมเดลสร้างจากภาพอ้างอิงรถของคุณ",
   drive: "ขับฟู้ดทรัก",
   plan: "เตรียมเส้นทาง",
   local: "พื้นที่ทำงานบนอุปกรณ์นี้",
@@ -140,7 +140,7 @@ const th: Copy = {
   exportError: "เริ่มดาวน์โหลดไม่ได้ กรุณาลองอีกครั้ง",
   body: "สตูดิโอเคลื่อนที่สำหรับอาหาร ดนตรี และบทสนทนา",
   detail:
-    "ตัวรถสร้างด้วย Blender พร้อมล้อที่เคลื่อนไหวและโมเดลสำรองเพื่อรองรับอุปกรณ์ที่หลากหลาย ฉากขับรถเป็นพอร์ตโฟลิโอเสมือน ส่วนจุดจอดด้านล่างใช้ข้อมูลที่คุณกรอก",
+    "หัวรถกระบะสีเทาเข้ม ตัวถังสูงยื่นเหนือห้องโดยสาร ภายในลายไม้และครัวสเตนเลส นำรายละเอียดจากภาพทั้งหกมารวมเป็นรถหนึ่งคัน สำรวจในโลกเสมือนและใช้ข้อมูลของคุณวางแผนจุดจอด",
   detail1: "01 / สร้าง",
   detail2: "02 / วางแผน",
   detail3: "03 / เชื่อมต่อ",
@@ -151,8 +151,8 @@ const th: Copy = {
 const zh: Copy = {
   eyebrow: "S×B / 移动厨房",
   title: "从虚拟天地\n驶向下一站",
-  intro: "驾驶原创三维餐车，再用自己的实际资料规划菜单和服务地点。",
-  concept: "原创餐车概念模型",
+  intro: "驾驶根据你的参考图重建的三维餐车，再用自己的资料规划菜单和服务地点。",
+  concept: "依据你的餐车参考图重建",
   drive: "驾驶餐车",
   plan: "规划路线",
   local: "此设备上的工作区",
@@ -212,7 +212,7 @@ const zh: Copy = {
   exportError: "无法开始下载，请重试。",
   body: "让美食、音乐与交谈一起出发。",
   detail:
-    "原创 Blender 车身、可转动的车轮和程序化备用模型，让不同设备都能继续旅程。驾驶场景是虚拟作品集；下方服务地点使用你提供的资料。",
+    "深灰色皮卡驾驶室、高挑的额头式车厢、温暖的木饰与不锈钢厨房，将六张参考图的细节汇聚到一辆车中。在虚拟场景中探索它，再用自己的资料规划服务地点。",
   detail1: "01 / 创作",
   detail2: "02 / 规划",
   detail3: "03 / 连接",

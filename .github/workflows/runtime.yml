@@ -16,7 +16,7 @@ concurrency:
 jobs:
   runtime:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -82,6 +82,9 @@ jobs:
       - name: Drive the real Blender truck and its asset fallback
         if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
         run: node scripts/browser-truck.mjs http://127.0.0.1:8081
+      - name: Inspect the reference truck exterior and kitchen
+        if: ${{ !cancelled() && steps.production-start.outcome == 'success' }}
+        run: node scripts/browser-showroom.mjs http://127.0.0.1:8081
       - name: Print startup diagnostics on failure
         if: failure()
         run: |

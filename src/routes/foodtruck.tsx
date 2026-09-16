@@ -8,7 +8,8 @@ import {
   Truck,
   Utensils,
 } from "lucide-react";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import { ClientOnly } from "@/components/canvas/client-only";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocale } from "@/lib/copy";
@@ -28,6 +29,8 @@ import {
   type ServiceStop,
 } from "@/lib/foodtruck/model";
 import { useFoodtruck } from "@/lib/foodtruck/use-foodtruck";
+
+const TruckShowroom = lazy(() => import("@/components/foodtruck/truck-showroom"));
 
 export const Route = createFileRoute("/foodtruck")({ component: Foodtruck });
 const localeNames = { en: "en-GB", th: "th-TH", zh: "zh-CN" };
@@ -227,6 +230,17 @@ function Foodtruck() {
           </p>
         </div>
       </section>
+      <ClientOnly>
+        <Suspense
+          fallback={
+            <div className="truck-showroom-loading" role="status">
+              {c.loading}
+            </div>
+          }
+        >
+          <TruckShowroom />
+        </Suspense>
+      </ClientOnly>
       <section className="truck-story">
         <div>
           <p className="editorial-kicker">SIRAWAT × BALL</p>

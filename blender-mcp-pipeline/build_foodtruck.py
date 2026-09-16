@@ -1,336 +1,434 @@
-"""Original S×B food-studio CONCEPT vehicle; not a measured real-truck reconstruction.
+"""Reference-informed reconstruction from six user images, with estimated dimensions.
 
-Coordinates: metres, glTF Y-up, front -Z, root at wheel centre. Wheels are runtime
-articulation and deliberately excluded. A neutral structure is sealed before a
-material-only pass. Run in official Blender 4.5 LTS background mode.
+User reference pixels establish visible features, not measured dimensions, OEM
+identity, operating specifications or electrical/plumbing safety. Stored GLB has
+closed approved joints; opening them is a runtime inspection pose only.
 """
 import argparse
 import json
 import math
+import random
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 import bpy
 from mathutils import Matrix, Vector
-from build_assets import box, mesh, root, material, xyz, snapshot, write_json
+from build_assets import box as make_box, mesh as make_mesh, root, material, xyz, snapshot, write_json
 from contract import digest, file_digest, inspect_glb, safe_output_directory
+from reference_interior import build_interior
 
-ROOT = 'FoodTruck_Body'
-ANCHORS = {'WheelAnchor_FL': (-0.95, 0, -1.12), 'WheelAnchor_FR': (0.95, 0, -1.12),
-           'WheelAnchor_RL': (-0.95, 0, 1.0), 'WheelAnchor_RR': (0.95, 0, 1.0)}
-# Original 5x7 block lettering, generated as geometry (no font download or texture).
-GLYPHS = {
- 'S':['01111','10000','10000','01110','00001','00001','11110'],
- 'B':['11110','10001','10001','11110','10001','10001','11110'],
- '×':['00000','10001','01010','00100','01010','10001','00000'],
- 'F':['11111','10000','10000','11110','10000','10000','10000'],
- 'O':['01110','10001','10001','10001','10001','10001','01110'],
- 'D':['11110','10001','10001','10001','10001','10001','11110'],
- 'T':['11111','00100','00100','00100','00100','00100','00100'],
- 'U':['10001','10001','10001','10001','10001','10001','01110'],
- 'I':['11111','00100','00100','00100','00100','00100','11111'],
- 'M':['10001','11011','10101','10101','10001','10001','10001'],
- 'E':['11111','10000','10000','11110','10000','10000','11111'],
- 'N':['10001','11001','11001','10101','10011','10011','10001'],
- ' ':['00000']*7,
-}
+ROOT='FoodTruck_Body'
+ANCHORS={'WheelAnchor_FL':(-.91,0,-1.94),'WheelAnchor_FR':(.91,0,-1.94),
+         'WheelAnchor_RL':(-.96,0,1.52),'WheelAnchor_RR':(.96,0,1.52)}
+JOINTS={'ServingHatch_Pivot':{'position':(1.045,2.39,1.04),'axis':'Z','openRadians':1.35},
+        'OpposingHatch_Pivot':{'position':(-1.045,2.39,1.04),'axis':'Z','openRadians':-1.35}}
+REFERENCE_NAMES=['01-1000077114.png','02-1000077115.png','03-1000077116.png','04-1000077117.png','05-1000077118.png','06-1000077120.png']
 
 
-def set_role(obj, role):
-    obj['material_role'] = role
+def role(obj,value):
+    obj['material_role']=value
     return obj
 
 
-def block(name, center, size, role='ink', bevel=0.0):
-    obj = set_role(box(name, center, size, truck, neutral), role)
+def block(name,center,size,role_name='body',bevel=0):
+    obj=role(make_box(name,center,size,truck,neutral),role_name)
     if bevel:
-        bpy.context.view_layer.objects.active = obj
-        modifier = obj.modifiers.new('Authored_edge_bevel', 'BEVEL')
-        modifier.width = bevel
-        modifier.segments = 1
+        bpy.context.view_layer.objects.active=obj
+        modifier=obj.modifiers.new('Baked_edge_bevel','BEVEL'); modifier.width=bevel; modifier.segments=2
         bpy.ops.object.modifier_apply(modifier=modifier.name)
     return obj
 
 
-def panel(name, points, role='glass'):
-    return set_role(mesh(name, points, [tuple(range(len(points)))], truck, neutral), role)
+def surface(name,vertices,faces,role_name='body'):
+    return role(make_mesh(name,vertices,faces,truck,neutral),role_name)
 
 
-def rotate_baked(obj, center, angle):
-    origin=Vector(xyz(center))
-    rotation=Matrix.Rotation(angle,4,'X')
-    for vertex in obj.data.vertices:
-        vertex.co=origin+rotation@(vertex.co-origin)
+def panel(name,vertices,role_name='body'):
+    return surface(name,vertices,[tuple(range(len(vertices)))],role_name)
+
+
+def tube(name,points,radius,role_name='black'):
+    curve=bpy.data.curves.new(name+'_Curve','CURVE'); curve.dimensions='3D';curve.bevel_depth=radius
+    curve.bevel_resolution=1;curve.resolution_u=1;curve.use_fill_caps=True
+    spline=curve.splines.new('POLY');spline.points.add(len(points)-1)
+    for point,target in zip(points,spline.points): target.co=(*xyz(point),1)
+    obj=bpy.data.objects.new(name,curve);bpy.context.scene.collection.objects.link(obj);obj.parent=truck
+    obj.data.materials.append(neutral);obj['material_role']=role_name
+    bpy.ops.object.select_all(action='DESELECT');obj.select_set(True);bpy.context.view_layer.objects.active=obj
+    bpy.ops.object.convert(target='MESH')
+    return bpy.context.object
+
+
+def cylinder(name,center,radius,depth,role_name='black',axis='Y',vertices=16):
+    rotation=(0,0,0) if axis=='Y' else (0,math.pi/2,0) if axis=='X' else (math.pi/2,0,0)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=vertices,radius=radius,depth=depth,location=xyz(center),rotation=rotation)
+    obj=bpy.context.object;obj.name=name;obj.parent=truck;obj.data.materials.append(neutral);obj['material_role']=role_name
+    bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
+    return obj
+
+
+def rotate_baked(obj,center,angle):
+    pivot=Vector(xyz(center));rotation=Matrix.Rotation(angle,4,'X')
+    for vertex in obj.data.vertices:vertex.co=pivot+rotation@(vertex.co-pivot)
     obj.data.update()
 
 
-def bitmap_text(name, label, center, height, face='side', role='bone'):
-    size = height/7
-    total = (len(label)*6-1)*size
-    vertices, faces = [], []
-    cube_indices = [(0,3,2,1),(4,5,6,7),(0,1,5,4),(3,7,6,2),(0,4,7,3),(1,2,6,5)]
-    for char_i, char in enumerate(label):
-        for row, row_pixels in enumerate(GLYPHS[char]):
-            for col, pixel in enumerate(row_pixels):
-                if pixel != '1':
-                    continue
-                u = (char_i*6+col+0.5)*size-total/2
-                v = (3-row)*size
-                cx,cy,cz = center
-                if face=='side':
-                    location, dimensions = (cx,cy+v,cz-u), (.007,size*.93,size*.93)
-                elif face=='front':
-                    location, dimensions = (cx+u,cy+v,cz), (size*.93,size*.93,.007)
-                else:
-                    location, dimensions = (cx-u,cy+v,cz), (size*.93,size*.93,.007)
-                start=len(vertices)
-                vertices += [(location[0]+x*dimensions[0]/2,location[1]+y*dimensions[1]/2,location[2]+z*dimensions[2]/2)
-                             for x,y,z in [(-1,-1,-1),(1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,1),(1,-1,1),(1,1,1),(-1,1,1)]]
-                faces += [tuple(start+i for i in face_indices) for face_indices in cube_indices]
-    return set_role(mesh(name, vertices, faces, truck, neutral), role)
+def attach_to_pivot(obj,pivot):
+    # Bake inverse translation so glTF joint remains identity rotation in Y-up.
+    for vertex in obj.data.vertices:vertex.co-=pivot.location
+    obj.parent=pivot
+    obj.location=(0,0,0)
+    obj.data.update()
 
 
-def fender(name, x, z):
-    segments=16
-    vertices=[]
-    for offset in [-.02,.02]:
-        for radius in [.338,.405]:
-            vertices += [(x+offset,radius*math.sin(math.pi*i/segments),z+radius*math.cos(math.pi*i/segments)) for i in range(segments+1)]
-    n=segments+1
+def fender(name,x,z,inner=.39,outer=.475):
+    count=24; n=count+1
+    vertices=[(x+offset,r*math.sin(math.pi*i/count),z+r*math.cos(math.pi*i/count))
+              for offset in [-.055,.055] for r in [inner,outer] for i in range(n)]
     faces=[]
-    for i in range(segments):
+    for i in range(count):
         faces += [(i,i+1,n+i+1,n+i),(2*n+i,3*n+i,3*n+i+1,2*n+i+1),
                   (i,2*n+i,2*n+i+1,i+1),(n+i,n+i+1,3*n+i+1,3*n+i)]
-    faces += [(0,n,3*n,2*n),(segments,2*n+segments,3*n+segments,n+segments)]
-    return set_role(mesh(name,vertices,faces,truck,neutral),'silver')
+    faces += [(0,n,3*n,2*n),(count,2*n+count,3*n+count,n+count)]
+    return surface(name,vertices,faces,'body')
 
 
-def merge_static_parts():
-    """Reduce draw calls before sealing geometry; keep interactive contract meshes."""
-    preserve={'Windshield','Serving_Counter','Brand_SxB','Brand_FoodStudio','Rear_Brand',
-              'Menu_Panel','Menu_Title','Lamp_Front_0','Lamp_Front_1','Lamp_Rear_0','Lamp_Rear_1'}
-    roles=sorted({obj.get('material_role') for obj in bpy.context.scene.objects if obj.type=='MESH'})
-    for role in roles:
-        parts=[obj for obj in bpy.context.scene.objects if obj.type=='MESH' and obj.get('material_role')==role and obj.name not in preserve]
-        if len(parts)<2: continue
-        names=sorted(obj.name for obj in parts)
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in parts: obj.select_set(True)
-        bpy.context.view_layer.objects.active=parts[0]
-        bpy.ops.object.join()
-        obj=bpy.context.object
-        obj.name='Body_'+role.capitalize()
-        obj.data.name=obj.name+'_Geometry'
-        obj['source_parts']=names
+def octagonal_box(name,center,w,h,depth,role_name):
+    x,y,z=center;cut=min(w,h)*.19
+    shape=[(-w/2+cut,-h/2),(w/2-cut,-h/2),(w/2,-h/2+cut),(w/2,h/2-cut),
+           (w/2-cut,h/2),(-w/2+cut,h/2),(-w/2,h/2-cut),(-w/2,-h/2+cut)]
+    vertices=[(x+u,y+v,z+d) for d in [-depth/2,depth/2] for u,v in shape]
+    faces=[tuple(reversed(range(8))),tuple(range(8,16))]+[(i,(i+1)%8,(i+1)%8+8,i+8) for i in range(8)]
+    return surface(name,vertices,faces,role_name)
 
 
-def build():
-    global truck, neutral
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.context.preferences.filepaths.save_version=0
-    bpy.context.scene.unit_settings.system='METRIC'
-    bpy.context.scene.unit_settings.scale_length=1.0
-    truck=root(ROOT)
-    truck['asset_contract']='foodtruck-v1'
-    truck['concept_only']=True
-    truck['front_axis']='-Z (glTF)'
-    neutral=material('Mat_Food_Structure',(.32,.32,.32),0,.75)
-    # Floor and chassis leave tire clearances. All wheel geometry belongs to app.
-    block('Chassis',(0,.19,0),(1.60,.11,3.30),'under',.012)
-    block('Interior_Floor',(0,.31,.46),(1.77,.065,2.30),'silver')
-    for x in [-.925,.925]:
-        suffix='L' if x<0 else 'R'
-        block('Sill_'+suffix,(x,.29,-.05),(.05,.19,1.37),'silver',.01)
-        for z in [-1.12,1.0]:
-            fender('Fender_'+suffix+('_F' if z<0 else '_R'),x,z)
-    # Cargo box with real passenger-side serving aperture.
-    block('Cargo_Driver_Wall',(-.925,1.25,.56),(.05,1.74,2.26),'ink',.012)
-    block('Cargo_Rear_Wall',(0,1.25,1.665),(1.9,1.74,.065),'ink',.012)
-    block('Cargo_Front_Wall',(0,1.25,-.555),(1.9,1.74,.055),'ink',.01)
-    block('Cargo_Roof',(0,2.12,.56),(1.90,.06,2.28),'bone',.012)
-    block('Hatch_Lower_Panel',(.925,.65,.52),(.05,.54,2.20),'ink',.012)
-    block('Hatch_Header',(.925,1.905,.52),(.05,.39,2.20),'ink',.01)
-    block('Hatch_Front_Pillar',(.925,1.315,-.49),(.05,.79,.14),'ink',.008)
-    block('Hatch_Rear_Pillar',(.925,1.315,1.44),(.05,.79,.36),'ink',.008)
-    # Trim outlines the actual opening (x~.95, y .92–1.71, z -.42–1.26).
-    for name,center,size in [
-        ('Hatch_Trim_Top',(.956,1.71,.42),(.022,.033,1.71)),
-        ('Hatch_Trim_Bottom',(.956,.92,.42),(.022,.033,1.71)),
-        ('Hatch_Trim_Front',(.956,1.315,-.43),(.022,.82,.033)),
-        ('Hatch_Trim_Rear',(.956,1.315,1.27),(.022,.82,.033)),
-    ]: block(name,center,size,'silver')
-    block('Hatch_Fixed_Visor',(1.045,1.756,.42),(.25,.036,1.78),'bone',.008)
-    block('Serving_Counter',(1.01,.955,.42),(.30,.045,1.77),'silver',.008)
-    block('Counter_Front_Edge',(1.17,.93,.42),(.025,.075,1.80),'ink',.008)
-    # Generic equipment forms without menu, pricing, product or operating claims.
-    block('Interior_Back_Wall',(-.78,1.28,.52),(.035,1.66,2.04),'bone')
-    block('Interior_Worktop',(.03,1.04,.43),(1.33,.065,1.91),'silver',.008)
-    block('Cabinet_Base',(-.10,.685,.53),(1.02,.62,1.57),'bone',.01)
-    for i,z in enumerate([.07,.62,1.17]):
-        block('Cabinet_Door_'+str(i),(.421,.69,z),(.014,.48,.50),'bone')
-        block('Cabinet_Handle_'+str(i),(.434,.86,z),(.018,.017,.20),'silver')
-    block('Upper_Shelf',(-.43,1.62,.47),(.69,.035,1.85),'silver')
-    for i,z in enumerate([-.13,.06,.25]):
-        block('Storage_Canister_'+str(i),(-.37,1.75,z),(.15,.20,.14),'bone',.012)
-    block('Counter_Appliance',(.06,1.225,.93),(.42,.31,.41),'under',.018)
-    block('Appliance_Face',(.276,1.26,.93),(.02,.17,.31),'silver',.01)
-    for i,z in enumerate([.82,.93,1.04]):
-        block('Appliance_Control_'+str(i),(.29,1.255,z),(.014,.025,.027),'under')
-    block('Interior_Light',(-.06,1.94,.39),(.05,.025,1.42),'lamp')
-    # Cab: an actual sloping windscreen, narrow pillars and separate inset doors.
-    block('Cab_Lower',(0,.565,-1.125),(1.83,.39,1.10),'ink',.025)
-    block('Cab_Dash',(0,.94,-1.24),(1.65,.10,.37),'under',.015)
-    block('Cab_Roof',(0,1.795,-.97),(1.88,.075,.70),'bone',.015)
-    # Windscreen pane faces -Z; glass is opaque tinted PBR for robust mobile GLB.
-    panel('Windshield',[(-.845,.925,-1.674),(.845,.925,-1.674),(.845,1.733,-1.295),(-.845,1.733,-1.295)],'glass')
-    block('Windscreen_Top',(0,1.75,-1.30),(1.82,.065,.062),'silver',.006)
-    block('Windscreen_Base',(0,.916,-1.658),(1.83,.052,.059),'silver',.006)
-    centre=block('Windscreen_Centre',(0,1.34,-1.486),(.031,.90,.038),'silver')
-    rotate_baked(centre,(0,1.34,-1.486),math.atan2(.379,.808))
-    # Match the windscreen slope with baked pillar meshes.
-    for x in [-.883,.883]:
-        suffix='L' if x<0 else 'R'
-        pillar=block('Cab_A_Pillar_'+suffix,(x,1.326,-1.484),(.068,.93,.065),'silver',.005)
-        rotate_baked(pillar,(x,1.326,-1.484),math.atan2(.379,.808))
-        block('Cab_Rear_Pillar_'+suffix,(x,1.285,-.628),(.075,1.03,.086),'ink',.008)
-        panel('Cab_Window_'+suffix,[(x*1.055,.967,-1.56),(x*1.055,.967,-.68),(x*1.055,1.727,-.68),(x*1.055,1.727,-1.245)],'glass')
-        block('Door_Trim_'+suffix,(x*1.057,.905,-1.10),(.025,.033,.86),'silver')
-        block('Door_Handle_'+suffix,(x*1.066,.82,-.75),(.035,.035,.17),'silver',.005)
-        block('Mirror_Arm_'+suffix,(x*1.10,1.26,-1.25),(.20,.032,.037),'silver')
-        block('Mirror_Housing_'+suffix,(x*1.205,1.27,-1.25),(.087,.22,.17),'ink',.015)
-        block('Mirror_Glass_'+suffix,(x*1.25,1.27,-1.25),(.012,.175,.125),'silver')
-        block('Seat_'+suffix,(x*.62,.95,-.90),(.40,.38,.37),'under',.025)
-    # Functional trim, lamp meshes, and abstract identity (no license-plate text).
-    block('Front_Bumper',(0,.285,-1.697),(1.87,.16,.072),'silver',.014)
-    block('Front_Grille',(0,.565,-1.685),(.98,.235,.028),'under',.012)
-    for i in range(5): block('Grille_Slat_'+str(i),(0,.475+i*.043,-1.706),(.87,.013,.018),'silver')
-    for i,x in enumerate([-.655,.655]):
-        block('Lamp_Front_'+str(i),(x,.645,-1.701),(.31,.16,.055),'lamp',.015)
-        block('Front_Indicator_'+str(i),(x,.442,-1.698),(.135,.037,.042),'bone',.005)
-        block('Lamp_Rear_'+str(i),(x,.60,1.705),(.09,.27,.025),'red',.012)
-    block('Rear_Bumper',(0,.26,1.708),(1.87,.15,.082),'silver',.012)
-    block('Rear_Door_Left',(-.445,1.25,1.705),(.77,1.52,.013),'ink')
-    block('Rear_Door_Right',(.445,1.25,1.705),(.77,1.52,.013),'ink')
-    block('Rear_Centre_Seam',(0,1.25,1.718),(.026,1.54,.021),'silver')
-    for x in [-.82,.82]:
-        for y in [.72,1.65]: block('Rear_Hinge_'+str(x)+'_'+str(y),(x,y,1.72),(.055,.11,.021),'silver')
-    # S×B FOOD STUDIO is a concept identity, not a third-party mark or real menu.
-    bitmap_text('Brand_SxB','S×B',(.960,1.93,.20),.22)
-    bitmap_text('Brand_FoodStudio','FOOD STUDIO',(.96,.64,.20),.10)
-    block('Menu_Panel',(.96,1.32,1.438),(.024,.61,.255),'under',.008)
-    bitmap_text('Menu_Title','MENU',(.982,1.535,1.438),.06)
-    for i,length in enumerate([.155,.120,.150,.135]):
-        block('Menu_Abstract_Line_'+str(i),(.984,1.395-i*.068,1.431),(.008,.014,length),'bone')
-    bitmap_text('Rear_Brand','S×B',(0,1.525,1.725),.21,'rear')
-    # Dark roof vent and nonfunctional original industrial details.
-    block('Roof_Vent',(0,2.167,.80),(.57,.074,.59),'under',.012)
-    for i in range(5): block('Roof_Vent_Slat_'+str(i),(-.20+i*.10,2.207,.8),(.012,.014,.47),'silver')
+def create_hatch(name,side):
+    cfg=JOINTS[name]; pivot=bpy.data.objects.new(name,None);bpy.context.scene.collection.objects.link(pivot)
+    pivot.parent=truck;pivot.location=xyz(cfg['position']);pivot['runtime_joint']='hinged_serving_panel';pivot['glTF_axis']='Z'
+    pivot['open_radians']=cfg['openRadians'];pivot['closed_radians']=0.0
+    x=side*1.048; created=[]
+    for suffix,center,size in [
+        ('Top',(x,2.325,1.04),(.045,.13,2.24)),('Bottom',(x,1.43,1.04),(.045,.46,2.24)),
+        ('Front',(x,1.98,-.033),(.045,.64,.094)),('Back',(x,1.98,2.113),(.045,.64,.094)),
+        ('Divider',(x,1.98,1.04),(.045,.64,.15))]:
+        created.append(block(name+'_'+suffix,center,size,'body',.008))
+    for i,z in enumerate([.456,1.624]):
+        width=.99
+        for suffix,center,size in [
+            ('Top',(x+side*.028,2.283,z),(.026,.025,width)),('Bottom',(x+side*.028,1.677,z),(.026,.025,width)),
+            ('Front',(x+side*.028,1.98,z-width/2),(.026,.62,.025)),('Back',(x+side*.028,1.98,z+width/2),(.026,.62,.025))]:
+            created.append(block(name+'_Window'+str(i)+'_'+suffix,center,size,'trim',.005))
+        created.append(panel(name+'_Glass'+str(i),[(x+side*.003,1.70,z-.468),(x+side*.003,1.70,z+.468),
+                         (x+side*.003,2.26,z+.468),(x+side*.003,2.26,z-.468)],'glass'))
+        created.append(block(name+'_WindowDivider'+str(i),(x+side*.03,1.98,z),(.027,.56,.016),'black'))
+    created.append(block(name+'_Handle',(x+side*.041,1.30,1.04),(.042,.044,.135),'black',.008))
+    for z in [.02,1.04,2.08]:
+        created.append(block(name+'_Latch'+str(z),(x+side*.038,1.21,z),(.040,.085,.06),'trim',.007))
+    for obj in created:attach_to_pivot(obj,pivot)
+    # Root-fixed narrow mounting frame; aperture stays hollow beneath the hatch.
+    for z in [-.10,2.18]:block(name+'_FixedRail'+str(z),(side*1.026,1.80,z),(.028,1.26,.035),'black')
+    block(name+'_FixedUpper',(side*1.026,2.406,1.04),(.030,.033,2.30),'trim')
+    return pivot
+
+
+def build_exterior():
+    global truck,neutral
+    bpy.ops.wm.read_factory_settings(use_empty=True);bpy.context.preferences.filepaths.save_version=0
+    bpy.context.scene.unit_settings.system='METRIC';bpy.context.scene.unit_settings.scale_length=1
+    truck=root(ROOT);truck['asset_contract']='foodtruck-reference-v2';truck['reference_informed']=True;truck['dimensions_measured']=False
+    neutral=material('Mat_Reference_Structure',(.32,.32,.32),0,.76)
+    block('Pickup_Chassis',(0,.12,-.05),(1.66,.17,5.17),'black',.02)
+    block('Truck_Floor',(0,.59,1.14),(1.99,.10,2.64),'steelchecker')
+    block('Camper_Front_Bulkhead',(0,1.25,-.177),(2.025,1.25,.04),'body')
+    # Both sides are genuinely open; closed side glazing lives on articulated panels.
+    for side in [-1,1]:
+        tag='ReferenceSide' if side>0 else 'OpposingSide'
+        block(tag+'_LowerWall',(side*1.016,.89,1.14),(.065,.61,2.62),'body',.018)
+        block(tag+'_Header',(side*1.016,2.60,1.14),(.065,.33,2.62),'body',.018)
+        block(tag+'_FrontPost',(side*1.016,1.80,-.15),(.065,1.23,.16),'body',.012)
+        block(tag+'_RearPost',(side*1.016,1.80,2.34),(.065,1.23,.27),'body',.012)
+        block(tag+'_SkirtFront',(side*1.007,.34,.47),(.078,.36,1.23),'body',.025)
+        block(tag+'_SkirtRear',(side*1.007,.34,2.23),(.078,.36,.40),'body',.025)
+        fender(tag+'_RearArch',side*1.017,1.52)
+        block(tag+'_BottomTrim',(side*1.053,.58,1.14),(.025,.028,2.62),'trim')
+        for z in [-.05,.82,2.32]:
+            block(tag+'_ToolboxLatch'+str(z),(side*1.055,.39,z),(.023,.10,.085),'trim',.008)
+        block(tag+'_LowerHatch_Handle',(side*1.058,.94,1.11),(.038,.042,.145),'black',.005)
+        for z in [.0,1.09,2.20]:
+            block(tag+'_LowerHatch_Hinge'+str(z),(side*1.055,.71,z),(.035,.055,.11),'trim',.004)
+    # Main roof and cab-over pod: hollow bedroom with sloped nose.
+    block('Camper_Roof',(0,2.766,.51),(2.085,.065,3.93),'body',.016)
+    profile=[(1.90,-.18),(1.90,-1.80),(2.03,-1.93),(2.40,-1.93),(2.74,-1.43),(2.74,-.18)]
+    for side in [-1,1]:
+        panel('Cabover_Side_'+str(side),[(side*1.022,y,z) for y,z in profile],'body')
+        block('Cabover_Side_Trim_'+str(side),(side*1.030,1.91,-1.0),(.02,.028,1.60),'trim')
+        # Small side access panel visible in the exterior reference.
+        block('Cabover_Side_Access_'+str(side),(side*1.034,2.34,-.74),(.025,.50,.76),'body',.017)
+    panel('Cabover_FrontSlope',[(-1.035,2.74,-1.43),(1.035,2.74,-1.43),(1.035,2.40,-1.93),(-1.035,2.40,-1.93)],'body')
+    panel('Cabover_Nose',[(-1.035,2.40,-1.93),(1.035,2.40,-1.93),(1.035,2.03,-1.93),(-1.035,2.03,-1.93)],'body')
+    panel('Cabover_LowerBevel',[(-1.035,2.03,-1.93),(1.035,2.03,-1.93),(1.035,1.90,-1.80),(-1.035,1.90,-1.80)],'body')
+    block('Cabover_Underside',(0,1.889,-1.0),(2.06,.038,1.64),'body',.014)
+    for side in [-1,1]:
+        tube('Roof_Rail_'+str(side),[(side*.997,2.837,-1.44),(side*.997,2.837,2.45)],.022,'trim')
+        for z in [-1.20,-.1,1.05,2.35]:block('Roof_Rail_Mount_'+str(side)+'_'+str(z),(side*.997,2.808,z),(.058,.066,.085),'black')
+    # Rear wall has a separate windowed entry, louvers and projected step.
+    block('Rear_Left_Panel',(-.775,1.55,2.455),(.54,1.85,.060),'body',.014)
+    block('Rear_Right_Panel',(.775,1.55,2.455),(.54,1.85,.060),'body',.014)
+    block('Rear_Header',(0,2.55,2.455),(2.05,.41,.060),'body',.014)
+    block('Rear_Sill',(0,.645,2.455),(1.98,.15,.060),'body')
+    door=bpy.data.objects.new('RearDoor_Pivot',None);bpy.context.scene.collection.objects.link(door);door.parent=truck;door.location=xyz((-.47,.63,2.49))
+    pieces=[]
+    for suffix,center,size in [('Bottom',(0,1.0,2.494),(.94,.74,.032)),('Top',(0,2.20,2.494),(.94,.25,.032)),
+                              ('Left',(-.437,1.72,2.494),(.065,.73,.032)),('Right',(.437,1.72,2.494),(.065,.73,.032))]:
+        pieces.append(block('RearDoor_'+suffix,center,size,'body',.008))
+    pieces.append(panel('RearDoor_Glass',[(-.398,1.385,2.50),(.398,1.385,2.50),(.398,2.06,2.50),(-.398,2.06,2.50)],'glass'))
+    pieces.append(block('RearDoor_Handle',(.29,1.245,2.531),(.23,.036,.040),'trim',.008))
+    for i in range(7):pieces.append(block('RearDoor_Louver_'+str(i),(0,.82+i*.055,2.531),(.76,.023,.055),'black'))
+    for obj in pieces:attach_to_pivot(obj,door)
+    block('Rear_Bumper',(0,.345,2.493),(2.10,.155,.12),'black',.018)
+    block('Rear_Step',(0,.265,2.655),(1.50,.060,.43),'steelchecker',.018)
+    for x in [-.53,.53]:block('Rear_Step_Support'+str(x),(x,.25,2.43),(.065,.065,.42),'black')
+    for i,x in enumerate([-.78,.78]):
+        block('Tail_Lamp_Housing_'+str(i),(x,.49,2.506),(.42,.19,.06),'black',.012)
+        block('Lamp_Rear_'+str(i),(x,.49,2.543),(.27,.125,.026),'red',.008)
+        block('Tail_Reverse_'+str(i),(x+(.145 if x<0 else -.145),.49,2.545),(.062,.12,.029),'white')
+    # Ladder at the rear corner of the pictured serving side.
+    for z in [2.02,2.39]:
+        tube('Rear_Ladder_Rail_'+str(z),[(1.117,.75,z),(1.117,2.75,z),(1.103,2.86,z)],.024,'black')
+    for i in range(8):tube('Rear_Ladder_Rung_'+str(i),[(1.12,.83+i*.25,2.02),(1.12,.83+i*.25,2.39)],.021,'black')
+    # Distinct pickup cab and long square hood (not the earlier flat-front concept).
+    block('Cab_Lower',(0,.59,-.82),(1.77,.77,1.34),'body',.055)
+    block('Cab_Roof',(0,1.847,-.49),(1.79,.075,.68),'body',.028)
+    block('Hood_Lower',(0,.865,-2.015),(1.74,.48,1.22),'body',.04)
+    panel('Hood_Top',[(-.87,1.105,-2.635),(.87,1.105,-2.635),(.87,1.25,-1.395),(-.87,1.25,-1.395)],'body')
+    panel('Windshield',[(-.77,1.24,-1.409),(.77,1.24,-1.409),(.77,1.796,-.795),(-.77,1.796,-.795)],'cab_glass')
+    for x in [-.825,.825]:
+        tube('Cab_Windscreen_Edge_'+str(x),[(x,1.21,-1.42),(x,1.825,-.775)],.033,'black')
+        panel('Cab_Window_'+str(x),[(x*1.075,1.01,-1.25),(x*1.075,1.01,-.20),(x*1.075,1.76,-.20),(x*1.075,1.76,-.75)],'cab_glass')
+        tube('Cab_Window_Trim_'+str(x),[(x*1.086,1.01,-1.25),(x*1.086,1.01,-.20),(x*1.086,1.76,-.20),(x*1.086,1.76,-.75),(x*1.086,1.01,-1.25)],.021,'black')
+        tube('Door_Seam_'+str(x),[(x*1.086,.99,-1.25),(x*1.086,.30,-1.13),(x*1.086,.27,-.18),(x*1.086,1.70,-.18)],.013,'trim')
+        block('Door_Handle_'+str(x),(x*1.102,.94,-.42),(.044,.045,.20),'black',.009)
+        block('Mirror_Arm_'+str(x),(x*1.20,1.29,-1.15),(.19,.054,.075),'black',.012)
+        block('Mirror_Housing_'+str(x),(x*1.32,1.30,-1.15),(.21,.19,.26),'body',.035)
+        block('Mirror_Insert_'+str(x),(x*1.39,1.30,-1.15),(.012,.135,.19),'trim',.008)
+        fender('Front_Fender_'+str(x),x*1.102,-1.94,.385,.49)
+    tube('Windshield_Top',[(-.83,1.835,-.774),(.83,1.835,-.774)],.028,'black')
+    tube('Windshield_Base',[(-.83,1.225,-1.417),(.83,1.225,-1.417)],.026,'black')
+    for x in [-.39,.23]:tube('Wiper_'+str(x),[(x,1.26,-1.417),(x+.35,1.43,-1.235)],.012,'black')
+    block('Front_Bumper',(0,.365,-2.733),(1.93,.31,.175),'black',.04)
+    block('Front_Grille',(0,.845,-2.642),(.84,.34,.055),'black',.015)
+    for i in range(3):block('Grille_Strip_'+str(i),(0,.738+i*.098,-2.682),(.79,.018,.023),'trim')
+    for i,x in enumerate([-.68,.68]):
+        octagonal_box('Headlamp_Surround_'+str(i),(x,.78,-2.65),.44,.43,.12,'black')
+        octagonal_box('Headlamp_Bezel_'+str(i),(x,.78,-2.712),.328,.32,.034,'trim')
+        octagonal_box('Lamp_Front_'+str(i),(x,.78,-2.735),.235,.22,.032,'white_light')
+        block('Front_Amber_'+str(i),(x+(.158 if x>0 else -.158),.78,-2.717),(.026,.18,.023),'amber')
+    for side in [-1,1]:
+        for y in [.99,1.20]:block('Side_Indicator_'+str(side)+'_'+str(y),(side*.886,y,-1.52),(.028,.072,.10),'amber',.012)
+    create_hatch('ServingHatch_Pivot',1);create_hatch('OpposingHatch_Pivot',-1)
     for name,position in ANCHORS.items():
-        obj=bpy.data.objects.new(name,None)
-        bpy.context.scene.collection.objects.link(obj)
-        obj.parent=truck
-        obj.location=xyz(position)
-        obj['runtime_only']=True
-    merge_static_parts()
+        obj=bpy.data.objects.new(name,None);bpy.context.scene.collection.objects.link(obj);obj.parent=truck;obj.location=xyz(position);obj['runtime_only']=True
+    build_interior({'box':block,'mesh':surface,'tube':tube})
+    bpy.context.view_layer.update()
+
+
+def texture_image():
+    # Original procedural wood grain, not a crop from user reference photographs.
+    width,height=512,256; rng=random.Random(1729); pixels=[]
+    for y in range(height):
+        v=y/height
+        for x in range(width):
+            u=x/width
+            wave=math.sin(v*190 + 5*math.sin(u*11+v*8)+1.8*math.sin(u*23-v*7))
+            fine=math.sin(v*710+2*math.sin(u*37))
+            knot=math.sin(math.sqrt(((u-.31)*3)**2+((v-.56)*1.7)**2)*95)
+            level=.50+.20*wave+.06*fine+.07*knot+.035*(rng.random()-.5)
+            pixels.extend((.10+.39*level,.037+.19*level,.013+.065*level,1))
+    image=bpy.data.images.new('Reference_Original_Wood_Grain',width=width,height=height,alpha=False)
+    image.pixels.foreach_set(pixels);image.file_format='PNG';image.pack()
+    return image
+
+
+def checker_normal_image():
+    """Original periodic diamond-plate normal tile; no reference pixels copied."""
+    size=128; heights=[]
+    for y in range(size):
+        for x in range(size):
+            u,v=(x+.5)/size,(y+.5)/size
+            level=0.0
+            for cx,cy,sign in [(.25,.25,1),(.75,.75,1),(.75,.25,-1),(.25,.75,-1)]:
+                dx,dy=u-cx,v-cy
+                along=(dx+sign*dy)/math.sqrt(2);across=(dy-sign*dx)/math.sqrt(2)
+                level=max(level,max(0.0,1-abs(along)/.19-abs(across)/.047))
+            heights.append(level)
+    pixels=[]
+    for y in range(size):
+        for x in range(size):
+            dx=(heights[y*size+(x+1)%size]-heights[y*size+(x-1)%size])*size*.025
+            dy=(heights[((y+1)%size)*size+x]-heights[((y-1)%size)*size+x])*size*.025
+            normal=Vector((-dx,-dy,1)).normalized();pixels.extend((normal.x*.5+.5,normal.y*.5+.5,normal.z*.5+.5,1))
+    image=bpy.data.images.new('Reference_Original_Diamond_Plate',width=size,height=size,alpha=False)
+    image.colorspace_settings.name='Non-Color';image.pixels.foreach_set(pixels);image.file_format='PNG';image.pack()
+    return image
+
+
+def add_uv(obj,scale=.78):
+    uv=obj.data.uv_layers.new(name='UVMap')
+    for poly in obj.data.polygons:
+        dominant=max(range(3),key=lambda i:abs(poly.normal[i]));axes=[i for i in range(3) if i!=dominant]
+        for loop_index in poly.loop_indices:
+            co=obj.data.vertices[obj.data.loops[loop_index].vertex_index].co
+            uv.data[loop_index].uv=(co[axes[0]]*scale,co[axes[1]]*scale)
+
+
+def prepare_structure():
+    # UVs and grouping are structural operations; finish them before taking baseline.
+    for obj in list(bpy.context.scene.objects):
+        if obj.type=='MESH':
+            # Primitive generators may attach unused UVs. Keep only authored maps
+            # so tangent export is portable without inflating every metal mesh.
+            while obj.data.uv_layers:obj.data.uv_layers.remove(obj.data.uv_layers[0])
+        if obj.type=='MESH' and obj.get('material_role')=='wood':add_uv(obj)
+        if obj.type=='MESH' and obj.get('material_role')=='steelchecker':add_uv(obj,3.125)
+    preserve={'Windshield','Lamp_Front_0','Lamp_Front_1','Lamp_Rear_0','Lamp_Rear_1','Serving_Counter','Interior_Sink_Basin'}
+    parents=[truck]+[obj for obj in bpy.context.scene.objects if obj.type=='EMPTY' and obj.name.endswith('_Pivot')]
+    for parent in parents:
+        candidates=[obj for obj in parent.children if obj.type=='MESH' and obj.name not in preserve]
+        roles=sorted({obj.get('material_role') for obj in candidates})
+        for role_name in roles:
+            parts=[obj for obj in parent.children if obj.type=='MESH' and obj.name not in preserve and obj.get('material_role')==role_name]
+            if len(parts)<2:continue
+            names=sorted(obj.name for obj in parts);bpy.ops.object.select_all(action='DESELECT')
+            for obj in parts:obj.select_set(True)
+            bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join();obj=bpy.context.object
+            obj.name=(parent.name if parent!=truck else 'Body')+'_'+role_name.capitalize();obj.data.name=obj.name+'_Geometry';obj['source_parts']=names
     bpy.context.view_layer.update()
 
 
 def polish():
-    palette={'ink':((.012,.014,.019),.45,.33),'under':((.006,.007,.010),.12,.56),
-             'bone':((.78,.755,.69),.18,.47),'silver':((.55,.59,.63),.86,.24),
-             'glass':((.042,.082,.100),.62,.16),'lamp':((.88,.86,.79),.10,.25),
-             'red':((.42,.018,.012),.20,.28)}
-    materials={key:material('Mat_Food_'+key,*value) for key,value in palette.items()}
-    for key,power in [('lamp',1.2),('red',.5)]:
-        bsdf=materials[key].node_tree.nodes.get('Principled BSDF')
-        bsdf.inputs['Emission Color'].default_value=(*palette[key][0],1)
-        bsdf.inputs['Emission Strength'].default_value=power
+    palette={'body':((.029,.035,.045),.62,.23),'black':((.009,.011,.014),.20,.38),'gloss':((.008,.010,.013),.30,.13),
+             'trim':((.32,.35,.39),.82,.22),'steel':((.52,.56,.60),.88,.25),'steelchecker':((.37,.40,.44),.87,.29),
+             'wood':((.38,.17,.058),0,.39),'white':((.79,.80,.77),.06,.31),'curtain':((.49,.32,.08),.10,.38),
+             'glass':((.27,.35,.36),0,.12),'cab_glass':((.032,.055,.065),.45,.14),
+             'warm_light':((1,.53,.16),.0,.22),'white_light':((.87,.89,.88),.03,.2),
+             'amber':((.57,.12,.013),.1,.24),'red':((.50,.009,.008),.1,.25)}
+    materials={key:material('Mat_Reference_'+key,*value) for key,value in palette.items()}
+    wood=texture_image();tree=materials['wood'].node_tree;node=tree.nodes.new('ShaderNodeTexImage');node.image=wood
+    tree.links.new(node.outputs['Color'],tree.nodes.get('Principled BSDF').inputs['Base Color'])
+    tree=materials['steelchecker'].node_tree;node=tree.nodes.new('ShaderNodeTexImage');node.image=checker_normal_image()
+    normal=tree.nodes.new('ShaderNodeNormalMap');normal.inputs['Strength'].default_value=.65
+    tree.links.new(node.outputs['Color'],normal.inputs['Color']);tree.links.new(normal.outputs['Normal'],tree.nodes.get('Principled BSDF').inputs['Normal'])
+    glass=materials['glass'];glass.node_tree.nodes.get('Principled BSDF').inputs['Alpha'].default_value=.30
+    glass.surface_render_method='DITHERED';glass.use_transparency_overlap=False
+    for key,power in [('warm_light',4.0),('white_light',1.1),('red',.4),('amber',.4)]:
+        bsdf=materials[key].node_tree.nodes.get('Principled BSDF');bsdf.inputs['Emission Color'].default_value=(*palette[key][0],1);bsdf.inputs['Emission Strength'].default_value=power
     for obj in bpy.context.scene.objects:
         if obj.type=='MESH':
-            obj.data.materials.clear()
-            obj.data.materials.append(materials[obj['material_role']])
+            key=obj.get('material_role');obj.data.materials.clear();obj.data.materials.append(materials[key])
 
 
 def seal(objects):
-    required={ROOT,'Windshield','Serving_Counter','Brand_SxB',*ANCHORS}
-    if missing:=required-set(objects): raise ValueError('Missing truck objects: '+str(sorted(missing)))
-    return {'schemaVersion':1,'asset':'foodtruck-body','objects':objects,'structureHash':digest(objects)}
+    required={ROOT,'Windshield',*ANCHORS,*JOINTS}
+    if missing:=required-set(objects):raise ValueError('Missing reference truck objects: '+str(sorted(missing)))
+    return {'schemaVersion':2,'asset':'foodtruck-reference-v2','objects':objects,'structureHash':digest(objects),'approvedJoints':JOINTS}
 
 
-def verify(baseline, objects):
-    if baseline['structureHash']!=digest(baseline['objects']): raise ValueError('Baseline digest mismatch')
+def verify(baseline,objects):
+    if baseline['structureHash']!=digest(baseline['objects']):raise ValueError('Baseline digest mismatch')
     changed=[name for name in sorted(set(objects)|set(baseline['objects'])) if objects.get(name)!=baseline['objects'].get(name)]
-    if changed: raise ValueError('Truck structure changed: '+','.join(changed))
+    if changed:raise ValueError('Truck structure changed: '+','.join(changed))
     return {'status':'PASS','objectsCompared':len(objects),'structureHash':baseline['structureHash']}
 
 
-def render_preview(path):
-    # Snapshot before preview additions; no render-only geometry is saved/exported.
-    bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-.335))
-    bpy.context.object.data.materials.append(material('Preview_Ground',(.035,.039,.048),.1,.70))
-    bpy.context.object.is_shadow_catcher=True
+def source_bounds():
+    points=[obj.matrix_world@Vector(corner) for obj in bpy.context.scene.objects if obj.type=='MESH' for corner in obj.bound_box]
+    points=[(v.x,v.z,-v.y) for v in points]
+    return {'min':[min(v[i] for v in points) for i in range(3)],'max':[max(v[i] for v in points) for i in range(3)]}
+
+
+def add_preview_wheels():
     for x,y,z in ANCHORS.values():
-        bpy.ops.mesh.primitive_cylinder_add(vertices=20,radius=.32,depth=.22,location=xyz((x,y,z)),rotation=(0,math.pi/2,0))
-        bpy.context.object.data.materials.append(material('Preview_Tire',(.007,.008,.010),0,.85))
-        bpy.ops.mesh.primitive_cylinder_add(vertices=16,radius=.19,depth=.225,location=xyz((x,y,z)),rotation=(0,math.pi/2,0))
-        bpy.context.object.data.materials.append(material('Preview_Rim',(.40,.44,.49),.85,.24))
-    scene=bpy.context.scene
-    scene.render.engine='CYCLES'; scene.cycles.device='CPU'; scene.cycles.samples=32; scene.cycles.use_denoising=True
-    scene.render.resolution_x=1280; scene.render.resolution_y=960; scene.render.resolution_percentage=100
+        profile=[(.25,-.10),(.29,-.115),(.345,-.10),(.37,-.055),(.37,.055),(.345,.10),(.29,.115),(.25,.10)]
+        count=40;vertices=[(x+axial,y+radius*math.sin(i*math.tau/count),z+radius*math.cos(i*math.tau/count)) for radius,axial in profile for i in range(count)]
+        faces=[(ring*count+i,ring*count+(i+1)%count,((ring+1)%len(profile))*count+(i+1)%count,((ring+1)%len(profile))*count+i) for ring in range(len(profile)) for i in range(count)]
+        tyre=surface('Preview_Tire',vertices,faces,'black')
+        for polygon in tyre.data.polygons:polygon.use_smooth=True
+        cylinder('Preview_Steel_Wheel',(x,y,z),.25,.185,'black','X',32)
+        cylinder('Preview_Hub',(x,y,z),.078,.224,'black','X',20)
+        side=-1 if x<0 else 1
+        for i in range(8):
+            a=i*math.tau/8
+            cylinder('Preview_Bolt',(x+side*.115,.11*math.sin(a),z+.11*math.cos(a)),.012,.015,'trim','X',8)
+    # New objects had neutral material; apply only known role assignments to preview wheels.
+    for obj in bpy.context.scene.objects:
+        if obj.name.startswith('Preview_') and obj.type=='MESH':
+            obj.data.materials.clear();obj.data.materials.append(bpy.data.materials['Mat_Reference_'+obj['material_role']])
+
+
+def render_previews(out):
+    scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=40;scene.cycles.use_denoising=True
+    scene.render.resolution_x=1280;scene.render.resolution_y=960;scene.render.resolution_percentage=100
+    scene.render.image_settings.file_format='WEBP';scene.render.image_settings.color_mode='RGBA';scene.render.image_settings.quality=88
+    scene.world=bpy.data.worlds.new('Preview_Studio');scene.world.use_nodes=True
+    scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.16,.18,.22,1)
+    scene.world.node_tree.nodes['Background'].inputs[1].default_value=.5
+    add_preview_wheels()
+    bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-.375));ground=bpy.context.object;ground.is_shadow_catcher=True
+    ground.data.materials.append(material('Preview_Ground',(.045,.049,.055),0,.7))
     scene.render.film_transparent=True
-    scene.render.image_settings.file_format='WEBP'; scene.render.image_settings.color_mode='RGBA'
-    scene.render.image_settings.quality=88; scene.render.filepath=str(path)
-    scene.world=bpy.data.worlds.new('Preview_World'); scene.world.use_nodes=True
-    scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.11,.13,.17,1)
-    scene.world.node_tree.nodes['Background'].inputs[1].default_value=.55
-    bpy.ops.object.camera_add(location=xyz((5.3,3.9,-6.8)))
-    camera=bpy.context.object; camera.rotation_euler=(Vector(xyz((0,.92,0)))-camera.location).to_track_quat('-Z','Y').to_euler()
-    camera.data.type='ORTHO'; camera.data.ortho_scale=6.0; scene.camera=camera
-    for position,power,size in [((3,5,-4),1300,5),((-4,4,-1),900,4),((1,5,4),1600,4)]:
-        bpy.ops.object.light_add(type='AREA',location=xyz(position));light=bpy.context.object
-        light.data.energy=power;light.data.shape='DISK';light.data.size=size
-        light.rotation_euler=(Vector(xyz((0,1,0)))-light.location).to_track_quat('-Z','Y').to_euler()
-    bpy.ops.render.render(write_still=True)
+    bpy.ops.object.camera_add(location=xyz((6.5,4.7,-7.3)));camera=bpy.context.object
+    camera.rotation_euler=(Vector(xyz((0,1.28,-.05)))-camera.location).to_track_quat('-Z','Y').to_euler()
+    camera.data.type='ORTHO';camera.data.ortho_scale=7.3;scene.camera=camera
+    for pos,power,size in [((3,6,-4),1800,5),((-4,4,-1),1500,4),((1,5,4),2100,5)]:
+        bpy.ops.object.light_add(type='AREA',location=xyz(pos));light=bpy.context.object;light.data.energy=power;light.data.shape='DISK';light.data.size=size
+        light.rotation_euler=(Vector(xyz((0,1.3,0)))-light.location).to_track_quat('-Z','Y').to_euler()
+    for z in [.1,1.0,2.0]:
+        bpy.ops.object.light_add(type='AREA',location=xyz((0,2.58,z)));light=bpy.context.object;light.data.energy=45;light.data.color=(1,.69,.37);light.data.size=.45
+    scene.render.filepath=str(out/'foodtruck-preview.webp');bpy.ops.render.render(write_still=True)
+    # Articulated inspection pose only. Never save it over locked source or GLB.
+    for name,cfg in JOINTS.items():bpy.data.objects[name].rotation_euler.y=-cfg['openRadians']
+    scene.render.film_transparent=False;ground.is_shadow_catcher=False
+    camera.location=xyz((0,1.86,2.28));camera.rotation_euler=(Vector(xyz((0,1.82,-.65)))-camera.location).to_track_quat('-Z','Y').to_euler()
+    camera.data.type='PERSP';camera.data.lens=18;camera.data.sensor_width=32
+    scene.render.filepath=str(out/'foodtruck-interior.webp');bpy.ops.render.render(write_still=True)
+    camera.location=xyz((0,1.86,-.08));camera.rotation_euler=(Vector(xyz((0,1.52,2.31)))-camera.location).to_track_quat('-Z','Y').to_euler()
+    scene.render.filepath=str(out/'foodtruck-rear-interior.webp');bpy.ops.render.render(write_still=True)
 
 
-def main(out):
-    out=safe_output_directory(out)
-    build()
-    baseline=seal(snapshot())
+def main(out,reference_dir):
+    refs=[]
+    for name in REFERENCE_NAMES:
+        source=reference_dir/name
+        if not source.is_file():raise ValueError('Missing supplied reference image: '+name)
+        refs.append({'filename':name,'sha256':file_digest(source),'contentType':'image/jpeg','dimensions':[1536,1536]})
+    out=safe_output_directory(out);build_exterior();prepare_structure();baseline=seal(snapshot())
     write_json(out/'foodtruck-baseline.json',baseline)
     bpy.ops.wm.save_as_mainfile(filepath=str(out/'foodtruck-structural.blend'))
-    polish()
-    verification=verify(baseline,snapshot())
-    bpy.ops.wm.save_as_mainfile(filepath=str(out/'foodtruck-final.blend'))
+    polish();validation=verify(baseline,snapshot());bpy.ops.wm.save_as_mainfile(filepath=str(out/'foodtruck-final.blend'))
     bpy.ops.object.select_all(action='SELECT')
     result=bpy.ops.export_scene.gltf(filepath=str(out/'foodtruck-body.glb'),use_selection=True,export_format='GLB',export_yup=True,
-                                   export_apply=True,export_cameras=False,export_lights=False,export_animations=False,export_extras=True)
-    if 'FINISHED' not in result: raise RuntimeError('Foodtruck export failed')
-    asset=inspect_glb(out/'foodtruck-body.glb',ROOT)
-    # All body mesh transforms are baked except authored pillar rotation. Measure
-    # complete world bounds in the source for the explicit runtime contract.
-    coords=[obj.matrix_world@Vector(corner) for obj in bpy.context.scene.objects if obj.type=='MESH' for corner in obj.bound_box]
-    gltf_coords=[(c.x,c.z,-c.y) for c in coords]
-    bounds={'min':[min(p[i] for p in gltf_coords) for i in range(3)],'max':[max(p[i] for p in gltf_coords) for i in range(3)]}
-    report={'schemaVersion':1,'status':'PASS','asset':asset,'blenderVersion':bpy.app.version_string,
-            'source':'Original procedural S×B food-studio CONCEPT; no actual truck photographs or dimensions supplied',
-            'externalAssets':[],'geometryAuthority':'Authored concept contract, not a survey or fabricated customer story',
-            'structureValidation':verification,'coordinateSystem':'metres, Y-up, front -Z, root at wheel-centre height',
-            'wheelAnchors':ANCHORS,'wheelRadius':.32,'wheelsExported':False,'bodyBounds':bounds,
-            'drawPrimitives':len(asset['primitiveBounds']),
-            'structuralSourceSha256':file_digest(out/'foodtruck-structural.blend'),
-            'finalSourceSha256':file_digest(out/'foodtruck-final.blend'),'baselineSha256':file_digest(out/'foodtruck-baseline.json'),
-            'generatorSha256':file_digest(__file__),'browserIntegration':'NOT_VERIFIED_BY_GENERATOR','humanApproval':'NOT_CLAIMED'}
-    preview=out/'foodtruck-preview.webp'
-    render_preview(preview)
-    report['renderPreview']={'filename':preview.name,'sha256':file_digest(preview),'bytes':preview.stat().st_size,
-                             'width':1280,'height':960,'transparent':True,'engine':'Blender Cycles CPU, 32 samples'}
+          export_apply=True,export_tangents=True,export_cameras=False,export_lights=False,export_animations=False,export_extras=True)
+    if 'FINISHED' not in result:raise RuntimeError('Reference foodtruck export failed')
+    asset=inspect_glb(out/'foodtruck-body.glb',ROOT,max_asset_bytes=1_500_000,max_asset_triangles=45_000)
+    report={'schemaVersion':2,'status':'PASS','asset':asset,'blenderVersion':bpy.app.version_string,'references':refs,
+            'source':'Reference-informed reconstruction from six supplied images; scale and hidden geometry are estimates',
+            'geometryAuthority':'User image features; no measured drawing or vehicle engineering verification',
+            'externalAssets':[],'largeInventedBranding':False,'structureValidation':validation,'coordinateSystem':'metres, Y-up, front -Z; wheel-centre origin',
+            'wheelAnchors':ANCHORS,'wheelRadius':.37,'wheelsExported':False,'bodyBounds':source_bounds(),'drawPrimitives':len(asset['primitiveBounds']),
+            'approvedJoints':JOINTS,'budget':{'maxBytes':1_500_000,'maxTriangles':45_000,'reason':'Reference cab-over exterior, operable hatches, retained interior and portable wood texture'},
+            'structuralSourceSha256':file_digest(out/'foodtruck-structural.blend'),'finalSourceSha256':file_digest(out/'foodtruck-final.blend'),
+            'baselineSha256':file_digest(out/'foodtruck-baseline.json'),'generatorSha256':file_digest(__file__),
+            'interiorGeneratorSha256':file_digest(Path(__file__).with_name('reference_interior.py')),
+            'browserIntegration':'NOT_VERIFIED_BY_GENERATOR','humanApproval':'NOT_CLAIMED'}
+    render_previews(out)
+    report['previews']=[{'filename':n,'sha256':file_digest(out/n),'bytes':(out/n).stat().st_size,'width':1280,'height':960,
+                        'transparent':n=='foodtruck-preview.webp','engine':'Blender Cycles CPU, 40 samples'} for n in ['foodtruck-preview.webp','foodtruck-interior.webp','foodtruck-rear-interior.webp']]
     write_json(out/'foodtruck-receipt.json',report)
-    print('FOODTRUCK_PASS '+str(out))
+    print('REFERENCE_FOODTRUCK_PASS '+str(out))
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--output-dir',type=Path,required=True)
+    parser=argparse.ArgumentParser();parser.add_argument('--output-dir',type=Path,required=True);parser.add_argument('--reference-dir',type=Path,required=True)
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
-    main(args.output_dir.resolve())
+    main(args.output_dir.resolve(),args.reference_dir.resolve())
